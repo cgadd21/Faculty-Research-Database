@@ -94,6 +94,61 @@ CREATE TABLE facultyAbstract (
     CONSTRAINT facultyAbstract_pk PRIMARY KEY (facultyID, abstractID)
 );
 
+INSERT INTO Users (userID, typeID) VALUES 
+(1,'F'), 
+(2,'S'), 
+(3,'G');
+INSERT INTO userLogin (userID, username, password) VALUES 
+(1,'Jimhab','FacultyPass'),
+(2,'jmd4173','StudentPass'),
+(3,'Wegmans','GuestPass');
+INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES
+(3, 'Wegmans','Mr','Wegman','wegmanscontact@gmail.com');
+INSERT INTO student (studentID, fname, lname) VALUES
+(2, 'John', 'DAngelo');
+INSERT INTO studentContact (studentID, email, phonenumber) VALUES
+(2, 'jmd4173@rit.edu', '203-427-5637');
+
+INSERT INTO interestList  VALUES (1, 'Pascal');
+INSERT INTO interestList  VALUES (2, 'Java');
+INSERT INTO interestList  VALUES (3, 'JDBC');
+INSERT INTO interestList  VALUES (4, 'MySQL');
+INSERT INTO interestList  VALUES (5, 'Python');
+INSERT INTO interestList  VALUES (6, 'COBOL');
+INSERT INTO interestList  VALUES (7, 'C');
+INSERT INTO interestList  VALUES (8, 'CyberSecurity');
+INSERT INTO interestList  VALUES (9, 'C++');
+INSERT INTO interestList  VALUES (10, 'C#');
+INSERT INTO interestList  VALUES (11, 'JavaScript');
+INSERT INTO interestList  VALUES (12, 'PHP');
+INSERT INTO interestList  VALUES (13, 'Ada');
+INSERT INTO interestList  VALUES (14, "Ruby/Ruby on Rails");
+
+INSERT INTO studentInterests (studentID, interestID) VALUES
+(2,2),
+(2,3),
+(2,4);
+
+INSERT INTO faculty (facultyID, fname, lname) VALUES
+(1, 'Jim', 'Habermas');
+
+INSERT INTO facultyContact (facultyID, email, phonenumber, location) VALUES
+(1, 'jrhicsa@rit.edu', '123-456-7890', 'Golisano');
+
+INSERT INTO abstractList (abstractID, professorAbstract) VALUES
+(1,'Im an abstract!');
+
+INSERT INTO facultyAbstract (facultyID, abstractID) VALUES
+(1,1);
 
 
 
+INSERT INTO facultyInterests (facultyID, interestID) VALUES
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6),
+(1,7),
+(1,8);
