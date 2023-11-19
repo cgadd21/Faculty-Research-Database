@@ -4,7 +4,9 @@
 
 // Java program that connects to a database (Using StudentDB)
 
-import java.sql.*; 
+import java.sql.*;
+import java.util.Scanner;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;     
@@ -71,7 +73,7 @@ public class DataLayer{
     }
 
     //Return true if user has edit permissions, otherwise false. Determines if user can log in.
-    public boolean login(String username, String password) {
+    public String login(String username, String password) {
         
         try {
             String query = "SELECT * FROM userlogin WHERE username = ? AND password = ?";
@@ -93,29 +95,29 @@ public class DataLayer{
                                 String userType = userTypeResultSet.getString("typeID");
                                 if ("F".equals(userType)) {
                                     System.out.println("Login successful! User is faculty.");
-                                    return true; // User is faculty
+                                    return userType; // User is faculty
                                 } else if("S".equals(userType)){
                                     System.out.println("Login successful! User is student.");
-                                    return false; // User is not faculty
+                                    return userType; // User is not faculty
                                 } else{
                                     System.out.println("Login successful! User is guest.");
-                                    return false; // User is not faculty
+                                    return userType; // User is not faculty
                                 }
                             } else {
                                 System.out.println("Login failed. No matching user in faculty table.");
-                                return false; // No matching user in faculty table
+                                return null; // No matching user in faculty table
                             }
                         }
                     }
                 } else {
                     System.out.println("Login failed. No matching user in userlogin table.");
-                    return false; // No matching user in userlogin table
+                    return null; // No matching user in userlogin table
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Login failed due to an error.");
-            return false;
+            return null;
         }
     }
 
@@ -227,29 +229,69 @@ public class DataLayer{
         String username = "root";
         String password = "student";
         String database = "project";
-
         boolean isConnected = dataLayer.connect(username, password, database);
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+        String userType;
 
-        username = "jmd4173";
-        password = "StudentPass";
+        if(isConnected)
+        {
+            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Exit");
+            choice = scanner.nextInt();
+            System.out.println("");
 
-        dataLayer.login(username, password);
+            switch (choice) 
+            {
+                case 1:
+                    System.out.print("Login\nUsername: ");
+                    username = scanner.next();
+                    System.out.print("Password: ");
+                    password = scanner.next();
+                    try
+                    {
+                        userType = dataLayer.login(username, password);
+                    }
+                    catch(Exception e)
+                    {
+                        System.out.println("ERROR logging in");
+                    }
+                break;
 
-        username = "JimHab";
-        password = "FacultyPass";
+                case 2:
+                    
+                break;
 
-        dataLayer.login(username, password);
+                case 3:
+                    
+                break;
+                
+                case 4:
+                    System.out.println("Goodbye!\n");
+                    scanner.close();
+                    System.exit(0);
+                break;
 
-        username = "Wegmans";
-        password = "GuestPass";
+                default:
+                    System.out.println("Please enter a valid option");
+                break;
+            }
+        }
 
-        dataLayer.login(username, password);
-        
-        
-        dataLayer.createOrUpdateAccount("Faculty",4, "John", "Doe", "john.doe@example.com", "1234567890", "New Location", "faculty123", "password123");
+        //sample data
+        // username = "jmd4173";
+        // password = "StudentPass";
+        // dataLayer.login(username, password);
+        // username = "JimHab";
+        // password = "FacultyPass";
+        // dataLayer.login(username, password);
+        // username = "Wegmans";
+        // password = "GuestPass";
+        // dataLayer.login(username, password);
+        // dataLayer.createOrUpdateAccount("Faculty",4, "John", "Doe", "john.doe@example.com", "1234567890", "New Location", "faculty123", "password123");
+        // // Example: Creating or updating a Student account
+        // dataLayer.createOrUpdateAccount("Student", 5,"Jane", "Doe", "jane.doe@example.com", "9876543210", null, "student123", "password456");
 
-        // Example: Creating or updating a Student account
-        dataLayer.createOrUpdateAccount("Student", 5,"Jane", "Doe", "jane.doe@example.com", "9876543210", null, "student123", "password456");
+
 
     }
 

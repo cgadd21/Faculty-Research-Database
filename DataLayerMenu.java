@@ -35,7 +35,7 @@ public class DataLayerMenu
                         try
                         {
                             System.out.println("SUCCESS in Faculty Login");
-                            System.out.print("Options\n1.Search Student Interests\n2. Edit Account\nSelection: ");
+                            System.out.print("\nOptions\n1. Search Student Interests\n2. Edit Account\nSelection: ");
                             choice = scanner.nextInt();
                             switch (choice) 
                             {
@@ -48,7 +48,7 @@ public class DataLayerMenu
                                 
                                 case 2:
                                     //add abstracts and skills depending on method 
-                                    System.out.print("Faculty\nFirst Name: ");
+                                    System.out.print("Faculty Edit\nFirst Name: ");
                                     fName = scanner.next();
                                     System.out.print("Last Name: ");
                                     lName = scanner.next();
