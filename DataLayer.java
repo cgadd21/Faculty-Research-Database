@@ -71,7 +71,7 @@ public class DataLayer{
     }
 
     //Return true if user has edit permissions, otherwise false. Determines if user can log in.
-    private boolean login(String username, String password) {
+    public boolean login(String username, String password) {
         
         try {
             String query = "SELECT * FROM userlogin WHERE username = ? AND password = ?";
@@ -119,6 +119,109 @@ public class DataLayer{
         }
     }
 
+    public void createOrUpdateAccount(String userType, int id, String firstName, String lastName,
+                                   String email, String phoneNumber, String location,
+                                   String username, String password) {
+    try {
+        String query;
+
+        if ("Faculty".equalsIgnoreCase(userType)) {
+            // Create or update Faculty account
+            query = "INSERT INTO faculty (facultyid, fname, lname) " +
+                    "VALUES (?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE fname = ?, lname = ?";
+
+            try (PreparedStatement facultyStatement = conn.prepareStatement(query)) {
+                facultyStatement.setInt(1, id);
+                facultyStatement.setString(2, firstName);
+                facultyStatement.setString(3, lastName);
+
+                // Set parameters for ON DUPLICATE KEY UPDATE clause
+                facultyStatement.setString(4, firstName);
+                facultyStatement.setString(5, lastName);
+
+                facultyStatement.executeUpdate();
+            }
+
+            // Create or update Faculty contact information
+            query = "INSERT INTO facultycontact (facultyid, email, phonenumber, location) " +
+                    "VALUES (?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE email = ?, phonenumber = ?, location = ?";
+        } else if ("Student".equalsIgnoreCase(userType)) {
+            // Create or update Student account
+            query = "INSERT INTO student (studentid, fname, lname) " +
+                    "VALUES (?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE fname = ?, lname = ?";
+
+            try (PreparedStatement studentStatement = conn.prepareStatement(query)) {
+                studentStatement.setInt(1, id);
+                studentStatement.setString(2, firstName);
+                studentStatement.setString(3, lastName);
+
+                // Set parameters for ON DUPLICATE KEY UPDATE clause
+                studentStatement.setString(4, firstName);
+                studentStatement.setString(5, lastName);
+
+                studentStatement.executeUpdate();
+            }
+
+            // Create or update Student contact information
+            query = "INSERT INTO studentcontact (studentid, email, phonenumber) " +
+                    "VALUES (?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE email = ?, phonenumber = ?";
+        } else {
+            System.out.println("Invalid user type.");
+            return;
+        }
+
+        try (PreparedStatement contactStatement = conn.prepareStatement(query)) {
+            contactStatement.setInt(1, id);
+            
+            if ("Faculty".equalsIgnoreCase(userType)) {
+                contactStatement.setString(2, email);
+                contactStatement.setString(3, phoneNumber);
+                contactStatement.setString(4, location);
+
+                // Set parameters for ON DUPLICATE KEY UPDATE clause
+                contactStatement.setString(5, email);
+                contactStatement.setString(6, phoneNumber);
+                contactStatement.setString(7, location);
+            } else if ("Student".equalsIgnoreCase(userType)) {
+                contactStatement.setString(2, email);
+                contactStatement.setString(3, phoneNumber);
+
+                // Set parameters for ON DUPLICATE KEY UPDATE clause
+                contactStatement.setString(4, email);
+                contactStatement.setString(5, phoneNumber);
+            }
+
+            contactStatement.executeUpdate();
+
+            // Create or update User Login
+            query = "INSERT INTO userlogin (id, username, password) " +
+                    "VALUES (?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE password = ?";
+
+            try (PreparedStatement loginStatement = conn.prepareStatement(query)) {
+                loginStatement.setInt(1, id);
+                loginStatement.setString(2, username);
+                loginStatement.setString(3, password);
+
+                // Set parameter for ON DUPLICATE KEY UPDATE clause
+                loginStatement.setString(4, password);
+
+                loginStatement.executeUpdate();
+
+                System.out.println("Account created/updated successfully.");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println("Error creating/updating account.");
+    }
+}
+
+
     public static void main(String[] args) {
         DataLayer dataLayer = new DataLayer();
         String username = "root";
@@ -141,6 +244,12 @@ public class DataLayer{
         password = "GuestPass";
 
         dataLayer.login(username, password);
+        
+        
+        dataLayer.createOrUpdateAccount("Faculty",4, "John", "Doe", "john.doe@example.com", "1234567890", "New Location", "faculty123", "password123");
+
+        // Example: Creating or updating a Student account
+        dataLayer.createOrUpdateAccount("Student", 5,"Jane", "Doe", "jane.doe@example.com", "9876543210", null, "student123", "password456");
 
     }
 
