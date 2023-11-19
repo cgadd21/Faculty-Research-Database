@@ -11,6 +11,7 @@ public class DataLayerMenu
     String email;
     String phone;
     String location;
+    String skills;
 
     public void Menu()
     {
@@ -34,6 +35,47 @@ public class DataLayerMenu
                         try
                         {
                             System.out.println("SUCCESS in Faculty Login");
+                            System.out.print("Options\n1.Search Student Interests\n2. Edit Account\nSelection: ");
+                            choice = scanner.nextInt();
+                            switch (choice) 
+                            {
+                                case 1:
+                                    System.out.print("Please 1-3 interests\nSeperate the skills with a comma\nSkills: ");
+                                    skills = scanner.next();
+                                    //split up skills based on method
+                                    //return results of students
+                                break;
+                                
+                                case 2:
+                                    //add abstracts and skills depending on method 
+                                    System.out.print("Faculty\nFirst Name: ");
+                                    fName = scanner.next();
+                                    System.out.print("Last Name: ");
+                                    lName = scanner.next();
+                                    System.out.print("Email: ");
+                                    email = scanner.next();
+                                    System.out.print("Phone Number: ");
+                                    phone = scanner.next();
+                                    System.out.print("Location: ");
+                                    location = scanner.next();
+                                    System.out.print("Username: ");
+                                    username = scanner.next();
+                                    System.out.print("Password: ");
+                                    password = scanner.next();
+                                    try
+                                    {
+                                        System.out.println("SUCCESS in Faculty Edit");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        System.out.println("ERROR in Faculty Edit");
+                                    }
+                                break;
+                            
+                                default:
+                                    System.out.println("Please enter a valid option");
+                                break;
+                            }
                         }
                         catch (Exception e)
                         {
