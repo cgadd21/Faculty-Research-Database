@@ -34,6 +34,7 @@ public class DataLayerMenu
                         try
                         {
                             System.out.println("SUCCESS in Faculty Login");
+                            // Call Data layer function Input: Username, password
                         }
                         catch (Exception e)
                         {
