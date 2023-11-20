@@ -26,6 +26,10 @@ CREATE TABLE guest(
     ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
+
+
+
+
 -- GUEST INFORMATION END
 
 CREATE TABLE student (
@@ -81,6 +85,8 @@ CREATE TABLE facultyInterests (
     ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
+
+
 
 CREATE TABLE abstractList (
 	abstractID int,
@@ -155,3 +161,9 @@ INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,6),
 (1,7),
 (1,8);
+
+INSERT INTO guestInterests (guestID, interestID) VALUES 
+    (3, 1),  
+    (3, 2),  
+    (3, 10),
+    (3,12);
