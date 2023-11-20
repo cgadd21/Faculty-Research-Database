@@ -10,15 +10,10 @@ use project;
 CREATE TABLE users (
 	userID INT NOT NULL auto_increment,
 	typeID ENUM ('F','G','S') NOT NULL,
+    username VARCHAR(30) UNIQUE,
+    password VARCHAR(30),
 	constraint user_pk primary key (userID)
 ) AUTO_INCREMENT = 1; 
-
-CREATE TABLE userLogin (
-	userID int,
-	username VARCHAR(30) UNIQUE,
-    password VARCHAR(30),
-    constraint user_id_fk foreign key (userID) references users(userID)
-);
 -- GUEST INFORMATION START
 CREATE TABLE guest(
     guestID INT NOT NULL,
@@ -35,15 +30,10 @@ CREATE TABLE student (
 	studentID int,
     fname VARCHAR(30),
     lname VARCHAR(30),
-    CONSTRAINT student_pk PRIMARY KEY (studentID),
-    CONSTRAINT student_id_fk FOREIGN KEY (studentID) REFERENCES users(userID)
-);
-
-CREATE TABLE studentContact (
-	studentID int,
     email VARCHAR(30),
     phonenumber VARCHAR(30), 
-    CONSTRAINT studentContact_id_fk FOREIGN KEY (studentID) REFERENCES student(studentID)
+    CONSTRAINT student_pk PRIMARY KEY (studentID),
+    CONSTRAINT student_id_fk FOREIGN KEY (studentID) REFERENCES users(userID)
 );
 
 CREATE TABLE interestList (
@@ -63,6 +53,9 @@ CREATE TABLE faculty (
 	facultyID INT NOT NULL,
     fname VARCHAR(30),
     lname VARCHAR(30),
+    email VARCHAR(30),
+    phonenumber VARCHAR(30),
+    location VARCHAR(30),
     CONSTRAINT faculty_pk PRIMARY KEY (facultyID),
     CONSTRAINT faculty_id_fk FOREIGN KEY (facultyID) REFERENCES users(userID)
 );
@@ -74,13 +67,7 @@ CREATE TABLE facultyInterests (
     CONSTRAINT facultyInterests_faculty_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID),
     CONSTRAINT facultyInterests_int_fk FOREIGN KEY (interestID) REFERENCES interestList(interestID)
 );
-CREATE TABLE facultyContact (
-	facultyID INT,
-    email VARCHAR(30),
-    phonenumber VARCHAR(30),
-    location VARCHAR(50),
-    CONSTRAINT facultyContact_id_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID)
-);
+
 CREATE TABLE abstractList (
 	abstractID int,
 	professorAbstract TEXT,
@@ -94,20 +81,14 @@ CREATE TABLE facultyAbstract (
     CONSTRAINT facultyAbstract_pk PRIMARY KEY (facultyID, abstractID)
 );
 
-INSERT INTO Users (userID, typeID) VALUES 
-(1,'F'), 
-(2,'S'), 
-(3,'G');
-INSERT INTO userLogin (userID, username, password) VALUES 
-(1,'Jimhab','FacultyPass'),
-(2,'jmd4173','StudentPass'),
-(3,'Wegmans','GuestPass');
+INSERT INTO Users (userID, typeID, username, password) VALUES 
+(1,'F','Jimhab','FacultyPass'), 
+(2,'S','jmd4173','StudentPass'), 
+(3,'G','Wegmans','GuestPass');
 INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES
 (3, 'Wegmans','Mr','Wegman','wegmanscontact@gmail.com');
-INSERT INTO student (studentID, fname, lname) VALUES
-(2, 'John', 'DAngelo');
-INSERT INTO studentContact (studentID, email, phonenumber) VALUES
-(2, 'jmd4173@rit.edu', '203-427-5637');
+INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES
+(2, 'John', 'DAngelo','jmd4173@rit.edu', '203-427-5637');
 
 INSERT INTO interestList  VALUES (1, 'Pascal');
 INSERT INTO interestList  VALUES (2, 'Java');
@@ -129,19 +110,17 @@ INSERT INTO studentInterests (studentID, interestID) VALUES
 (2,3),
 (2,4);
 
-INSERT INTO faculty (facultyID, fname, lname) VALUES
-(1, 'Jim', 'Habermas');
+INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
+(1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano');
 
-INSERT INTO facultyContact (facultyID, email, phonenumber, location) VALUES
-(1, 'jrhicsa@rit.edu', '123-456-7890', 'Golisano');
 
 INSERT INTO abstractList (abstractID, professorAbstract) VALUES
 (1,'Im an abstract!');
 
+
+
 INSERT INTO facultyAbstract (facultyID, abstractID) VALUES
 (1,1);
-
-
 
 INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,1),
