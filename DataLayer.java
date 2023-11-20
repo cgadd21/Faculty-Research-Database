@@ -17,47 +17,26 @@
 import java.sql.*;
 import java.util.Scanner;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
 public class DataLayer {
 
     // Attributes
     private Connection conn;
     private Statement stmt;
     private ResultSet rs;
-    private String sql;
     private boolean connection;
-    private boolean editPerm; // Determines if user has edit permissions.
     public int col;
 
-    // Sets up default driver and basis for the SQL database
-    final String DEFAULT_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static String url = "jdbc:mysql://localhost/";
-
-    // Connect to db, Takes username password and databasename
-    public boolean connect(String user, String password, String database) {
-        // Nulls connection to avoid any issues
-        // Sets up path to db
-        url = url + database;
-        // trys Connection
+    // Connect to db
+    public boolean connect() {
         try {
-            Class.forName(DEFAULT_DRIVER);
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("\nCreated Connection!\n");
-            connection = true;
-
-        } // end of try
-        catch (ClassNotFoundException cnfe) {
-            System.out.print("ERROR IN CLASS, CONNECTION FAILED \n" + cnfe);
-            connection = false;
-        } catch (SQLException se) {
-            System.out.print("ERROR SQLException, CONNECTION FAILED \n" + se);
-            connection = false;
-        } // end of catch
-
-        return connection;
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
+            return true;
+        } catch (ClassNotFoundException cnfe) {
+            return false;
+        } catch (SQLException sqle) {
+            return false;
+        }
     }
 
     // Closes all connections after checking if connection is true.
@@ -67,10 +46,8 @@ public class DataLayer {
                 rs.close();
                 stmt.close();
                 conn.close();
-                System.out.println("SQL Connection Closed");
                 return true;
             } else {
-                System.out.println("SQL Connection was already closed");
                 return true;
             }
         } catch (SQLException sqle) {
@@ -91,34 +68,9 @@ public class DataLayer {
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
 
-            try (ResultSet userIdResultSet = preparedStatement.executeQuery()) {
-                if (userIdResultSet.next()) {
-                    int userId = userIdResultSet.getInt("userID");
-
-                    // Second query to get type_id based on user_id
-                    String userTypeQuery = "SELECT typeID FROM users WHERE userID = ?";
-                    try (PreparedStatement userTypeStatement = conn.prepareStatement(userTypeQuery)) {
-                        userTypeStatement.setInt(1, userId);
-
-                        try (ResultSet userTypeResultSet = userTypeStatement.executeQuery()) {
-                            if (userTypeResultSet.next()) {
-                                String userType = userTypeResultSet.getString("typeID");
-                                if ("F".equals(userType)) {
-                                    System.out.println("Login successful! User is faculty.");
-                                    return userType; // User is faculty
-                                } else if ("S".equals(userType)) {
-                                    System.out.println("Login successful! User is student.");
-                                    return userType; // User is not faculty
-                                } else {
-                                    System.out.println("Login successful! User is guest.");
-                                    return userType; // User is not faculty
-                                }
-                            } else {
-                                System.out.println("Login failed. No matching user in faculty table.");
-                                return null; // No matching user in faculty table
-                            }
-                        }
-                    }
+            try (ResultSet userResultSet = preparedStatement.executeQuery()) {
+                if (userResultSet.next()) {
+                    return userResultSet.getString("typeID");
                 } else {
                     System.out.println("Login failed. No matching user in userlogin table.");
                     return null; // No matching user in userlogin table
@@ -130,214 +82,226 @@ public class DataLayer {
             return null;
         }
     }
-    
-    public void createStudent(String firstName, String lastName, String email, String phoneNumber, String username, String password) {
-          int userId = -1;
-          try {
-              conn.setAutoCommit(false);
-      
-              // Insert into users table
-              String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('S', ?, ?)";
-              try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                  userInsertStmt.setString(1, username);
-                  userInsertStmt.setString(2, password);
-                  userInsertStmt.executeUpdate();
-                  try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
-                      if (generatedKeys.next()) {
-                          userId = generatedKeys.getInt(1);
-                      } else {
-                          throw new SQLException("Creating user failed, no ID obtained.");
-                      }
-                  }
-              }
-      
-              // Insert into student table
-              String studentInsertQuery = "INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES (?, ?, ?, ?, ?)";
-              try (PreparedStatement studentStmt = conn.prepareStatement(studentInsertQuery)) {
-                  studentStmt.setInt(1, userId);
-                  studentStmt.setString(2, firstName);
-                  studentStmt.setString(3, lastName);
-                  studentStmt.setString(4, email);
-                  studentStmt.setString(5, phoneNumber);
-                  studentStmt.executeUpdate();
-              }
-      
-              conn.commit();
-          } catch (SQLException e) {
-              e.printStackTrace();
-              System.out.println("Error creating student account.");
-          } finally {
-              try {
-                  conn.setAutoCommit(true);
-              } catch (SQLException ex) {
-                  ex.printStackTrace();
-              }
-          }
-      }
-    public void createFaculty(String firstName, String lastName, String email, String phoneNumber, String location, String username, String password) {
-          int userId = -1;
-          try {
-              conn.setAutoCommit(false);
-      
-              // Insert into users table
-              String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('F', ?, ?)";
-              try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                  userInsertStmt.setString(1, username);
-                  userInsertStmt.setString(2, password);
-                  userInsertStmt.executeUpdate();
-                  try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
-                      if (generatedKeys.next()) {
-                          userId = generatedKeys.getInt(1);
-                      } else {
-                          throw new SQLException("Creating user failed, no ID obtained.");
-                      }
-                  }
-              }
-      
-              // Insert into faculty table
-              String facultyInsertQuery = "INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES (?, ?, ?, ?, ?, ?)";
-              try (PreparedStatement facultyStmt = conn.prepareStatement(facultyInsertQuery)) {
-                  facultyStmt.setInt(1, userId);
-                  facultyStmt.setString(2, firstName);
-                  facultyStmt.setString(3, lastName);
-                  facultyStmt.setString(4, email);
-                  facultyStmt.setString(5, phoneNumber);
-                  facultyStmt.setString(6, location);
-                  facultyStmt.executeUpdate();
-              }
-      
-              conn.commit();
-          } catch (SQLException e) {
-              e.printStackTrace();
-              System.out.println("Error creating faculty account.");
-          } finally {
-              try {
-                  conn.setAutoCommit(true);
-              } catch (SQLException ex) {
-                  ex.printStackTrace();
-              }
-          }
-      }
-    public void createGuest(String business, String firstName, String lastName, String contactInfo, String username, String password) {
-          int userId = -1;
-          try {
-              conn.setAutoCommit(false);
-      
-              // Insert into users table
-              String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('G', ?, ?)";
-              try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                  userInsertStmt.setString(1, username);
-                  userInsertStmt.setString(2, password);
-                  userInsertStmt.executeUpdate();
-                  try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
-                      if (generatedKeys.next()) {
-                          userId = generatedKeys.getInt(1);
-                      } else {
-                          throw new SQLException("Creating user failed, no ID obtained.");
-                      }
-                  }
-              }
-      
-              // Insert into guest table
-              String guestInsertQuery = "INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES (?, ?, ?, ?, ?)";
-              try (PreparedStatement guestStmt = conn.prepareStatement(guestInsertQuery)) {
-                  guestStmt.setInt(1, userId);
-                  guestStmt.setString(2, business);
-                  guestStmt.setString(3, firstName);
-                  guestStmt.setString(4, lastName);
-                  guestStmt.setString(5, contactInfo);
-                  guestStmt.executeUpdate();
-              }
-      
-              conn.commit();
-          } catch (SQLException e) {
-              e.printStackTrace();
-              System.out.println("Error creating guest account.");
-          } finally {
-              try {
-                  conn.setAutoCommit(true);
-              } catch (SQLException ex) {
-                  ex.printStackTrace();
-              }
-          }
-      }
-      public void addFacultyAbstract(int facultyId, String professorAbstract) throws SQLException {
-          try {
-              // Insert abstract into abstractList table
-              String abstractInsertQuery = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
-              int abstractId;
-      
-              try (PreparedStatement abstractStmt = conn.prepareStatement(abstractInsertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                  abstractStmt.setString(1, professorAbstract);
-                  abstractStmt.executeUpdate();
-      
-                  try (ResultSet generatedKeys = abstractStmt.getGeneratedKeys()) {
-                      if (generatedKeys.next()) {
-                          abstractId = generatedKeys.getInt(1);
-                      } else {
-                          throw new SQLException("Creating abstract failed, no ID obtained.");
-                      }
-                  }
-              }
-      
-              // Link abstract to faculty in facultyAbstract table
-              String facultyAbstractInsertQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
-              try (PreparedStatement facultyAbstractStmt = conn.prepareStatement(facultyAbstractInsertQuery)) {
-                  facultyAbstractStmt.setInt(1, facultyId);
-                  facultyAbstractStmt.setInt(2, abstractId);
-                  facultyAbstractStmt.executeUpdate();
-              }
-          } catch (SQLException e) {
-              throw e;
-          }
-      }
-      public void addStudentInterest(int studentId, String interest) throws SQLException {
-          try {
-              // Check if the interest already exists in interestList, if not insert it
-              String interestCheckQuery = "SELECT interestID FROM interestList WHERE intDesc = ?";
-              int interestId;
-      
-              try (PreparedStatement interestCheckStmt = conn.prepareStatement(interestCheckQuery)) {
-                  interestCheckStmt.setString(1, interest);
-                  ResultSet rs = interestCheckStmt.executeQuery();
-                  
-                  if (rs.next()) {
-                      interestId = rs.getInt("interestID");
-                  } else {
-                      // Interest doesn't exist, so insert it
-                      String interestInsertQuery = "INSERT INTO interestList (intDesc) VALUES (?)";
-                      try (PreparedStatement interestInsertStmt = conn.prepareStatement(interestInsertQuery, Statement.RETURN_GENERATED_KEYS)) {
-                          interestInsertStmt.setString(1, interest);
-                          interestInsertStmt.executeUpdate();
-      
-                          try (ResultSet generatedKeys = interestInsertStmt.getGeneratedKeys()) {
-                              if (generatedKeys.next()) {
-                                  interestId = generatedKeys.getInt(1);
-                              } else {
-                                  throw new SQLException("Creating interest failed, no ID obtained.");
-                              }
-                          }
-                      }
-                  }
-              }
-      
-              // Link interest to student in studentInterests table
-              String studentInterestInsertQuery = "INSERT INTO studentInterests (studentID, interestID) VALUES (?, ?)";
-              try (PreparedStatement studentInterestStmt = conn.prepareStatement(studentInterestInsertQuery)) {
-                  studentInterestStmt.setInt(1, studentId);
-                  studentInterestStmt.setInt(2, interestId);
-                  studentInterestStmt.executeUpdate();
-              }
-          } catch (SQLException e) {
-              throw e;
-          }
-      }
+
+    public void createStudent(String firstName, String lastName, String email, String phoneNumber, String username,
+            String password) {
+        int userId = -1;
+        try {
+            conn.setAutoCommit(false);
+
+            // Insert into users table
+            String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('S', ?, ?)";
+            try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                userInsertStmt.setString(1, username);
+                userInsertStmt.setString(2, password);
+                userInsertStmt.executeUpdate();
+                try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        userId = generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
+                }
+            }
+
+            // Insert into student table
+            String studentInsertQuery = "INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement studentStmt = conn.prepareStatement(studentInsertQuery)) {
+                studentStmt.setInt(1, userId);
+                studentStmt.setString(2, firstName);
+                studentStmt.setString(3, lastName);
+                studentStmt.setString(4, email);
+                studentStmt.setString(5, phoneNumber);
+                studentStmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error creating student account.");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void createFaculty(String firstName, String lastName, String email, String phoneNumber, String location,
+            String username, String password) {
+        int userId = -1;
+        try {
+            conn.setAutoCommit(false);
+
+            // Insert into users table
+            String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('F', ?, ?)";
+            try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                userInsertStmt.setString(1, username);
+                userInsertStmt.setString(2, password);
+                userInsertStmt.executeUpdate();
+                try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        userId = generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
+                }
+            }
+
+            // Insert into faculty table
+            String facultyInsertQuery = "INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement facultyStmt = conn.prepareStatement(facultyInsertQuery)) {
+                facultyStmt.setInt(1, userId);
+                facultyStmt.setString(2, firstName);
+                facultyStmt.setString(3, lastName);
+                facultyStmt.setString(4, email);
+                facultyStmt.setString(5, phoneNumber);
+                facultyStmt.setString(6, location);
+                facultyStmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error creating faculty account.");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void createGuest(String business, String firstName, String lastName, String contactInfo, String username,
+            String password) {
+        int userId = -1;
+        try {
+            conn.setAutoCommit(false);
+
+            // Insert into users table
+            String userInsertQuery = "INSERT INTO users (typeID, username, password) VALUES ('G', ?, ?)";
+            try (PreparedStatement userInsertStmt = conn.prepareStatement(userInsertQuery,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                userInsertStmt.setString(1, username);
+                userInsertStmt.setString(2, password);
+                userInsertStmt.executeUpdate();
+                try (ResultSet generatedKeys = userInsertStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        userId = generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
+                }
+            }
+
+            // Insert into guest table
+            String guestInsertQuery = "INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement guestStmt = conn.prepareStatement(guestInsertQuery)) {
+                guestStmt.setInt(1, userId);
+                guestStmt.setString(2, business);
+                guestStmt.setString(3, firstName);
+                guestStmt.setString(4, lastName);
+                guestStmt.setString(5, contactInfo);
+                guestStmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error creating guest account.");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void addFacultyAbstract(int facultyId, String professorAbstract) throws SQLException {
+        try {
+            // Insert abstract into abstractList table
+            String abstractInsertQuery = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
+            int abstractId;
+
+            try (PreparedStatement abstractStmt = conn.prepareStatement(abstractInsertQuery,
+                    Statement.RETURN_GENERATED_KEYS)) {
+                abstractStmt.setString(1, professorAbstract);
+                abstractStmt.executeUpdate();
+
+                try (ResultSet generatedKeys = abstractStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        abstractId = generatedKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Creating abstract failed, no ID obtained.");
+                    }
+                }
+            }
+
+            // Link abstract to faculty in facultyAbstract table
+            String facultyAbstractInsertQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
+            try (PreparedStatement facultyAbstractStmt = conn.prepareStatement(facultyAbstractInsertQuery)) {
+                facultyAbstractStmt.setInt(1, facultyId);
+                facultyAbstractStmt.setInt(2, abstractId);
+                facultyAbstractStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public void addStudentInterest(int studentId, String interest) throws SQLException {
+        try {
+            // Check if the interest already exists in interestList, if not insert it
+            String interestCheckQuery = "SELECT interestID FROM interestList WHERE intDesc = ?";
+            int interestId;
+
+            try (PreparedStatement interestCheckStmt = conn.prepareStatement(interestCheckQuery)) {
+                interestCheckStmt.setString(1, interest);
+                ResultSet rs = interestCheckStmt.executeQuery();
+
+                if (rs.next()) {
+                    interestId = rs.getInt("interestID");
+                } else {
+                    // Interest doesn't exist, so insert it
+                    String interestInsertQuery = "INSERT INTO interestList (intDesc) VALUES (?)";
+                    try (PreparedStatement interestInsertStmt = conn.prepareStatement(interestInsertQuery,
+                            Statement.RETURN_GENERATED_KEYS)) {
+                        interestInsertStmt.setString(1, interest);
+                        interestInsertStmt.executeUpdate();
+
+                        try (ResultSet generatedKeys = interestInsertStmt.getGeneratedKeys()) {
+                            if (generatedKeys.next()) {
+                                interestId = generatedKeys.getInt(1);
+                            } else {
+                                throw new SQLException("Creating interest failed, no ID obtained.");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Link interest to student in studentInterests table
+            String studentInterestInsertQuery = "INSERT INTO studentInterests (studentID, interestID) VALUES (?, ?)";
+            try (PreparedStatement studentInterestStmt = conn.prepareStatement(studentInterestInsertQuery)) {
+                studentInterestStmt.setInt(1, studentId);
+                studentInterestStmt.setInt(2, interestId);
+                studentInterestStmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
     public static void main(String[] args) {
         DataLayer dataLayer = new DataLayer();
-        String username = "root";
-        String password = "student";
-        String database = "project";
-        boolean isConnected = dataLayer.connect(username, password, database);
+        String username;
+        String password;
+        boolean isConnected = dataLayer.connect();
         Scanner scanner = new Scanner(System.in);
         int choice;
         String userType;
@@ -355,8 +319,8 @@ public class DataLayer {
                     password = scanner.next();
                     try {
                         userType = dataLayer.login(username, password);
-                        if(userType != null) {
-                           postLoginMenu(dataLayer, scanner, userType);
+                        if (userType != null) {
+                            postLoginMenu(dataLayer, scanner, userType);
                         }
                     } catch (Exception e) {
                         System.out.println("ERROR logging in");
@@ -364,62 +328,64 @@ public class DataLayer {
                     break;
 
                 case 2:
-                   System.out.print("Are you a Student (1) or Faculty (2)? ");
-                   int type = scanner.nextInt();
-                   scanner.nextLine(); // consume the leftover newline
-               
-                   if (type == 1) {
-                       // Collect student information
-                       System.out.print("Enter first name: ");
-                       String firstName = scanner.nextLine();
-                       System.out.print("Enter last name: ");
-                       String lastName = scanner.nextLine();
-                       System.out.print("Enter email: ");
-                       String email = scanner.nextLine();
-                       System.out.print("Enter phone number: ");
-                       String phoneNumber = scanner.nextLine();                 
-                       System.out.print("Enter username: ");
-                       String sUser = scanner.nextLine();
-                       System.out.print("Enter password: ");
-                       String sPass = scanner.nextLine();
-                       try {
+                    System.out.print("Are you a Student (1) or Faculty (2)? ");
+                    int type = scanner.nextInt();
+                    scanner.nextLine(); // consume the leftover newline
+
+                    if (type == 1) {
+                        // Collect student information
+                        System.out.print("Enter first name: ");
+                        String firstName = scanner.nextLine();
+                        System.out.print("Enter last name: ");
+                        String lastName = scanner.nextLine();
+                        System.out.print("Enter email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Enter phone number: ");
+                        String phoneNumber = scanner.nextLine();
+                        System.out.print("Enter username: ");
+                        String sUser = scanner.nextLine();
+                        System.out.print("Enter password: ");
+                        String sPass = scanner.nextLine();
+                        try {
                             dataLayer.createStudent(firstName, lastName, email, phoneNumber, sUser, sPass);
                             System.out.println("Student account created successfully.");
                         } catch (Exception e) {
-                            System.out.println("An unexpected error occurred while creating the student account: " + e.getMessage());
-                       }           
-                   } else if (type == 2) {
-                       // Collect faculty information
-                       System.out.print("Enter first name: ");
-                       String firstName = scanner.nextLine();
-                       System.out.print("Enter last name: ");
-                       String lastName = scanner.nextLine();
-                       System.out.print("Enter email: ");
-                       String email = scanner.nextLine();
-                       System.out.print("Enter phone number: ");
-                       String phoneNumber = scanner.nextLine();
-                       System.out.print("Enter location: ");
-                       String location = scanner.nextLine();
-                       System.out.print("Enter username: ");
-                       String fUser = scanner.nextLine();
-                       System.out.print("Enter password: ");
-                       String fPass = scanner.nextLine();
-                       try {
+                            System.out.println("An unexpected error occurred while creating the student account: "
+                                    + e.getMessage());
+                        }
+                    } else if (type == 2) {
+                        // Collect faculty information
+                        System.out.print("Enter first name: ");
+                        String firstName = scanner.nextLine();
+                        System.out.print("Enter last name: ");
+                        String lastName = scanner.nextLine();
+                        System.out.print("Enter email: ");
+                        String email = scanner.nextLine();
+                        System.out.print("Enter phone number: ");
+                        String phoneNumber = scanner.nextLine();
+                        System.out.print("Enter location: ");
+                        String location = scanner.nextLine();
+                        System.out.print("Enter username: ");
+                        String fUser = scanner.nextLine();
+                        System.out.print("Enter password: ");
+                        String fPass = scanner.nextLine();
+                        try {
                             dataLayer.createFaculty(firstName, lastName, email, phoneNumber, location, fUser, fPass);
                             System.out.println("Faculty account created successfully.");
                             try {
-                                 userType = dataLayer.login(fUser, fPass);
+                                userType = dataLayer.login(fUser, fPass);
                             } catch (Exception e) {
-                                 System.out.println("ERROR logging in");
+                                System.out.println("ERROR logging in");
                             }
-                       }  catch (Exception e) {
-                            System.out.println("An unexpected error occurred while creating the faculty account: " + e.getMessage());
-                       }                        
+                        } catch (Exception e) {
+                            System.out.println("An unexpected error occurred while creating the faculty account: "
+                                    + e.getMessage());
+                        }
 
-                         } else {
-                             System.out.println("Invalid option. Please select 1 for Student or 2 for Faculty.");
-                         }
-                   break;
+                    } else {
+                        System.out.println("Invalid option. Please select 1 for Student or 2 for Faculty.");
+                    }
+                    break;
 
                 case 3:
 
@@ -428,6 +394,7 @@ public class DataLayer {
                 case 4:
                     System.out.println("Goodbye!\n");
                     scanner.close();
+                    dataLayer.close();
                     System.exit(0);
                     break;
 
@@ -436,41 +403,42 @@ public class DataLayer {
                     break;
             }
         }
-   }
-   private static void postLoginMenu(DataLayer dataLayer, Scanner scanner, String userType) {
-       System.out.println("1. Update User Information\n2. Add Abstract/Interest\n3. Logout");
-   
-       int choice = scanner.nextInt();
-       scanner.nextLine(); // Consume newline
-   
-       switch (choice) {
-           case 1:
-               // Call method to update user information
-               // You'll need to implement this
-               break;
-           case 2:
-               if ("F".equals(userType)) {
-                   // Add abstract for faculty
-                   System.out.print("Enter your abstract: ");
-                   String abstractText = scanner.nextLine();
-                   // Call method to add faculty abstract
-                   // e.g., dataLayer.addFacultyAbstract(facultyId, abstractText);
-               } else if ("S".equals(userType)) {
-                   // Add interest for student
-                   System.out.print("Enter your interest: ");
-                   String interest = scanner.nextLine();
-                   // Call method to add student interest
-                   // e.g., dataLayer.addStudentInterest(studentId, interest);
-               }
-               break;
-           case 3:
-               // Logout
-               System.out.println("Logging out...");
-               return;
-           default:
-               System.out.println("Invalid option");
-               break;
-       }
+    }
+
+    private static void postLoginMenu(DataLayer dataLayer, Scanner scanner, String userType) {
+        System.out.println("1. Update User Information\n2. Add Abstract/Interest\n3. Logout");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1:
+                // Call method to update user information
+                // You'll need to implement this
+                break;
+            case 2:
+                if ("F".equals(userType)) {
+                    // Add abstract for faculty
+                    System.out.print("Enter your abstract: ");
+                    String abstractText = scanner.nextLine();
+                    // Call method to add faculty abstract
+                    // e.g., dataLayer.addFacultyAbstract(facultyId, abstractText);
+                } else if ("S".equals(userType)) {
+                    // Add interest for student
+                    System.out.print("Enter your interest: ");
+                    String interest = scanner.nextLine();
+                    // Call method to add student interest
+                    // e.g., dataLayer.addStudentInterest(studentId, interest);
+                }
+                break;
+            case 3:
+                // Logout
+                System.out.println("Logging out...");
+                return;
+            default:
+                System.out.println("Invalid option");
+                break;
+        }
         // sample data
         // username = "jmd4173";
         // password = "StudentPass";
