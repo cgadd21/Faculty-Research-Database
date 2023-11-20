@@ -152,7 +152,7 @@ public class DataLayer {
         }
     }
 
-    public void displayCommonInterests(int facultyID) {
+    public void displayCommonInterestsForFaculty(int facultyID) {
         try {
             String query = "SELECT " +
                     "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
@@ -183,7 +183,36 @@ public class DataLayer {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error displaying common interests.");
+            System.out.println("Error displaying common interests for Faculty.");
+        }
+    }
+
+    public void displayCommonInterestsForStudents(int studentID) {
+        try {
+            String query = "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
+                    "GROUP_CONCAT(DISTINCT Interestlist.intDesc) AS 'Matching Interests' " +
+                    "FROM studentinterests " +
+                    "JOIN facultyinterests ON studentinterests.interestID = facultyinterests.interestID " +
+                    "JOIN faculty ON facultyinterests.facultyID = faculty.facultyID " +
+                    "JOIN Interestlist ON facultyinterests.interestID = Interestlist.interestID " +
+                    "WHERE studentinterests.studentID = ? " +
+                    "GROUP BY faculty.facultyID";
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
+                statement.setInt(1, studentID);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    while (resultSet.next()) {
+                        String facultyName = resultSet.getString("Faculty Name");
+                        String matchingInterests = resultSet.getString("Matching Interests");
+                        System.out.println("Faculty Name: " + facultyName);
+                        System.out.println("Matching Interests: " + matchingInterests);
+                        System.out.println();
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error displaying faculty for student interests.");
         }
     }
 
