@@ -34,7 +34,7 @@ public class DataLayer {
     public boolean connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
             return true;
         } catch (ClassNotFoundException cnfe) {
             return false;
