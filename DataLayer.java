@@ -17,114 +17,83 @@
 import java.sql.*;
 import java.util.Scanner;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
 public class DataLayer {
 
     // Attributes
     private Connection conn;
     private Statement stmt;
     private ResultSet rs;
-    private String sql;
     private boolean connection;
-    private boolean editPerm; // Determines if user has edit permissions.
     public int col;
 
-    // Sets up default driver and basis for the SQL database
-    final String DEFAULT_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static String url = "jdbc:mysql://localhost/";
-
-    // Connect to db, Takes username password and databasename
-    public boolean connect(String user, String password, String database) {
-        // Nulls connection to avoid any issues
-        // Sets up path to db
-        url = url + database;
-        // trys Connection
-        try {
-            Class.forName(DEFAULT_DRIVER);
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("\nCreated Connection!\n");
-            connection = true;
-
-        } // end of try
-        catch (ClassNotFoundException cnfe) {
-            System.out.print("ERROR IN CLASS, CONNECTION FAILED \n" + cnfe);
-            connection = false;
-        } catch (SQLException se) {
-            System.out.print("ERROR SQLException, CONNECTION FAILED \n" + se);
-            connection = false;
-        } // end of catch
-
-        return connection;
+    // Connect to db
+    public boolean connect() {
+        try
+        {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
+            return true;
+        }
+        catch(ClassNotFoundException cnfe)
+        {
+            return false;
+        }
+        catch(SQLException sqle)
+        {
+            return false;
+        }
     }
 
     // Closes all connections after checking if connection is true.
-    public boolean close() {
-        try {
-            if (connection) {
+    public boolean close() 
+    {
+        try 
+        {
+            if (connection) 
+            {
                 rs.close();
                 stmt.close();
                 conn.close();
-                System.out.println("SQL Connection Closed");
                 return true;
-            } else {
-                System.out.println("SQL Connection was already closed");
+            } 
+            else 
+            {
                 return true;
             }
-        } catch (SQLException sqle) {
+        } 
+        catch (SQLException sqle) 
+        {
             System.out.println("ERROR IN METHOD close()");
             System.out.println("ERROR MESSAGE -> " + sqle);
             return false;
         }
     }
 
-    // Return true if user has edit permissions, otherwise false. Determines if user
-    // can log in.
-    // include G
-    public String login(String username, String password) {
-
-        try {
-            String query = "SELECT * FROM userlogin WHERE username = ? AND password = ?";
+    // Returns the user type if user exists else null
+    public String login(String username, String password)
+    {
+        try
+        {
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
 
-            try (ResultSet userIdResultSet = preparedStatement.executeQuery()) {
-                if (userIdResultSet.next()) {
-                    int userId = userIdResultSet.getInt("userID");
-
-                    // Second query to get type_id based on user_id
-                    String userTypeQuery = "SELECT typeID FROM users WHERE userID = ?";
-                    try (PreparedStatement userTypeStatement = conn.prepareStatement(userTypeQuery)) {
-                        userTypeStatement.setInt(1, userId);
-
-                        try (ResultSet userTypeResultSet = userTypeStatement.executeQuery()) {
-                            if (userTypeResultSet.next()) {
-                                String userType = userTypeResultSet.getString("typeID");
-                                if ("F".equals(userType)) {
-                                    System.out.println("Login successful! User is faculty.");
-                                    return userType; // User is faculty
-                                } else if ("S".equals(userType)) {
-                                    System.out.println("Login successful! User is student.");
-                                    return userType; // User is not faculty
-                                } else {
-                                    System.out.println("Login successful! User is guest.");
-                                    return userType; // User is not faculty
-                                }
-                            } else {
-                                System.out.println("Login failed. No matching user in faculty table.");
-                                return null; // No matching user in faculty table
-                            }
-                        }
-                    }
-                } else {
+            try (ResultSet userResultSet = preparedStatement.executeQuery())
+            {
+                if (userResultSet.next()) 
+                {
+                    return userResultSet.getString("typeID");
+                } 
+                else
+                {
                     System.out.println("Login failed. No matching user in userlogin table.");
                     return null; // No matching user in userlogin table
                 }
             }
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) 
+        {
             e.printStackTrace();
             System.out.println("Login failed due to an error.");
             return null;
@@ -234,10 +203,9 @@ public class DataLayer {
 
     public static void main(String[] args) {
         DataLayer dataLayer = new DataLayer();
-        String username = "root";
-        String password = "student";
-        String database = "project";
-        boolean isConnected = dataLayer.connect(username, password, database);
+        String username;
+        String password;
+        boolean isConnected = dataLayer.connect();
         Scanner scanner = new Scanner(System.in);
         int choice;
         String userType;
@@ -247,15 +215,19 @@ public class DataLayer {
             choice = scanner.nextInt();
             System.out.println("");
 
-            switch (choice) {
+            switch (choice) 
+            {
                 case 1:
                     System.out.print("Login\nUsername: ");
                     username = scanner.next();
                     System.out.print("Password: ");
                     password = scanner.next();
-                    try {
+                    try 
+                    {
                         userType = dataLayer.login(username, password);
-                    } catch (Exception e) {
+                    } 
+                    catch (Exception e) 
+                    {
                         System.out.println("ERROR logging in");
                     }
                     break;
@@ -271,6 +243,7 @@ public class DataLayer {
                 case 4:
                     System.out.println("Goodbye!\n");
                     scanner.close();
+                    dataLayer.close();
                     System.exit(0);
                     break;
 
@@ -279,24 +252,6 @@ public class DataLayer {
                     break;
             }
         }
-
-        // sample data
-        // username = "jmd4173";
-        // password = "StudentPass";
-        // dataLayer.login(username, password);
-        // username = "JimHab";
-        // password = "FacultyPass";
-        // dataLayer.login(username, password);
-        // username = "Wegmans";
-        // password = "GuestPass";
-        // dataLayer.login(username, password);
-        // dataLayer.createOrUpdateAccount("Faculty",4, "John", "Doe",
-        // "john.doe@example.com", "1234567890", "New Location", "faculty123",
-        // "password123");
-        // // Example: Creating or updating a Student account
-        // dataLayer.createOrUpdateAccount("Student", 5,"Jane", "Doe",
-        // "jane.doe@example.com", "9876543210", null, "student123", "password456");
-
     }
 
 }
