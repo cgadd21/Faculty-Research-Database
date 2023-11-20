@@ -31,7 +31,7 @@ public class DataLayer {
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
             return true;
         }
         catch(ClassNotFoundException cnfe)
@@ -198,6 +198,44 @@ public class DataLayer {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error creating/updating account.");
+        }
+    }
+
+    public void displayCommonInterests(int facultyID) {
+        try {
+            String query = "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Student Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Common Interests' " +
+                    "FROM facultyinterests " +
+                    "LEFT JOIN studentinterests ON facultyinterests.interestID = studentinterests.interestID " +
+                    "LEFT JOIN faculty ON facultyinterests.facultyID = faculty.facultyID " +
+                    "RIGHT JOIN Interestlist ON studentinterests.interestID = Interestlist.interestID " +
+                    "RIGHT JOIN student ON studentinterests.studentID = student.studentID " +
+                    "WHERE facultyinterests.facultyID = ? " +
+                    "GROUP BY facultyinterests.facultyID, studentinterests.studentID";
+
+            try (PreparedStatement statement = conn.prepareStatement(query)) {
+                // Set the facultyID parameter in the query
+                statement.setInt(1, facultyID);
+
+                // Execute the query
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    // Display the result
+                    while (resultSet.next()) {
+                        String facultyName = resultSet.getString("Faculty Name");
+                        String studentName = resultSet.getString("Student Name");
+                        String commonInterests = resultSet.getString("Common Interests");
+
+                        System.out.println("Faculty Name: " + facultyName);
+                        System.out.println("Student Name: " + studentName);
+                        System.out.println("Common Interests: " + commonInterests);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Error displaying common interests.");
         }
     }
 
