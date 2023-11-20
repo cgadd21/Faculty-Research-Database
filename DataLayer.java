@@ -39,8 +39,10 @@ public class DataLayer {
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
             return true;
         } catch (ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
             return false;
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
             return false;
         }
     }
