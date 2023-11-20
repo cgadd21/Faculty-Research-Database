@@ -23,6 +23,8 @@ CREATE TABLE guest(
     contactinfo VARCHAR(30),
     CONSTRAINT guest_pk PRIMARY KEY (guestID),
     CONSTRAINT guest_id_fk FOREIGN KEY (guestID) REFERENCES users(userID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 -- GUEST INFORMATION END
 
@@ -34,6 +36,8 @@ CREATE TABLE student (
     phonenumber VARCHAR(30), 
     CONSTRAINT student_pk PRIMARY KEY (studentID),
     CONSTRAINT student_id_fk FOREIGN KEY (studentID) REFERENCES users(userID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE interestList (
@@ -45,8 +49,12 @@ CREATE TABLE studentInterests (
 	studentID int,
     interestID int,
     CONSTRAINT studentInterests_pk PRIMARY KEY (studentID, interestID),
-    CONSTRAINT studentInterests_id_fk FOREIGN KEY (studentID) REFERENCES student(studentID),
+    CONSTRAINT studentInterests_id_fk FOREIGN KEY (studentID) REFERENCES student(studentID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
 	CONSTRAINT studentInterests_int_fk FOREIGN KEY (interestID) REFERENCES interestList(interestID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE faculty (
@@ -58,14 +66,20 @@ CREATE TABLE faculty (
     location VARCHAR(30),
     CONSTRAINT faculty_pk PRIMARY KEY (facultyID),
     CONSTRAINT faculty_id_fk FOREIGN KEY (facultyID) REFERENCES users(userID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE facultyInterests (
     facultyID INT,
     interestID INT,
     CONSTRAINT facultyInterests_pk PRIMARY KEY (facultyID, interestID),
-    CONSTRAINT facultyInterests_faculty_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID),
+    CONSTRAINT facultyInterests_faculty_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
     CONSTRAINT facultyInterests_int_fk FOREIGN KEY (interestID) REFERENCES interestList(interestID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE
 );
 
 CREATE TABLE abstractList (
@@ -76,8 +90,12 @@ CREATE TABLE abstractList (
 CREATE TABLE facultyAbstract (
 	facultyID INT,
 	abstractID INT,
-	CONSTRAINT facultyAbstract_faculty_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID),
-    CONSTRAINT facultyAbstract_abstract_fk FOREIGN KEY (abstractID) REFERENCES abstractList(abstractID),
+	CONSTRAINT facultyAbstract_faculty_fk FOREIGN KEY (facultyID) REFERENCES faculty(facultyID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
+    CONSTRAINT facultyAbstract_abstract_fk FOREIGN KEY (abstractID) REFERENCES abstractList(abstractID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
     CONSTRAINT facultyAbstract_pk PRIMARY KEY (facultyID, abstractID)
 );
 
