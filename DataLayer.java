@@ -36,7 +36,7 @@ public class DataLayer {
     public boolean connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
             return true;
         } catch (ClassNotFoundException cnfe) {
             cnfe.printStackTrace();
@@ -520,7 +520,7 @@ public class DataLayer {
         String userType;
 
         if (isConnected) {
-            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Exit\nSelection: ");
+            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Delete User \n5. Exit\nSelection: ");
             choice = scanner.nextInt();
             System.out.println("");
 
@@ -568,12 +568,12 @@ public class DataLayer {
                                     + e.getMessage());
                         }
                         try {
-                                int userId = dataLayer.getUserIdByUsername(sUser);
-                                userType = dataLayer.login(sUser, sPass);
-                                postLoginMenu(dataLayer, scanner, userType, userId);
-                            } catch (Exception e) {
-                                System.out.println("ERROR logging in");
-                            }
+                            int userId = dataLayer.getUserIdByUsername(sUser);
+                            userType = dataLayer.login(sUser, sPass);
+                            postLoginMenu(dataLayer, scanner, userType, userId);
+                        } catch (Exception e) {
+                            System.out.println("ERROR logging in");
+                        }
 
                     } else if (type == 2) {
                         // Collect faculty information
@@ -621,6 +621,7 @@ public class DataLayer {
                     break;
 
                 case 3:
+
                     System.out.print("(1) Login to a guest account\n(2) Create a new guest account\nSelection:");
                     int choose = scanner.nextInt();
                     scanner.nextLine();
@@ -668,9 +669,15 @@ public class DataLayer {
                             System.out.println("Invalid option");
                             break;
                     }
+
                     break;
 
                 case 4:
+                    System.out.print("Enter User you would like to delete: ");
+                    String UserID = scanner.next();
+                    dataLayer.deleteUser(Integer.parseInt(UserID));
+                    break;
+                case 5:
                     System.out.println("Goodbye!\n");
                     scanner.close();
                     System.exit(0);
@@ -761,7 +768,7 @@ public class DataLayer {
                     System.out.print("Are you sure you want to delete your account? (yes/no)");
                     String conf = scanner.next();
                     if ("yes".equals(conf)) {
-                         dataLayer.deleteUser(userId);
+                        dataLayer.deleteUser(userId);
                     }
                     System.out.println("Logging out...");
                     return;
