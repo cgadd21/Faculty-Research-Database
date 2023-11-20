@@ -30,11 +30,13 @@ public class DataLayer {
     public boolean connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3305/project", "root", "student");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
             return true;
         } catch (ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
             return false;
         } catch (SQLException sqle) {
+            sqle.printStackTrace();
             return false;
         }
     }
@@ -297,6 +299,20 @@ public class DataLayer {
         }
     }
 
+    public void deleteUser(int userID){
+        try {
+            String query = "DELETE FROM users WHERE userID = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, userID);
+            preparedStatement.executeUpdate();
+            System.out.println("User Deleted.");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Delete User failed due to an error.");
+        }
+    }
+
     public static void main(String[] args) {
         DataLayer dataLayer = new DataLayer();
         String username;
@@ -307,7 +323,7 @@ public class DataLayer {
         String userType;
 
         if (isConnected) {
-            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Exit\nSelection: ");
+            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Delete User \n5. Exit\nSelection: ");
             choice = scanner.nextInt();
             System.out.println("");
 
@@ -388,10 +404,15 @@ public class DataLayer {
                     break;
 
                 case 3:
-
+               
                     break;
 
                 case 4:
+                    System.out.print("Enter User you would like to delete: ");
+                    String UserID = scanner.next();
+                    dataLayer.deleteUser(Integer.parseInt(UserID));
+                    break;
+                case 5:
                     System.out.println("Goodbye!\n");
                     scanner.close();
                     dataLayer.close();
