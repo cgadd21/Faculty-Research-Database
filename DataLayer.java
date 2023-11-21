@@ -1,19 +1,3 @@
-// login, sign up
-// login - user and pass return user type F,S,G
-// sign up - student/faculty/guest create new account
-//First input type values
-//Login and password
-//Specific values of each table
-// 3 methods CreateUser/ 3 for EditUser/ ? amount for DeleteUser overload based on F,S,G.
-/*
- * INSERT INTO users (typeID) VALUES ('F'); SELECT * FROM users ORDER BY userID DESC LIMIT 1; - how to get the userID -- only increment
- * INSERT INTO ALL OTHER TABLES WITH THIS userID
- */
-// search interest/abstract depending on usertype 
-// edit account
-// delete account
-// class for each table and return object
-
 import java.sql.*;
 import java.util.Scanner;
 import java.io.*;
@@ -65,9 +49,6 @@ public class DataLayer {
         }
     }
 
-    // Return true if user has edit permissions, otherwise false. Determines if user
-    // can log in.
-    // include G
     public int getNextAbstractId() throws SQLException {
         int nextId = 1; // Default starting value
         String query = "SELECT MAX(abstractID) as maxId FROM abstractList";
@@ -213,6 +194,381 @@ public class DataLayer {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Error displaying faculty for student interests.");
+        }
+    }
+
+    public void studentInterests(String interestID)
+    {
+        try
+        {
+            String query = "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Student Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "studentinterests.interestID IN (?) " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Student Name: " + resultSet.getString("Student Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying student interests.");
+        }
+    }
+
+    public void studentInterests(String interestID1, String interestID2)
+    {
+        try
+        {
+            String query = "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Student Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "studentinterests.interestID IN (?,?) " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Student Name: " + resultSet.getString("Student Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying student interests.");
+        }
+    }
+
+    public void studentInterests(String interestID1, String interestID2, String interestID3)
+    {
+        try
+        {
+            String query = "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Student Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "studentinterests.interestID IN (?,?,?) " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                statement.setString(3, interestID3);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Student Name: " + resultSet.getString("Student Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying student interests.");
+        }
+    }
+
+    public void facultyInterests(String interestID)
+    {
+        try
+        {
+            String query = "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
+                    "LEFT JOIN interestList ON facultyInterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "facultyinterests.interestID IN (?) " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying faculty interests.");
+        }
+    }
+
+    public void facultyInterests(String interestID1, String interestID2)
+    {
+        try
+        {
+           String query = "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
+                    "LEFT JOIN interestList ON facultyInterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "facultyinterests.interestID IN (?,?) " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying faculty interests.");
+        }
+    }
+
+    public void facultyInterests(String interestID1, String interestID2, String interestID3)
+    {
+        try
+        {
+            String query = "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
+                    "LEFT JOIN interestList ON facultyInterests.interestID = Interestlist.interestID " +
+                    "WHERE " +
+                    "facultyinterests.interestID IN (?,?,?) " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                statement.setString(3, interestID3);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying faculty interests.");
+        }
+    }
+
+    public void schoolInterests(String interestID)
+    {
+        try
+        {
+            String query = "WITH schoolInterests AS ( " +
+                    "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "studentinterests.interestID " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname), studentinterests.interestID " +
+                    "UNION " +
+                    "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "facultyinterests.interestID " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyID = facultyinterests.facultyID " +
+                    "LEFT JOIN interestList ON facultyinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
+                    ") " +
+                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?) " +
+                    "GROUP BY Name";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Name: " + resultSet.getString("Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying school interests.");
+        }
+    }
+
+    public void schoolInterests(String interestID1, String interestID2)
+    {
+        try
+        {
+            String query = "WITH schoolInterests AS ( " +
+                    "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "studentinterests.interestID " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname), studentinterests.interestID " +
+                    "UNION " +
+                    "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "facultyinterests.interestID " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyID = facultyinterests.facultyID " +
+                    "LEFT JOIN interestList ON facultyinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
+                    ") " +
+                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?,?) " +
+                    "GROUP BY Name";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Name: " + resultSet.getString("Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying school interests.");
+        }
+    }
+
+    public void schoolInterests(String interestID1, String interestID2, String interestID3)
+    {
+        try
+        {
+            String query = "WITH schoolInterests AS ( " +
+                    "SELECT " +
+                    "CONCAT(student.fname, ' ', student.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "studentinterests.interestID " +
+                    "FROM " +
+                    "studentinterests " +
+                    "LEFT JOIN student ON student.studentID = studentinterests.studentID " +
+                    "LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "studentinterests.studentID, CONCAT(student.fname, ' ', student.lname), studentinterests.interestID " +
+                    "UNION " +
+                    "SELECT " +
+                    "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Name', " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "facultyinterests.interestID " +
+                    "FROM " +
+                    "facultyinterests " +
+                    "LEFT JOIN faculty ON faculty.facultyID = facultyinterests.facultyID " +
+                    "LEFT JOIN interestList ON facultyinterests.interestID = Interestlist.interestID " +
+                    "GROUP BY " +
+                    "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
+                    ") " +
+                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?,?,?) " +
+                    "GROUP BY Name";
+
+            try (PreparedStatement statement = conn.prepareStatement(query))
+            {
+                statement.setString(1, interestID1);
+                statement.setString(2, interestID2);
+                statement.setString(3, interestID3);
+                try (ResultSet resultSet = statement.executeQuery()) 
+                {
+                    while (resultSet.next()) 
+                    {
+                        System.out.println("Name: " + resultSet.getString("Name"));
+                        System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    }
+                }
+            }
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+            System.out.println("Error displaying school interests.");
         }
     }
 
@@ -810,21 +1166,5 @@ public class DataLayer {
                     break;
             }
         }
-        // sample data
-        // username = "jmd4173";
-        // password = "StudentPass";
-        // dataLayer.login(username, password);
-        // username = "JimHab";
-        // password = "FacultyPass";
-        // dataLayer.login(username, password);
-        // username = "Wegmans";
-        // password = "GuestPass";
-        // dataLayer.login(username, password);
-        // dataLayer.createOrUpdateAccount("Faculty",4, "John", "Doe",
-        // "john.doe@example.com", "1234567890", "New Location", "faculty123",
-        // "password123");
-        // // Example: Creating or updating a Student account
-        // dataLayer.createOrUpdateAccount("Student", 5,"Jane", "Doe",
-        // "jane.doe@example.com", "9876543210", null, "student123", "password456");
     }
 }
