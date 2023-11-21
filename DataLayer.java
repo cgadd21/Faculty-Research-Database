@@ -310,7 +310,10 @@ public class DataLayer {
         {
             String query = "SELECT " +
                     "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
-                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "faculty.location AS 'Location', " +
+                    "faculty.phonenumber AS 'Phone Number', " +
+                    "faculty.email AS 'Email' " +
                     "FROM " +
                     "facultyinterests " +
                     "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
@@ -328,6 +331,9 @@ public class DataLayer {
                     while (resultSet.next()) 
                     {
                         System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Location: " + resultSet.getString("Location"));
+                        System.out.println("Phone Number: " + resultSet.getString("Phone Number"));
+                        System.out.println("Email: " + resultSet.getString("Email"));
                         System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
                     }
                 }
@@ -346,7 +352,10 @@ public class DataLayer {
         {
            String query = "SELECT " +
                     "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
-                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "faculty.location AS 'Location', " +
+                    "faculty.phonenumber AS 'Phone Number', " +
+                    "faculty.email AS 'Email' " +
                     "FROM " +
                     "facultyinterests " +
                     "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
@@ -365,6 +374,9 @@ public class DataLayer {
                     while (resultSet.next()) 
                     {
                         System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Location: " + resultSet.getString("Location"));
+                        System.out.println("Phone Number: " + resultSet.getString("Phone Number"));
+                        System.out.println("Email: " + resultSet.getString("Email"));
                         System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
                     }
                 }
@@ -383,7 +395,10 @@ public class DataLayer {
         {
             String query = "SELECT " +
                     "CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', " +
-                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' " +
+                    "GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', " +
+                    "faculty.location AS 'Location', " +
+                    "faculty.phonenumber AS 'Phone Number', " +
+                    "faculty.email AS 'Email' " +
                     "FROM " +
                     "facultyinterests " +
                     "LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId " +
@@ -403,6 +418,9 @@ public class DataLayer {
                     while (resultSet.next()) 
                     {
                         System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                        System.out.println("Location: " + resultSet.getString("Location"));
+                        System.out.println("Phone Number: " + resultSet.getString("Phone Number"));
+                        System.out.println("Email: " + resultSet.getString("Email"));
                         System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
                     }
                 }
@@ -901,7 +919,7 @@ public class DataLayer {
         String userType;
 
         if (isConnected) {
-            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Delete User \n5. Exit\nSelection: ");
+            System.out.print("1. Login\n2. Sign Up\n3. Guest\n4. Exit\nSelection: ");
             choice = scanner.nextInt();
             System.out.println("");
 
@@ -1054,11 +1072,6 @@ public class DataLayer {
                     break;
 
                 case 4:
-                    System.out.print("Enter User you would like to delete: ");
-                    String UserID = scanner.next();
-                    dataLayer.deleteUser(Integer.parseInt(UserID));
-                    break;
-                case 5:
                     System.out.println("Goodbye!\n");
                     scanner.close();
                     System.exit(0);
