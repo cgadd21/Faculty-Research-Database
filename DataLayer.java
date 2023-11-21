@@ -442,7 +442,7 @@ public class DataLayer {
                     "GROUP BY " +
                     "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
                     ") " +
-                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?) " +
+                    "SELECT Name, GROUP_CONCAT(Interest) AS 'Interest' FROM schoolInterests WHERE interestID IN (?) " +
                     "GROUP BY Name";
 
             try (PreparedStatement statement = conn.prepareStatement(query))
@@ -492,7 +492,7 @@ public class DataLayer {
                     "GROUP BY " +
                     "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
                     ") " +
-                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?,?) " +
+                    "SELECT Name, GROUP_CONCAT(Interest) AS 'Interest' FROM schoolInterests WHERE interestID IN (?,?) " +
                     "GROUP BY Name";
 
             try (PreparedStatement statement = conn.prepareStatement(query))
@@ -543,7 +543,7 @@ public class DataLayer {
                     "GROUP BY " +
                     "facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID " +
                     ") " +
-                    "SELECT Name, GROUP_CONCAT(Interest) FROM schoolInterests WHERE interestID IN (?,?,?) " +
+                    "SELECT Name, GROUP_CONCAT(Interest) AS 'Interest' FROM schoolInterests WHERE interestID IN (?,?,?) " +
                     "GROUP BY Name";
 
             try (PreparedStatement statement = conn.prepareStatement(query))
