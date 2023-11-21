@@ -12,10 +12,6 @@ public class DataLayer {
     private boolean connection;
     public int col;
 
-    // Sets up default driver and basis for the SQL database
-    final String DEFAULT_DRIVER = "com.mysql.cj.jdbc.Driver";
-    static String url = "jdbc:mysql://localhost/";
-
     // Connect to db, Takes username password and databasename
     public boolean connect() {
         try {
@@ -1077,7 +1073,7 @@ public class DataLayer {
 
     private static void postLoginMenu(DataLayer dataLayer, Scanner scanner, String userType, int userId) {
         while (true) {
-            System.out.println("1. Update User Information\n2. Add Interest\n3. Delete user\n4. Logout");
+            System.out.println("1. Update User Information\n2. Add Interest\n3. Delete user\n4. Search Interests\n5. Logout");
 
             int choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -1158,6 +1154,30 @@ public class DataLayer {
                     System.out.println("Logging out...");
                     return;
                 case 4:
+                    dataLayer.displayAllInterests();
+                    System.out.println("Enter Interest IDs (comma-separated): ");
+                    String interestSearch = scanner.nextLine();
+                    String[] interestSearchIds = interestSearch.split(",");
+                    try
+                    {
+                        if(interestSearchIds.length == 1 && userType.equals("F")) dataLayer.studentInterests(interestSearchIds[0]);
+                        if(interestSearchIds.length == 2 && userType.equals("F")) dataLayer.studentInterests(interestSearchIds[0],interestSearchIds[1]);
+                        if(interestSearchIds.length == 3 && userType.equals("F")) dataLayer.studentInterests(interestSearchIds[0],interestSearchIds[1],interestSearchIds[2]);
+
+                        if(interestSearchIds.length == 1 && userType.equals("S")) dataLayer.facultyInterests(interestSearchIds[0]);
+                        if(interestSearchIds.length == 2 && userType.equals("S")) dataLayer.facultyInterests(interestSearchIds[0],interestSearchIds[1]);
+                        if(interestSearchIds.length == 3 && userType.equals("S")) dataLayer.facultyInterests(interestSearchIds[0],interestSearchIds[1],interestSearchIds[2]);
+
+                        if(interestSearchIds.length == 1 && userType.equals("G")) dataLayer.schoolInterests(interestSearchIds[0]);
+                        if(interestSearchIds.length == 2 && userType.equals("G")) dataLayer.schoolInterests(interestSearchIds[0],interestSearchIds[1]);
+                        if(interestSearchIds.length == 3 && userType.equals("G")) dataLayer.schoolInterests(interestSearchIds[0],interestSearchIds[1],interestSearchIds[2]);
+                    } 
+                    catch (Exception e) 
+                    {
+                        System.out.println("Error searching interests: " + e.getMessage());
+                    }
+                    break;
+                case 5:
                     // Logout
                     System.out.println("Logging out...");
                     return;
