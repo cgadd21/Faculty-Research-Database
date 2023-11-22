@@ -218,7 +218,8 @@ public class Backend
         }
     }
 
-    public User updateUser(User user) {
+    public User updateUser(User user) 
+    {
         try 
         {
             String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
@@ -406,10 +407,12 @@ public class Backend
         }
     }
 
-    public void getInterests(User user, List<Interest> interests)
+    public List<InterestResult> getInterests(User user, List<Interest> interests)
     {
         try
         {
+            List<InterestResult> interestResults = new ArrayList<>();
+
             if (user.getTypeID().equals("F"))
             {
                 String query = "SELECT CONCAT(student.fname, ' ', student.lname) AS 'Student Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' FROM studentinterests LEFT JOIN student ON student.studentID = studentinterests.studentID LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID WHERE studentinterests.interestID IN (";
@@ -432,8 +435,15 @@ public class Backend
 
                 while (resultSet.next()) 
                 {
-                    System.out.println("Student Name: " + resultSet.getString("Student Name"));
-                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    InterestResult interestResult = new InterestResult
+                    (
+                        resultSet.getString("Student Name"),
+                        resultSet.getString("Interest"),
+                        null, 
+                        null, 
+                        null
+                    );
+                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("S"))
@@ -458,11 +468,15 @@ public class Backend
 
                 while (resultSet.next()) 
                 {
-                    System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
-                    System.out.println("Location: " + resultSet.getString("Location"));
-                    System.out.println("Phone Number: " + resultSet.getString("Phone Number"));
-                    System.out.println("Email: " + resultSet.getString("Email"));
-                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    InterestResult interestResult = new InterestResult
+                    (
+                        resultSet.getString("Faculty Name"),
+                        resultSet.getString("Interest"),
+                        resultSet.getString("Location"),
+                        resultSet.getString("Phone Number"),
+                        resultSet.getString("Email")
+                    );
+                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("G"))
@@ -484,15 +498,26 @@ public class Backend
                 }
 
                 ResultSet resultSet = stmt.executeQuery();
-                
+
                 while (resultSet.next()) 
                 {
-                    System.out.println("Name: " + resultSet.getString("Name"));
-                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                    InterestResult interestResult = new InterestResult
+                    (
+                        resultSet.getString("Name"),
+                        resultSet.getString("Interest"),
+                        null, 
+                        null, 
+                        null
+                    );
+                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
                 }
             }
+            return interestResults;
         }
-        catch (SQLException e) {}
+        catch (SQLException e)
+        {
+            return null;
+        }
     }
 
     public static void main(String[] args) 
