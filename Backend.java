@@ -75,11 +75,65 @@ public class Backend
 
     public User GetUser(User cUser)
     {
-        if(cUser.getTypeID().equals("F"))
+        if (cUser.getTypeID().equals("F")) 
         {
-            Faculty facultyUser = new Faculty();
-            return facultyUser;
-        }
+            try 
+            {
+                String query = "SELECT * FROM users " +
+                               "JOIN faculty ON users.userID = faculty.facultyID " +
+                               "LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID " +
+                               "LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID " +
+                               "LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID " +
+                               "LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID " +
+                               "WHERE users.userID = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setInt(1, cUser.getUserID());
+        
+                try (ResultSet facultyResultSet = preparedStatement.executeQuery()) 
+                {
+                    if (facultyResultSet.next()) 
+                    {
+                        Faculty facultyUser = new Faculty
+                        (
+                            facultyResultSet.getInt("userID"),
+                            facultyResultSet.getString("typeID"),
+                            facultyResultSet.getString("username"),
+                            facultyResultSet.getString("password"),
+                            facultyResultSet.getString("location")
+                        );
+        
+                        List<Interest> interests = new ArrayList<>();
+                        List<Abstract> abstracts = new ArrayList<>();
+
+                        while (facultyResultSet.next()) 
+                        {
+                            Interest interest = new Interest();
+                            interest.setInterestID(facultyResultSet.getInt("interestID"));
+                            interest.setIntDesc(facultyResultSet.getString("intDesc"));
+                            if(!interests.contains(interest)) interests.add(interest);
+
+                            Abstract facultyAbstract = new Abstract();
+                            facultyAbstract.setAbstractID(facultyResultSet.getInt("abstractID"));
+                            facultyAbstract.setProfessorAbstract(facultyResultSet.getString("professorAbstract"));
+                            if(!abstracts.contains(facultyAbstract)) abstracts.add(facultyAbstract);
+                        }
+        
+                        facultyUser.setInterests(interests);
+                        facultyUser.setAbstracts(abstracts);
+        
+                        return facultyUser;
+                    } 
+                    else 
+                    {
+                        return null;
+                    }
+                }
+            } 
+            catch (SQLException e) 
+            {
+                return null;
+            }
+        }        
         else if (cUser.getTypeID().equals("S")) 
         {
             try 
@@ -107,13 +161,13 @@ public class Backend
                         );
 
                         List<Interest> interests = new ArrayList<>();
-                        do 
+                        while (studentResultSet.next()) 
                         {
                             Interest interest = new Interest();
                             interest.setInterestID(studentResultSet.getInt("interestID"));
                             interest.setIntDesc(studentResultSet.getString("intDesc"));
-                            interests.add(interest);
-                        } while (studentResultSet.next());
+                            if(!interests.contains(interest)) interests.add(interest);
+                        }
 
                         studentUser.setInterests(interests);
 
