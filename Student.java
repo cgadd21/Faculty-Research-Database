@@ -20,13 +20,26 @@ public class Student extends User {
     @Override
     public String toString() 
     {
+        StringBuilder interestsStringBuilder = new StringBuilder();
+        for (Interest interest : interests) 
+        {
+            interestsStringBuilder.append(interest.getIntDesc()).append(", ");
+        }
+
+        String interestsString = interestsStringBuilder.toString();
+        if (!interestsString.isEmpty()) 
+        {
+            interestsString = interestsString.substring(0, interestsString.length() - 2);
+        }
+
         return "Student{" +
                 "userID=" + getUserID() +
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + getEmail() + '\'' +
+                ", phoneNumber='" + getPhoneNumber() + '\'' +
+                ", interests=[" + interestsString + ']' +
                 '}';
     }
     

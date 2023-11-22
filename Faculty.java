@@ -21,12 +21,38 @@ public class Faculty extends User {
     @Override
     public String toString() 
     {
+        StringBuilder interestsStringBuilder = new StringBuilder();
+        for (Interest interest : interests) 
+        {
+            interestsStringBuilder.append(interest.getIntDesc()).append(", ");
+        }
+
+        String interestsString = interestsStringBuilder.toString();
+        if (!interestsString.isEmpty()) 
+        {
+            interestsString = interestsString.substring(0, interestsString.length() - 2);
+        }
+
+        StringBuilder abstractsStringBuilder = new StringBuilder();
+        for (Abstract facultyAbstract : abstracts) 
+        {
+            abstractsStringBuilder.append(facultyAbstract.getProfessorAbstract()).append(", ");
+        }
+
+        String abstractsString = abstractsStringBuilder.toString();
+        if (!abstractsString.isEmpty()) 
+        {
+            abstractsString = abstractsString.substring(0, abstractsString.length() - 2);
+        }
+
         return "Faculty{" +
                 "userID=" + getUserID() +
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
-                ", location='" + location + '\'' +
+                ", location='" + getLocation() + '\'' +
+                ", interests=[" + interestsString + ']' +
+                ", abstracts=[" + abstractsString + ']' +
                 '}';
     }
     
