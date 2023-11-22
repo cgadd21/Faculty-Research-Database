@@ -406,6 +406,71 @@ public class Backend
         }
     }
 
+    public void getInterests(User user, List<Interest> interests)
+    {
+        try
+        {
+            if (user.getTypeID().equals("F"))
+            {
+                String query = "SELECT CONCAT(student.fname, ' ', student.lname) AS 'Student Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' FROM studentinterests LEFT JOIN student ON student.studentID = studentinterests.studentID LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID WHERE studentinterests.interestID IN (";
+
+                if(interests.size() == 1) query += "?";
+                if(interests.size() == 2) query += "?,?";
+                if(interests.size() == 1) query += "?,?,?";
+
+                query += ") GROUP BY studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) 
+                {
+                    System.out.println("Student Name: " + resultSet.getString("Student Name"));
+                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                }
+            }
+            else if (user.getTypeID().equals("S"))
+            {
+                String query = "SELECT CONCAT(faculty.fname, ' ', faculty.lname) AS 'Faculty Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', faculty.location AS 'Location', faculty.phonenumber AS 'Phone Number', faculty.email AS 'Email' FROM facultyinterests LEFT JOIN faculty ON faculty.facultyId = facultyInterests.facultyId LEFT JOIN interestList ON facultyInterests.interestID = Interestlist.interestID WHERE facultyinterests.interestID IN (";
+
+                if(interests.size() == 1) query += "?";
+                if(interests.size() == 2) query += "?,?";
+                if(interests.size() == 1) query += "?,?,?";
+                
+                query += ") GROUP BY facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) 
+                {
+                    System.out.println("Faculty Name: " + resultSet.getString("Faculty Name"));
+                    System.out.println("Location: " + resultSet.getString("Location"));
+                    System.out.println("Phone Number: " + resultSet.getString("Phone Number"));
+                    System.out.println("Email: " + resultSet.getString("Email"));
+                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                }
+            }
+            else if (user.getTypeID().equals("G"))
+            {
+                String query = "WITH schoolInterests AS ( SELECT CONCAT(student.fname, ' ', student.lname) AS 'Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', studentinterests.interestID FROM studentinterests LEFT JOIN student ON student.studentID = studentinterests.studentID LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID GROUP BY studentinterests.studentID, CONCAT(student.fname, ' ', student.lname), studentinterests.interestID UNION SELECT CONCAT(faculty.fname, ' ', faculty.lname) AS 'Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest', facultyinterests.interestID FROM facultyinterests LEFT JOIN faculty ON faculty.facultyID = facultyinterests.facultyID LEFT JOIN interestList ON facultyinterests.interestID = Interestlist.interestID GROUP BY facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname), facultyinterests.interestID) SELECT Name, GROUP_CONCAT(Interest) AS 'Interest' FROM schoolInterests WHERE interestID IN (";
+
+                if(interests.size() == 1) query += "?";
+                if(interests.size() == 2) query += "?,?";
+                if(interests.size() == 1) query += "?,?,?";
+
+                query += ") GROUP BY Name";
+
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet resultSet = stmt.executeQuery();
+                while (resultSet.next()) 
+                {
+                    System.out.println("Name: " + resultSet.getString("Name"));
+                    System.out.println("Interest: " + resultSet.getString("Interest") + "\n");
+                }
+            }
+        }
+        catch (SQLException e) {}
+    }
+
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
