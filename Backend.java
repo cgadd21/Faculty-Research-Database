@@ -1,7 +1,5 @@
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Backend 
 {
@@ -79,19 +77,12 @@ public class Backend
         {
             try 
             {
-                String query = "SELECT * FROM users " +
-                               "JOIN faculty ON users.userID = faculty.facultyID " +
-                               "LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID " +
-                               "LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID " +
-                               "LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID " +
-                               "LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID " +
-                               "WHERE users.userID = ?";
+                String query = "SELECT * FROM users JOIN faculty ON users.userID = faculty.facultyID LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
+                ResultSet facultyResultSet = preparedStatement.executeQuery();
         
-                try (ResultSet facultyResultSet = preparedStatement.executeQuery()) 
-                {
-                    if (facultyResultSet.next()) 
+                if (facultyResultSet.next()) 
                     {
                         Faculty facultyUser = new Faculty
                         (
@@ -132,7 +123,6 @@ public class Backend
                     {
                         return null;
                     }
-                }
             } 
             catch (SQLException e) 
             {
@@ -143,17 +133,12 @@ public class Backend
         {
             try 
             {
-                String query = "SELECT * FROM users " +
-                            "JOIN student ON users.userID = student.studentID " +
-                            "LEFT JOIN studentInterests ON student.studentID = studentInterests.studentID " +
-                            "LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID " +
-                            "WHERE users.userID = ?";
+                String query = "SELECT * FROM users JOIN student ON users.userID = student.studentID LEFT JOIN studentInterests ON student.studentID = studentInterests.studentID LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
+                ResultSet studentResultSet = preparedStatement.executeQuery();
 
-                try (ResultSet studentResultSet = preparedStatement.executeQuery()) 
-                {
-                    if (studentResultSet.next()) 
+                if (studentResultSet.next()) 
                     {
                         Student studentUser = new Student
                         (
@@ -185,7 +170,6 @@ public class Backend
                     {
                         return null;
                     }
-                }
             } 
             catch (SQLException e) 
             {
@@ -196,15 +180,12 @@ public class Backend
         {
             try 
             {
-                String query = "SELECT * FROM users " +
-                        "JOIN guest ON users.userID = guest.guestID " +
-                        "WHERE users.userID = ?";
+                String query = "SELECT * FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
+                ResultSet guestResultSet = preparedStatement.executeQuery();
 
-                try (ResultSet guestResultSet = preparedStatement.executeQuery()) 
-                {
-                    if (guestResultSet.next()) 
+                if (guestResultSet.next()) 
                     {
                         Guest guestUser = new Guest
                         (
@@ -225,7 +206,6 @@ public class Backend
                     {
                         return null;
                     }
-                }
             } 
             catch (SQLException e) 
             {
@@ -401,6 +381,29 @@ public class Backend
             }
         }
         catch (SQLException e) {}
+    }
+
+    public List<Interest> getInterests()
+    {
+        try
+        {
+            List<Interest> interests = new ArrayList<>();
+            String query = "SELECT interestID, intDesc FROM interestList";
+            Statement stmt = conn.createStatement();
+            ResultSet interestsResultSet = stmt.executeQuery(query);
+            while(interestsResultSet.next())
+            {
+                Interest interest = new Interest();
+                interest.setInterestID(interestsResultSet.getInt("interestID"));
+                interest.setIntDesc(interestsResultSet.getString("intDesc"));
+                if(!interests.contains(interest)) interests.add(interest);
+            }
+            return interests;
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
     }
 
     public static void main(String[] args) 
