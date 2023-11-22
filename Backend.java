@@ -255,6 +255,7 @@ public class Backend
                 stmt.setString(4, studentUser.getPhoneNumber());
                 stmt.setInt(5, studentUser.getStudentID());
                 stmt.executeUpdate();
+
                 //add update interests
             } 
             else if (user.getTypeID().equals("G")) 
@@ -306,6 +307,8 @@ public class Backend
                 stmt.setString(5, facultyUser.getPhoneNumber());
                 stmt.setString(6, facultyUser.getLocation());
                 stmt.executeUpdate();
+
+                //add insert abstract(s) & interests
             } 
             else if (user.getTypeID().equals("S")) 
             {
@@ -318,6 +321,8 @@ public class Backend
                 stmt.setString(4, studentUser.getEmail());
                 stmt.setString(5, studentUser.getPassword());
                 stmt.executeUpdate();
+
+                //add insert interests
             }
             else if (user.getTypeID().equals("G")) 
             {
