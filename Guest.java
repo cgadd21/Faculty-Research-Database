@@ -7,10 +7,14 @@ public class Guest extends User {
 
     public Guest() {}
 
-    public Guest(int userID, String typeID, String username, String password, String business) 
+    public Guest(int userID, String typeID, String username, String password, int guestID, String business, String fname, String lname, String contactInfo) 
     {
         super(userID, typeID, username, password);
+        this.guestID = guestID;
         this.business = business;
+        this.fname = fname;
+        this.lname = lname;
+        this.contactInfo = contactInfo;
     }
     
     @Override
@@ -21,7 +25,11 @@ public class Guest extends User {
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
+                ", guestID='" + guestID + '\'' +
                 ", business='" + business + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", contactInfo='" + contactInfo + '\'' +
                 '}';
     }
 

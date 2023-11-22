@@ -186,8 +186,43 @@ public class Backend
         }
         else if(cUser.getTypeID().equals("G"))
         {
-            Guest guestUser = new Guest();
-            return guestUser;
+            try 
+            {
+                String query = "SELECT * FROM users " +
+                        "JOIN guest ON users.userID = guest.guestID " +
+                        "WHERE users.userID = ?";
+                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setInt(1, cUser.getUserID());
+
+                try (ResultSet guestResultSet = preparedStatement.executeQuery()) 
+                {
+                    if (guestResultSet.next()) 
+                    {
+                        Guest guestUser = new Guest
+                        (
+                            guestResultSet.getInt("userID"),
+                            guestResultSet.getString("typeID"),
+                            guestResultSet.getString("username"),
+                            guestResultSet.getString("password"),
+                            guestResultSet.getInt("guestID"),
+                            guestResultSet.getString("business"),
+                            guestResultSet.getString("fname"),
+                            guestResultSet.getString("lname"),
+                            guestResultSet.getString("contactinfo")
+                        );
+
+                        return guestUser;
+                    } 
+                    else 
+                    {
+                        return null;
+                    }
+                }
+            } 
+            catch (SQLException e) 
+            {
+                return null;
+            }
         }
         else
         {
