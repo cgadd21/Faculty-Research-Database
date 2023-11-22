@@ -156,6 +156,9 @@ public class Backend
                             studentResultSet.getString("typeID"),
                             studentResultSet.getString("username"),
                             studentResultSet.getString("password"),
+                            studentResultSet.getInt("studentID"),
+                            studentResultSet.getString("fname"),
+                            studentResultSet.getString("lname"),
                             studentResultSet.getString("email"),
                             studentResultSet.getString("phonenumber")
                         );

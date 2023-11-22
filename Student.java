@@ -10,9 +10,12 @@ public class Student extends User {
 
     public Student() {}
 
-    public Student(int userID, String typeID, String username, String password, String email, String phoneNumber) 
+    public Student(int userID, String typeID, String username, String password, int studentID, String fname, String lname, String email, String phoneNumber) 
     {
         super(userID, typeID, username, password);
+        this.studentID = studentID;
+        this.fname = fname;
+        this.lname = lname;
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
@@ -37,8 +40,11 @@ public class Student extends User {
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
-                ", email='" + getEmail() + '\'' +
-                ", phoneNumber='" + getPhoneNumber() + '\'' +
+                ", studentID='" + studentID + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", interests=[" + interestsString + ']' +
                 '}';
     }
