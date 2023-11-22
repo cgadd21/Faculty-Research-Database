@@ -12,9 +12,14 @@ public class Faculty extends User {
 
     public Faculty() {}
 
-    public Faculty(int userID, String typeID, String username, String password, String location)
+    public Faculty(int userID, String typeID, String username, String password, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
     {
         super(userID, typeID, username, password);
+        this.facultyID = facultyID;
+        this.fname = fname;
+        this.lname = lname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.location = location;
     }
 
@@ -50,7 +55,12 @@ public class Faculty extends User {
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
-                ", location='" + getLocation() + '\'' +
+                ", facultyID='" + facultyID + '\'' +
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", location='" + location + '\'' +
                 ", interests=[" + interestsString + ']' +
                 ", abstracts=[" + abstractsString + ']' +
                 '}';

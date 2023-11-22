@@ -99,6 +99,11 @@ public class Backend
                             facultyResultSet.getString("typeID"),
                             facultyResultSet.getString("username"),
                             facultyResultSet.getString("password"),
+                            facultyResultSet.getInt("facultyID"),
+                            facultyResultSet.getString("fname"),
+                            facultyResultSet.getString("lname"),
+                            facultyResultSet.getString("email"),
+                            facultyResultSet.getString("phoneNumber"),
                             facultyResultSet.getString("location")
                         );
         
