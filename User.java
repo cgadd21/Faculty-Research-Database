@@ -4,6 +4,27 @@ public class User {
     private String username;
     private String password;
 
+    public User() {}
+
+    public User(int userID, String typeID, String username, String password) 
+    {
+        this.userID = userID;
+        this.typeID = typeID;
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public String toString() 
+    {
+        return "User{" +
+                "userID=" + userID +
+                ", typeID='" + typeID + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
     public int getUserID() 
     {
         return userID;
