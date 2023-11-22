@@ -5,6 +5,26 @@ public class Guest extends User {
     private String lname;
     private String contactInfo;
 
+    public Guest() {}
+
+    public Guest(int userID, String typeID, String username, String password, String business) 
+    {
+        super(userID, typeID, username, password);
+        this.business = business;
+    }
+    
+    @Override
+    public String toString() 
+    {
+        return "Guest{" +
+                "userID=" + getUserID() +
+                ", typeID='" + getTypeID() + '\'' +
+                ", username='" + getUsername() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", business='" + business + '\'' +
+                '}';
+    }
+
     public int getGuestID() 
     {
         return guestID;

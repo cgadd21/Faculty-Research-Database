@@ -71,6 +71,29 @@ public class Backend
         }
     }
 
+    public User GetUser(User cUser)
+    {
+        if(cUser.getTypeID().equals("F"))
+        {
+            Faculty facultyUser = new Faculty();
+            return facultyUser;
+        }
+        else if(cUser.getTypeID().equals("S"))
+        {
+            Student studentUser = new Student();
+            return studentUser;
+        }
+        else if(cUser.getTypeID().equals("G"))
+        {
+            Guest guestUser = new Guest();
+            return guestUser;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
@@ -86,7 +109,26 @@ public class Backend
         
         cUser = backend.login(username,password);
 
-        if (cUser != null) System.out.println(cUser.toString());
+        if (cUser != null)
+        {
+            cUser = backend.GetUser(cUser);
+
+            if(cUser instanceof Faculty)
+            {
+                Faculty cFacultyUser = (Faculty) cUser;
+                System.out.println(cFacultyUser.toString());
+            }
+            else if(cUser instanceof Student)
+            {
+                Student cStudnetUser = (Student) cUser;
+                System.out.println(cStudnetUser.toString());
+            }
+            else if(cUser instanceof Guest)
+            {
+                Guest cGuestUser = (Guest) cUser;
+                System.out.println(cGuestUser.toString());
+            }
+        }
 
         scanner.close();
         backend.close();

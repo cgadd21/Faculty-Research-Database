@@ -7,6 +7,28 @@ public class Student extends User {
     private String email;
     private String phoneNumber;
     private List<Interest> interests;
+
+    public Student() {}
+
+    public Student(int userID, String typeID, String username, String password, String email, String phoneNumber) 
+    {
+        super(userID, typeID, username, password);
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
+    
+    @Override
+    public String toString() 
+    {
+        return "Student{" +
+                "userID=" + getUserID() +
+                ", typeID='" + getTypeID() + '\'' +
+                ", username='" + getUsername() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
     
     public int getStudentID() 
     {

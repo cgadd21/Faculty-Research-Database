@@ -9,6 +9,26 @@ public class Faculty extends User {
     private String location;
     private List<Interest> interests;
     private List<Abstract> abstracts;
+
+    public Faculty() {}
+
+    public Faculty(int userID, String typeID, String username, String password, String location)
+    {
+        super(userID, typeID, username, password);
+        this.location = location;
+    }
+
+    @Override
+    public String toString() 
+    {
+        return "Faculty{" +
+                "userID=" + getUserID() +
+                ", typeID='" + getTypeID() + '\'' +
+                ", username='" + getUsername() + '\'' +
+                ", password='" + getPassword() + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+    }
     
     public int getFacultyID() 
     {
