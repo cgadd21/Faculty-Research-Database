@@ -51,7 +51,7 @@ public class Backend
             {
                 if (userResultSet.next()) 
                 {
-                    User currUser = new User
+                    User user = new User
                     (
                         userResultSet.getInt("userID"),
                         userResultSet.getString("typeID"),
@@ -59,7 +59,7 @@ public class Backend
                         userResultSet.getString("password")
                     );
                     
-                    return currUser;
+                    return getUser(user);
                 } 
                 else 
                 {
@@ -73,9 +73,9 @@ public class Backend
         }
     }
 
-    public User getUser(User cUser)
+    public User getUser(User user)
     {
-        if (cUser.getTypeID().equals("F")) 
+        if (user.getTypeID().equals("F")) 
         {
             try 
             {
@@ -87,7 +87,7 @@ public class Backend
                                "LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID " +
                                "WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
-                preparedStatement.setInt(1, cUser.getUserID());
+                preparedStatement.setInt(1, user.getUserID());
         
                 try (ResultSet facultyResultSet = preparedStatement.executeQuery()) 
                 {
@@ -139,7 +139,7 @@ public class Backend
                 return null;
             }
         }        
-        else if (cUser.getTypeID().equals("S")) 
+        else if (user.getTypeID().equals("S")) 
         {
             try 
             {
@@ -149,7 +149,7 @@ public class Backend
                             "LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID " +
                             "WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
-                preparedStatement.setInt(1, cUser.getUserID());
+                preparedStatement.setInt(1, user.getUserID());
 
                 try (ResultSet studentResultSet = preparedStatement.executeQuery()) 
                 {
@@ -192,7 +192,7 @@ public class Backend
                 return null;
             }
         }
-        else if(cUser.getTypeID().equals("G"))
+        else if(user.getTypeID().equals("G"))
         {
             try 
             {
@@ -200,7 +200,7 @@ public class Backend
                         "JOIN guest ON users.userID = guest.guestID " +
                         "WHERE users.userID = ?";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
-                preparedStatement.setInt(1, cUser.getUserID());
+                preparedStatement.setInt(1, user.getUserID());
 
                 try (ResultSet guestResultSet = preparedStatement.executeQuery()) 
                 {
@@ -238,6 +238,71 @@ public class Backend
         }
     }
 
+    public User updateUser(User user) {
+        try 
+        {
+            String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
+            PreparedStatement stmtUser = conn.prepareStatement(queryUser);
+            stmtUser.setString(1, user.getUsername());
+            stmtUser.setString(2, user.getPassword());
+            stmtUser.setInt(3, user.getUserID());
+            stmtUser.executeUpdate();
+
+            if (user.getTypeID().equals("F")) 
+            {
+                Faculty facultyUser = (Faculty) user;
+                String query = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+
+                stmt.setString(1, facultyUser.getFname());
+                stmt.setString(2, facultyUser.getLname());
+                stmt.setString(3, facultyUser.getEmail());
+                stmt.setString(4, facultyUser.getPhoneNumber());
+                stmt.setString(5, facultyUser.getLocation());
+                stmt.setInt(6, facultyUser.getFacultyID());
+    
+                stmt.executeUpdate();
+            } 
+            else if (user.getTypeID().equals("S")) 
+            {
+                Student studentUser = (Student) user;
+                String query = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+    
+                stmt.setString(1, studentUser.getFname());
+                stmt.setString(2, studentUser.getLname());
+                stmt.setString(3, studentUser.getEmail());
+                stmt.setString(4, studentUser.getPhoneNumber());
+                stmt.setInt(5, studentUser.getStudentID());
+    
+                stmt.executeUpdate();
+            } 
+            else if (user.getTypeID().equals("G")) 
+            {
+                Guest guestUser = (Guest) user;
+                String query = "UPDATE guest SET business = ?, fname = ?, lname = ?, contactinfo = ? WHERE guestID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+
+                stmt.setString(1, guestUser.getBusiness());
+                stmt.setString(2, guestUser.getFname());
+                stmt.setString(3, guestUser.getLname());
+                stmt.setString(4, guestUser.getContactInfo());
+                stmt.setInt(5, guestUser.getGuestID());
+    
+                stmt.executeUpdate();
+            }
+            else 
+            {
+                return null;
+            }
+            return getUser(user);
+        } 
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
+    
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
@@ -255,8 +320,6 @@ public class Backend
 
         if (cUser != null)
         {
-            cUser = backend.getUser(cUser);
-
             if(cUser instanceof Faculty)
             {
                 Faculty cFacultyUser = (Faculty) cUser;
@@ -272,6 +335,10 @@ public class Backend
                 Guest cGuestUser = (Guest) cUser;
                 System.out.println(cGuestUser.toString());
             }
+        }
+        else
+        {
+            System.out.println("Error");
         }
 
         scanner.close();
