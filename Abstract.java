@@ -1,4 +1,5 @@
-public class Abstract {
+public class Abstract 
+{
     private int abstractID;
     private String professorAbstract;
     

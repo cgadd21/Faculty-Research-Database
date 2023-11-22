@@ -1,4 +1,5 @@
-public class InterestResult {
+public class InterestResult 
+{
     private String name;
     private String interest;
     private String location;

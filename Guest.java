@@ -1,4 +1,5 @@
-public class Guest extends User {
+public class Guest extends User 
+{
     private int guestID;
     private String business;
     private String fname;

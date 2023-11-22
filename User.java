@@ -1,4 +1,5 @@
-public class User {
+public class User 
+{
     private int userID;
     private String typeID;
     private String username;

@@ -1,4 +1,5 @@
-public class Interest {
+public class Interest 
+{
     private int interestID;
     private String intDesc;
     

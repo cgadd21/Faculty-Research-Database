@@ -1,6 +1,7 @@
 import java.util.List;
 
-public class Faculty extends User {
+public class Faculty extends User 
+{
     private int facultyID;
     private String fname;
     private String lname;
