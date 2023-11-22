@@ -253,42 +253,39 @@ public class Backend
                 Faculty facultyUser = (Faculty) user;
                 String query = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
-
                 stmt.setString(1, facultyUser.getFname());
                 stmt.setString(2, facultyUser.getLname());
                 stmt.setString(3, facultyUser.getEmail());
                 stmt.setString(4, facultyUser.getPhoneNumber());
                 stmt.setString(5, facultyUser.getLocation());
                 stmt.setInt(6, facultyUser.getFacultyID());
-    
                 stmt.executeUpdate();
+
+                //add update abstract(s) & interests
             } 
             else if (user.getTypeID().equals("S")) 
             {
                 Student studentUser = (Student) user;
                 String query = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
-    
                 stmt.setString(1, studentUser.getFname());
                 stmt.setString(2, studentUser.getLname());
                 stmt.setString(3, studentUser.getEmail());
                 stmt.setString(4, studentUser.getPhoneNumber());
                 stmt.setInt(5, studentUser.getStudentID());
-    
                 stmt.executeUpdate();
+                //add update interests
             } 
             else if (user.getTypeID().equals("G")) 
             {
                 Guest guestUser = (Guest) user;
                 String query = "UPDATE guest SET business = ?, fname = ?, lname = ?, contactinfo = ? WHERE guestID = ?";
                 PreparedStatement stmt = conn.prepareStatement(query);
-
                 stmt.setString(1, guestUser.getBusiness());
                 stmt.setString(2, guestUser.getFname());
                 stmt.setString(3, guestUser.getLname());
                 stmt.setString(4, guestUser.getContactInfo());
                 stmt.setInt(5, guestUser.getGuestID());
-    
                 stmt.executeUpdate();
             }
             else 
@@ -303,6 +300,109 @@ public class Backend
         }
     }
     
+    public User createUser(User user)
+    {
+        try
+        {
+            String queryUser = "INSERT INTO users (typeID, username, password) VALUES (?, ?, ?)";
+            PreparedStatement stmtUser = conn.prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
+            stmtUser.setString(1, user.getTypeID());
+            stmtUser.setString(2, user.getUsername());
+            stmtUser.setString(3, user.getPassword());
+            stmtUser.executeUpdate();
+            ResultSet generatedKeys = stmtUser.getGeneratedKeys();
+            if(generatedKeys.next()) user.setUserID(generatedKeys.getInt(1));
+
+            if (user.getTypeID().equals("F"))
+            {
+                Faculty facultyUser = (Faculty) user;
+                String query = "INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, facultyUser.getUserID());
+                stmt.setString(2, facultyUser.getFname());
+                stmt.setString(3, facultyUser.getLname());
+                stmt.setString(4, facultyUser.getEmail());
+                stmt.setString(5, facultyUser.getPhoneNumber());
+                stmt.setString(6, facultyUser.getLocation());
+                stmt.executeUpdate();
+            } 
+            else if (user.getTypeID().equals("S")) 
+            {
+                Student studentUser = (Student) user;
+                String query = "INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studentUser.getUserID());
+                stmt.setString(2, studentUser.getFname());
+                stmt.setString(3, studentUser.getLname());
+                stmt.setString(4, studentUser.getEmail());
+                stmt.setString(5, studentUser.getPassword());
+                stmt.executeUpdate();
+            }
+            else if (user.getTypeID().equals("G")) 
+            {
+                Guest guestUser = (Guest) user;
+                String query = "INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, guestUser.getUserID());
+                stmt.setString(2, guestUser.getBusiness());
+                stmt.setString(3, guestUser.getFname());
+                stmt.setString(4, guestUser.getLname());
+                stmt.setString(5, guestUser.getContactInfo());
+                stmt.executeUpdate();
+            }
+            else
+            {
+                return null;
+            }
+            return getUser(user);
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
+
+    public void deleteUser(User user)
+    {
+        try
+        {
+            String queryUser = "DELETE FROM users WHERE userID = ?";
+            PreparedStatement stmtUser = conn.prepareStatement(queryUser);
+            stmtUser.setInt(1, user.getUserID());
+            stmtUser.executeUpdate();
+
+            if (user.getTypeID().equals("F"))
+            {
+                Faculty facultyUser = (Faculty) user;
+                String query = "DELETE FROM faculty WHERE facultyID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, facultyUser.getFacultyID());
+                stmt.executeUpdate();
+                
+                //add delete abstract(s) & interests
+            } 
+            else if (user.getTypeID().equals("S")) 
+            {
+                Student studentUser = (Student) user;
+                String query = "DELETE FROM student WHERE studentID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, studentUser.getStudentID());
+                stmt.executeUpdate();
+
+                //add delete interests
+            }
+            else if (user.getTypeID().equals("G")) 
+            {
+                Guest guestUser = (Guest) user;
+                String query = "DELETE FROM guest WHERE guestID = ?";
+                PreparedStatement stmt = conn.prepareStatement(query);
+                stmt.setInt(1, guestUser.getGuestID());
+                stmt.executeUpdate();
+            }
+        }
+        catch (SQLException e) {}
+    }
+
     public static void main(String[] args) 
     {
         Scanner scanner = new Scanner(System.in);
