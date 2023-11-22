@@ -73,7 +73,7 @@ public class Backend
         }
     }
 
-    public User GetUser(User cUser)
+    public User getUser(User cUser)
     {
         if (cUser.getTypeID().equals("F")) 
         {
@@ -255,7 +255,7 @@ public class Backend
 
         if (cUser != null)
         {
-            cUser = backend.GetUser(cUser);
+            cUser = backend.getUser(cUser);
 
             if(cUser instanceof Faculty)
             {
