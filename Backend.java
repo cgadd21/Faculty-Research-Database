@@ -83,46 +83,46 @@ public class Backend
                 ResultSet facultyResultSet = preparedStatement.executeQuery();
         
                 if (facultyResultSet.next()) 
-                    {
-                        Faculty facultyUser = new Faculty
-                        (
-                            facultyResultSet.getInt("userID"),
-                            facultyResultSet.getString("typeID"),
-                            facultyResultSet.getString("username"),
-                            facultyResultSet.getString("password"),
-                            facultyResultSet.getInt("facultyID"),
-                            facultyResultSet.getString("fname"),
-                            facultyResultSet.getString("lname"),
-                            facultyResultSet.getString("email"),
-                            facultyResultSet.getString("phoneNumber"),
-                            facultyResultSet.getString("location")
-                        );
-        
-                        List<Interest> interests = new ArrayList<>();
-                        List<Abstract> abstracts = new ArrayList<>();
+                {
+                    Faculty facultyUser = new Faculty
+                    (
+                        facultyResultSet.getInt("userID"),
+                        facultyResultSet.getString("typeID"),
+                        facultyResultSet.getString("username"),
+                        facultyResultSet.getString("password"),
+                        facultyResultSet.getInt("facultyID"),
+                        facultyResultSet.getString("fname"),
+                        facultyResultSet.getString("lname"),
+                        facultyResultSet.getString("email"),
+                        facultyResultSet.getString("phoneNumber"),
+                        facultyResultSet.getString("location")
+                    );
+    
+                    List<Interest> interests = new ArrayList<>();
+                    List<Abstract> abstracts = new ArrayList<>();
 
-                        while (facultyResultSet.next()) 
-                        {
-                            Interest interest = new Interest();
-                            interest.setInterestID(facultyResultSet.getInt("interestID"));
-                            interest.setIntDesc(facultyResultSet.getString("intDesc"));
-                            if(!interests.contains(interest)) interests.add(interest);
-
-                            Abstract facultyAbstract = new Abstract();
-                            facultyAbstract.setAbstractID(facultyResultSet.getInt("abstractID"));
-                            facultyAbstract.setProfessorAbstract(facultyResultSet.getString("professorAbstract"));
-                            if(!abstracts.contains(facultyAbstract)) abstracts.add(facultyAbstract);
-                        }
-        
-                        facultyUser.setInterests(interests);
-                        facultyUser.setAbstracts(abstracts);
-        
-                        return facultyUser;
-                    } 
-                    else 
+                    while (facultyResultSet.next()) 
                     {
-                        return null;
+                        Interest interest = new Interest();
+                        interest.setInterestID(facultyResultSet.getInt("interestID"));
+                        interest.setIntDesc(facultyResultSet.getString("intDesc"));
+                        if(!interests.contains(interest)) interests.add(interest);
+
+                        Abstract facultyAbstract = new Abstract();
+                        facultyAbstract.setAbstractID(facultyResultSet.getInt("abstractID"));
+                        facultyAbstract.setProfessorAbstract(facultyResultSet.getString("professorAbstract"));
+                        if(!abstracts.contains(facultyAbstract)) abstracts.add(facultyAbstract);
                     }
+    
+                    facultyUser.setInterests(interests);
+                    facultyUser.setAbstracts(abstracts);
+    
+                    return facultyUser;
+                } 
+                else 
+                {
+                    return null;
+                }
             } 
             catch (SQLException e) 
             {
@@ -139,37 +139,37 @@ public class Backend
                 ResultSet studentResultSet = preparedStatement.executeQuery();
 
                 if (studentResultSet.next()) 
+                {
+                    Student studentUser = new Student
+                    (
+                        studentResultSet.getInt("userID"),
+                        studentResultSet.getString("typeID"),
+                        studentResultSet.getString("username"),
+                        studentResultSet.getString("password"),
+                        studentResultSet.getInt("studentID"),
+                        studentResultSet.getString("fname"),
+                        studentResultSet.getString("lname"),
+                        studentResultSet.getString("email"),
+                        studentResultSet.getString("phonenumber")
+                    );
+
+                    List<Interest> interests = new ArrayList<>();
+                    while (studentResultSet.next()) 
                     {
-                        Student studentUser = new Student
-                        (
-                            studentResultSet.getInt("userID"),
-                            studentResultSet.getString("typeID"),
-                            studentResultSet.getString("username"),
-                            studentResultSet.getString("password"),
-                            studentResultSet.getInt("studentID"),
-                            studentResultSet.getString("fname"),
-                            studentResultSet.getString("lname"),
-                            studentResultSet.getString("email"),
-                            studentResultSet.getString("phonenumber")
-                        );
-
-                        List<Interest> interests = new ArrayList<>();
-                        while (studentResultSet.next()) 
-                        {
-                            Interest interest = new Interest();
-                            interest.setInterestID(studentResultSet.getInt("interestID"));
-                            interest.setIntDesc(studentResultSet.getString("intDesc"));
-                            if(!interests.contains(interest)) interests.add(interest);
-                        }
-
-                        studentUser.setInterests(interests);
-
-                        return studentUser;
-                    } 
-                    else 
-                    {
-                        return null;
+                        Interest interest = new Interest();
+                        interest.setInterestID(studentResultSet.getInt("interestID"));
+                        interest.setIntDesc(studentResultSet.getString("intDesc"));
+                        if(!interests.contains(interest)) interests.add(interest);
                     }
+
+                    studentUser.setInterests(interests);
+
+                    return studentUser;
+                } 
+                else 
+                {
+                    return null;
+                }
             } 
             catch (SQLException e) 
             {
@@ -186,26 +186,26 @@ public class Backend
                 ResultSet guestResultSet = preparedStatement.executeQuery();
 
                 if (guestResultSet.next()) 
-                    {
-                        Guest guestUser = new Guest
-                        (
-                            guestResultSet.getInt("userID"),
-                            guestResultSet.getString("typeID"),
-                            guestResultSet.getString("username"),
-                            guestResultSet.getString("password"),
-                            guestResultSet.getInt("guestID"),
-                            guestResultSet.getString("business"),
-                            guestResultSet.getString("fname"),
-                            guestResultSet.getString("lname"),
-                            guestResultSet.getString("contactinfo")
-                        );
+                {
+                    Guest guestUser = new Guest
+                    (
+                        guestResultSet.getInt("userID"),
+                        guestResultSet.getString("typeID"),
+                        guestResultSet.getString("username"),
+                        guestResultSet.getString("password"),
+                        guestResultSet.getInt("guestID"),
+                        guestResultSet.getString("business"),
+                        guestResultSet.getString("fname"),
+                        guestResultSet.getString("lname"),
+                        guestResultSet.getString("contactinfo")
+                    );
 
-                        return guestUser;
-                    } 
-                    else 
-                    {
-                        return null;
-                    }
+                    return guestUser;
+                } 
+                else 
+                {
+                    return null;
+                }
             } 
             catch (SQLException e) 
             {
