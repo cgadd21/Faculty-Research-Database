@@ -341,7 +341,16 @@ public class Backend
                 stmt.setString(6, facultyUser.getLocation());
                 stmt.executeUpdate();
 
-                //add insert abstract(s) & interests
+                String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
+                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                for (Interest interest : facultyUser.getInterests()) 
+                {
+                    insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
+                    insertInterestsStmt.setInt(2, interest.getInterestID());
+                    insertInterestsStmt.executeUpdate();
+                }
+
+                //add insert abstract
             } 
             else if (user.getTypeID().equals("S")) 
             {
@@ -355,7 +364,14 @@ public class Backend
                 stmt.setString(5, studentUser.getPassword());
                 stmt.executeUpdate();
 
-                //add insert interests
+                String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
+                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                for (Interest interest : studentUser.getInterests()) 
+                {
+                    insertInterestsStmt.setInt(1, studentUser.getStudentID());
+                    insertInterestsStmt.setInt(2, interest.getInterestID());
+                    insertInterestsStmt.executeUpdate();
+                }
             }
             else if (user.getTypeID().equals("G")) 
             {
