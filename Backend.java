@@ -232,6 +232,7 @@ public class Backend
             String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
             PreparedStatement stmtUser = conn.prepareStatement(queryUser);
             stmtUser.setString(1, user.getUsername());
+            //encrpyt password
             stmtUser.setString(2, user.getPassword());
             stmtUser.setInt(3, user.getUserID());
             stmtUser.executeUpdate();
@@ -330,6 +331,7 @@ public class Backend
             PreparedStatement stmtUser = conn.prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
             stmtUser.setString(1, user.getTypeID());
             stmtUser.setString(2, user.getUsername());
+            //encrpyt password
             stmtUser.setString(3, user.getPassword());
             stmtUser.executeUpdate();
             ResultSet generatedKeys = stmtUser.getGeneratedKeys();
