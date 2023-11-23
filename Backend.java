@@ -393,22 +393,30 @@ public class Backend
             if (user.getTypeID().equals("F"))
             {
                 Faculty facultyUser = (Faculty) user;
-                String query = "DELETE FROM faculty WHERE facultyID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, facultyUser.getFacultyID());
-                stmt.executeUpdate();
+                String deleteFacultyQuery = "DELETE FROM faculty WHERE facultyID = ?";
+                PreparedStatement deleteFacultyStmt = conn.prepareStatement(deleteFacultyQuery);
+                deleteFacultyStmt.setInt(1, facultyUser.getFacultyID());
+                deleteFacultyStmt.executeUpdate();
                 
-                //add delete abstract(s) & interests
+                String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
+                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
+                deleteInterestsStmt.executeUpdate();
+
+                //add delete abstracts
             } 
             else if (user.getTypeID().equals("S")) 
             {
                 Student studentUser = (Student) user;
-                String query = "DELETE FROM student WHERE studentID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setInt(1, studentUser.getStudentID());
-                stmt.executeUpdate();
+                String deleteStudentQuery = "DELETE FROM student WHERE studentID = ?";
+                PreparedStatement deleteStudentStmt = conn.prepareStatement(deleteStudentQuery);
+                deleteStudentStmt.setInt(1, studentUser.getStudentID());
+                deleteStudentStmt.executeUpdate();
 
-                //add delete interests
+                String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
+                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                deleteInterestsStmt.setInt(1, studentUser.getStudentID());
+                deleteInterestsStmt.executeUpdate();
             }
             else if (user.getTypeID().equals("G")) 
             {
