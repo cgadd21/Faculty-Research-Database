@@ -263,7 +263,14 @@ public class Backend
                     insertInterestsStmt.executeUpdate();
                 }
 
-                //delete and insert abstracts
+                String updateAbstractQuery = "Update abstractList SET professorAbstract = ? WHERE abstractID = ?";
+                PreparedStatement updateAbstractStmt = conn.prepareStatement(updateAbstractQuery);
+                for (Abstract abstract1 : facultyUser.getAbstracts()) 
+                {
+                    updateAbstractStmt.setString(1, abstract1.getProfessorAbstract());
+                    updateAbstractStmt.setInt(2, abstract1.getAbstractID());
+                    updateAbstractStmt.executeUpdate();
+                }
             } 
             else if (user.getTypeID().equals("S")) 
             {
