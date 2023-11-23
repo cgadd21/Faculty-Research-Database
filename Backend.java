@@ -3,37 +3,30 @@ import java.util.*;
 
 public class Backend 
 {
-    private Connection conn;
-
-    public boolean connect() 
+    public Connection connect() 
     {
         try 
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
-            return true;
+            return DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
         } 
         catch (ClassNotFoundException cnfe) 
         {
-            return false;
+            return null;
         } 
         catch (SQLException sqle) 
         {
-            return false;
+            return null;
         }
     }
 
-    public boolean close() 
+    public void close() 
     {
         try 
         {
-            if (conn != null) conn.close();
-            return true;
+            if (connect() != null) connect().close();
         } 
-        catch (SQLException sqle) 
-        {
-            return false;
-        }
+        catch (SQLException sqle) {}
     }
 
     public User login(String username, String password)
@@ -41,7 +34,7 @@ public class Backend
         try 
         {
             String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            PreparedStatement preparedStatement = connect().prepareStatement(query);
             preparedStatement.setString(1, username);
             //encrpyt password
             preparedStatement.setString(2, password);
@@ -79,7 +72,7 @@ public class Backend
             try 
             {
                 String query = "SELECT * FROM users JOIN faculty ON users.userID = faculty.facultyID LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                PreparedStatement preparedStatement = connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet facultyResultSet = preparedStatement.executeQuery();
         
@@ -139,7 +132,7 @@ public class Backend
             try 
             {
                 String query = "SELECT * FROM users JOIN student ON users.userID = student.studentID LEFT JOIN studentInterests ON student.studentID = studentInterests.studentID LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                PreparedStatement preparedStatement = connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet studentResultSet = preparedStatement.executeQuery();
 
@@ -188,7 +181,7 @@ public class Backend
             try 
             {
                 String query = "SELECT * FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                PreparedStatement preparedStatement = connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet guestResultSet = preparedStatement.executeQuery();
 
@@ -230,7 +223,7 @@ public class Backend
         try 
         {
             String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
-            PreparedStatement stmtUser = conn.prepareStatement(queryUser);
+            PreparedStatement stmtUser = connect().prepareStatement(queryUser);
             stmtUser.setString(1, user.getUsername());
             //encrpyt password
             stmtUser.setString(2, user.getPassword());
@@ -241,7 +234,7 @@ public class Backend
             {
                 Faculty facultyUser = (Faculty) user;
                 String updateFacultyQuery = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
-                PreparedStatement updateFacultyStmt = conn.prepareStatement(updateFacultyQuery);
+                PreparedStatement updateFacultyStmt = connect().prepareStatement(updateFacultyQuery);
                 updateFacultyStmt.setString(1, facultyUser.getFname());
                 updateFacultyStmt.setString(2, facultyUser.getLname());
                 updateFacultyStmt.setString(3, facultyUser.getEmail());
@@ -251,12 +244,12 @@ public class Backend
                 updateFacultyStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
-                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteInterestsStmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : facultyUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
@@ -265,7 +258,7 @@ public class Backend
                 }
 
                 String updateAbstractQuery = "Update abstractList SET professorAbstract = ? WHERE abstractID = ?";
-                PreparedStatement updateAbstractStmt = conn.prepareStatement(updateAbstractQuery);
+                PreparedStatement updateAbstractStmt = connect().prepareStatement(updateAbstractQuery);
                 for (Abstract abstract1 : facultyUser.getAbstracts()) 
                 {
                     updateAbstractStmt.setString(1, abstract1.getProfessorAbstract());
@@ -277,7 +270,7 @@ public class Backend
             {
                 Student studentUser = (Student) user;
                 String updateStudentQuery = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
-                PreparedStatement updateStudentStmt = conn.prepareStatement(updateStudentQuery);
+                PreparedStatement updateStudentStmt = connect().prepareStatement(updateStudentQuery);
                 updateStudentStmt.setString(1, studentUser.getFname());
                 updateStudentStmt.setString(2, studentUser.getLname());
                 updateStudentStmt.setString(3, studentUser.getEmail());
@@ -286,12 +279,12 @@ public class Backend
                 updateStudentStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
-                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, studentUser.getStudentID());
                 deleteInterestsStmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : studentUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, studentUser.getStudentID());
@@ -303,7 +296,7 @@ public class Backend
             {
                 Guest guestUser = (Guest) user;
                 String query = "UPDATE guest SET business = ?, fname = ?, lname = ?, contactinfo = ? WHERE guestID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
                 stmt.setString(1, guestUser.getBusiness());
                 stmt.setString(2, guestUser.getFname());
                 stmt.setString(3, guestUser.getLname());
@@ -328,7 +321,7 @@ public class Backend
         try
         {
             String queryUser = "INSERT INTO users (typeID, username, password) VALUES (?, ?, ?)";
-            PreparedStatement stmtUser = conn.prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmtUser = connect().prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
             stmtUser.setString(1, user.getTypeID());
             stmtUser.setString(2, user.getUsername());
             //encrpyt password
@@ -341,7 +334,7 @@ public class Backend
             {
                 Faculty facultyUser = (Faculty) user;
                 String query = "INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
                 stmt.setInt(1, facultyUser.getUserID());
                 stmt.setString(2, facultyUser.getFname());
                 stmt.setString(3, facultyUser.getLname());
@@ -351,7 +344,7 @@ public class Backend
                 stmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : facultyUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
@@ -360,7 +353,7 @@ public class Backend
                 }
 
                 String insertAbstractsQuery = "INSERT INTO abstractList (abstractID, professorAbstract) VALUES (?, ?)";
-                PreparedStatement insertAbstractsStmt = conn.prepareStatement(insertAbstractsQuery, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement insertAbstractsStmt = connect().prepareStatement(insertAbstractsQuery, Statement.RETURN_GENERATED_KEYS);
                 for (Abstract facultyAbstract : facultyUser.getAbstracts()) 
                 {
                     insertAbstractsStmt.setInt(1, facultyAbstract.getAbstractID());
@@ -372,7 +365,7 @@ public class Backend
                     {
                         int abstractID = abstractGeneratedKeys.getInt(1);
                         String associateAbstractQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
-                        PreparedStatement associateAbstractStmt = conn.prepareStatement(associateAbstractQuery);
+                        PreparedStatement associateAbstractStmt = connect().prepareStatement(associateAbstractQuery);
                         associateAbstractStmt.setInt(1, facultyUser.getUserID());
                         associateAbstractStmt.setInt(2, abstractID);
                         associateAbstractStmt.executeUpdate();
@@ -383,7 +376,7 @@ public class Backend
             {
                 Student studentUser = (Student) user;
                 String query = "INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
                 stmt.setInt(1, studentUser.getUserID());
                 stmt.setString(2, studentUser.getFname());
                 stmt.setString(3, studentUser.getLname());
@@ -392,7 +385,7 @@ public class Backend
                 stmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : studentUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, studentUser.getStudentID());
@@ -404,7 +397,7 @@ public class Backend
             {
                 Guest guestUser = (Guest) user;
                 String query = "INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
                 stmt.setInt(1, guestUser.getUserID());
                 stmt.setString(2, guestUser.getBusiness());
                 stmt.setString(3, guestUser.getFname());
@@ -429,7 +422,7 @@ public class Backend
         try
         {
             String queryUser = "DELETE FROM users WHERE userID = ?";
-            PreparedStatement stmtUser = conn.prepareStatement(queryUser);
+            PreparedStatement stmtUser = connect().prepareStatement(queryUser);
             stmtUser.setInt(1, user.getUserID());
             stmtUser.executeUpdate();
 
@@ -437,17 +430,17 @@ public class Backend
             {
                 Faculty facultyUser = (Faculty) user;
                 String deleteFacultyQuery = "DELETE FROM faculty WHERE facultyID = ?";
-                PreparedStatement deleteFacultyStmt = conn.prepareStatement(deleteFacultyQuery);
+                PreparedStatement deleteFacultyStmt = connect().prepareStatement(deleteFacultyQuery);
                 deleteFacultyStmt.setInt(1, facultyUser.getFacultyID());
                 deleteFacultyStmt.executeUpdate();
                 
                 String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
-                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteInterestsStmt.executeUpdate();
 
                 String deleteAbstractQuery = "DELETE FROM facultyAbstract WHERE facultyID = ?";
-                PreparedStatement deleteAbstractStmt = conn.prepareStatement(deleteAbstractQuery);
+                PreparedStatement deleteAbstractStmt = connect().prepareStatement(deleteAbstractQuery);
                 deleteAbstractStmt.setInt(1, facultyUser.getFacultyID());
                 deleteAbstractStmt.executeUpdate();
             } 
@@ -455,12 +448,12 @@ public class Backend
             {
                 Student studentUser = (Student) user;
                 String deleteStudentQuery = "DELETE FROM student WHERE studentID = ?";
-                PreparedStatement deleteStudentStmt = conn.prepareStatement(deleteStudentQuery);
+                PreparedStatement deleteStudentStmt = connect().prepareStatement(deleteStudentQuery);
                 deleteStudentStmt.setInt(1, studentUser.getStudentID());
                 deleteStudentStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
-                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, studentUser.getStudentID());
                 deleteInterestsStmt.executeUpdate();
             }
@@ -468,7 +461,7 @@ public class Backend
             {
                 Guest guestUser = (Guest) user;
                 String query = "DELETE FROM guest WHERE guestID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
                 stmt.setInt(1, guestUser.getGuestID());
                 stmt.executeUpdate();
             }
@@ -482,7 +475,7 @@ public class Backend
         {
             List<Interest> interests = new ArrayList<>();
             String query = "SELECT interestID, intDesc FROM interestList";
-            Statement stmt = conn.createStatement();
+            Statement stmt = connect().createStatement();
             ResultSet interestsResultSet = stmt.executeQuery(query);
             while(interestsResultSet.next())
             {
@@ -518,7 +511,7 @@ public class Backend
 
                 query += ") GROUP BY studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
 
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -551,7 +544,7 @@ public class Backend
                 
                 query += ") GROUP BY facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
 
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -584,7 +577,7 @@ public class Backend
 
                 query += ") GROUP BY Name";
 
-                PreparedStatement stmt = conn.prepareStatement(query);
+                PreparedStatement stmt = connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -620,8 +613,6 @@ public class Backend
         Backend backend = new Backend();
         User cUser;
 
-        backend.connect();
-
         System.out.print("Login\nUsername: ");
         String username = scanner.next();
         System.out.print("Password: ");
@@ -645,6 +636,13 @@ public class Backend
             {
                 Guest cGuestUser = (Guest) cUser;
                 System.out.println(cGuestUser.toString());
+            }
+
+            List<Interest> interests = backend.getInterests();
+
+            for (Interest interest : interests) 
+            {
+                System.out.println(interest.getInterestID() + "|" + interest.getIntDesc());
             }
         }
         else
