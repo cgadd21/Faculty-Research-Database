@@ -2,6 +2,14 @@ public class Interest
 {
     private int interestID;
     private String intDesc;
+
+    public Interest() {}
+
+    public Interest(int interestID, String intDesc)
+    {
+        this.interestID = interestID;
+        this.intDesc = intDesc;
+    }
     
     public int getInterestID() 
     {

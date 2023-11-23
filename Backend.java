@@ -103,14 +103,18 @@ public class Backend
 
                     while (facultyResultSet.next()) 
                     {
-                        Interest interest = new Interest();
-                        interest.setInterestID(facultyResultSet.getInt("interestID"));
-                        interest.setIntDesc(facultyResultSet.getString("intDesc"));
+                        Interest interest = new Interest
+                        (
+                            facultyResultSet.getInt("interestID"),
+                            facultyResultSet.getString("intDesc")
+                        );
                         if(!interests.contains(interest)) interests.add(interest);
 
-                        Abstract facultyAbstract = new Abstract();
-                        facultyAbstract.setAbstractID(facultyResultSet.getInt("abstractID"));
-                        facultyAbstract.setProfessorAbstract(facultyResultSet.getString("professorAbstract"));
+                        Abstract facultyAbstract = new Abstract
+                        (
+                            facultyResultSet.getInt("abstractID"),
+                            facultyResultSet.getString("professorAbstract")
+                        );
                         if(!abstracts.contains(facultyAbstract)) abstracts.add(facultyAbstract);
                     }
     
@@ -156,9 +160,11 @@ public class Backend
                     List<Interest> interests = new ArrayList<>();
                     while (studentResultSet.next()) 
                     {
-                        Interest interest = new Interest();
-                        interest.setInterestID(studentResultSet.getInt("interestID"));
-                        interest.setIntDesc(studentResultSet.getString("intDesc"));
+                        Interest interest = new Interest
+                        (
+                            studentResultSet.getInt("interestID"),
+                            studentResultSet.getString("intDesc")
+                        );
                         if(!interests.contains(interest)) interests.add(interest);
                     }
 
@@ -399,9 +405,11 @@ public class Backend
             ResultSet interestsResultSet = stmt.executeQuery(query);
             while(interestsResultSet.next())
             {
-                Interest interest = new Interest();
-                interest.setInterestID(interestsResultSet.getInt("interestID"));
-                interest.setIntDesc(interestsResultSet.getString("intDesc"));
+                Interest interest = new Interest
+                (
+                    interestsResultSet.getInt("interestID"),
+                    interestsResultSet.getString("intDesc")
+                );
                 if(!interests.contains(interest)) interests.add(interest);
             }
             return interests;
