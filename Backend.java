@@ -403,7 +403,10 @@ public class Backend
                 deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteInterestsStmt.executeUpdate();
 
-                //add delete abstracts
+                String deleteAbstractQuery = "DELETE FROM facultyAbstract WHERE facultyID = ?";
+                PreparedStatement deleteAbstractStmt = conn.prepareStatement(deleteAbstractQuery);
+                deleteAbstractStmt.setInt(1, facultyUser.getFacultyID());
+                deleteAbstractStmt.executeUpdate();
             } 
             else if (user.getTypeID().equals("S")) 
             {
