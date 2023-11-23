@@ -43,6 +43,7 @@ public class Backend
             String query = "SELECT * FROM users WHERE username = ? AND password = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, username);
+            //encrpyt password
             preparedStatement.setString(2, password);
 
             try (ResultSet userResultSet = preparedStatement.executeQuery()) 
@@ -238,31 +239,57 @@ public class Backend
             if (user.getTypeID().equals("F")) 
             {
                 Faculty facultyUser = (Faculty) user;
-                String query = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, facultyUser.getFname());
-                stmt.setString(2, facultyUser.getLname());
-                stmt.setString(3, facultyUser.getEmail());
-                stmt.setString(4, facultyUser.getPhoneNumber());
-                stmt.setString(5, facultyUser.getLocation());
-                stmt.setInt(6, facultyUser.getFacultyID());
-                stmt.executeUpdate();
+                String updateFacultyQuery = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
+                PreparedStatement updateFacultyStmt = conn.prepareStatement(updateFacultyQuery);
+                updateFacultyStmt.setString(1, facultyUser.getFname());
+                updateFacultyStmt.setString(2, facultyUser.getLname());
+                updateFacultyStmt.setString(3, facultyUser.getEmail());
+                updateFacultyStmt.setString(4, facultyUser.getPhoneNumber());
+                updateFacultyStmt.setString(5, facultyUser.getLocation());
+                updateFacultyStmt.setInt(6, facultyUser.getFacultyID());
+                updateFacultyStmt.executeUpdate();
 
-                //add update abstract(s) & interests
+                String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
+                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
+                deleteInterestsStmt.executeUpdate();
+
+                String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
+                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                for (Interest interest : facultyUser.getInterests()) 
+                {
+                    insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
+                    insertInterestsStmt.setInt(2, interest.getInterestID());
+                    insertInterestsStmt.executeUpdate();
+                }
+
+                //delete and insert abstracts
             } 
             else if (user.getTypeID().equals("S")) 
             {
                 Student studentUser = (Student) user;
-                String query = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
-                PreparedStatement stmt = conn.prepareStatement(query);
-                stmt.setString(1, studentUser.getFname());
-                stmt.setString(2, studentUser.getLname());
-                stmt.setString(3, studentUser.getEmail());
-                stmt.setString(4, studentUser.getPhoneNumber());
-                stmt.setInt(5, studentUser.getStudentID());
-                stmt.executeUpdate();
+                String updateStudentQuery = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
+                PreparedStatement updateStudentStmt = conn.prepareStatement(updateStudentQuery);
+                updateStudentStmt.setString(1, studentUser.getFname());
+                updateStudentStmt.setString(2, studentUser.getLname());
+                updateStudentStmt.setString(3, studentUser.getEmail());
+                updateStudentStmt.setString(4, studentUser.getPhoneNumber());
+                updateStudentStmt.setInt(5, studentUser.getStudentID());
+                updateStudentStmt.executeUpdate();
 
-                //add update interests
+                String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
+                PreparedStatement deleteInterestsStmt = conn.prepareStatement(deleteInterestsQuery);
+                deleteInterestsStmt.setInt(1, studentUser.getStudentID());
+                deleteInterestsStmt.executeUpdate();
+
+                String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
+                PreparedStatement insertInterestsStmt = conn.prepareStatement(insertInterestsQuery);
+                for (Interest interest : studentUser.getInterests()) 
+                {
+                    insertInterestsStmt.setInt(1, studentUser.getStudentID());
+                    insertInterestsStmt.setInt(2, interest.getInterestID());
+                    insertInterestsStmt.executeUpdate();
+                }
             } 
             else if (user.getTypeID().equals("G")) 
             {
