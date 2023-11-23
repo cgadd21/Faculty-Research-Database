@@ -19,10 +19,20 @@ public class InterestResult
     {
         return name;
     }
+    
+    public void setName(String name) 
+    {
+        this.name = name;
+    }
 
     public String getInterest() 
     {
         return interest;
+    }
+    
+    public void setInterest(String interest) 
+    {
+        this.interest = interest;
     }
 
     public String getLocation() 
@@ -30,13 +40,28 @@ public class InterestResult
         return location;
     }
 
+    public void setLocation(String location) 
+    {
+        this.location = location;
+    }
+
     public String getPhoneNumber() 
     {
         return phoneNumber;
     }
 
+    public void setPhoneNumber(String phoneNumber) 
+    {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getEmail() 
     {
         return email;
+    }
+
+    public void setEmail(String email) 
+    {
+        this.email = email;
     }
 }
