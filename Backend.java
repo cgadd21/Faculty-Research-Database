@@ -638,7 +638,21 @@ public class Backend
         }
     }
 
-    //createAbstract
+    public List<Abstract> createAbstract(Abstract abstract1)
+    {
+        try
+        {
+            String query = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, abstract1.getProfessorAbstract());
+            stmt.executeUpdate();
+            return getAbstracts();
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
 
     public static void main(String[] args) 
     {
