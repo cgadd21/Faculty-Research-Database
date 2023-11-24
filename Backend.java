@@ -1,5 +1,11 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
+
+import javax.swing.JFileChooser;
 
 public class Backend 
 {
@@ -649,6 +655,31 @@ public class Backend
             return getAbstracts();
         }
         catch (SQLException e) 
+        {
+            return null;
+        }
+    }
+
+    public String txtToString()
+    {
+        try
+        {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Select an Abstract File");
+            StringBuilder abstractContent = new StringBuilder();
+            if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+            {
+                BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()));
+                String line;
+
+                while ((line = reader.readLine()) != null) 
+                {
+                    abstractContent.append(line).append("\n");
+                }
+            }
+            return abstractContent.toString();
+        }
+        catch (IOException e) 
         {
             return null;
         }
