@@ -599,7 +599,30 @@ public class Backend
 
     //createInterest
 
-    //getAbstracts
+    public List<Abstract> getAbstracts()
+    {
+        try
+        {
+            List<Abstract> abstracts = new ArrayList<>();
+            String query = "SELECT abstractID, professorAbstract FROM abstractList";
+            Statement stmt = conn.createStatement();
+            ResultSet abstractResultSet = stmt.executeQuery(query);
+            while(abstractResultSet.next())
+            {
+                Abstract abstract1 = new Abstract
+                (
+                    abstractResultSet.getInt("abstractID"),
+                    abstractResultSet.getString("professorAbstract")
+                );
+                if(!abstracts.contains(abstract1)) abstracts.add(abstract1);
+            }
+            return abstracts;
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
 
     //createAbstract
 
