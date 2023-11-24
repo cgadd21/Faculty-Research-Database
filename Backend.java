@@ -597,7 +597,21 @@ public class Backend
         }
     }
 
-    //createInterest
+    public List<Interest> createInterest(Interest interest)
+    {
+        try
+        {
+            String query = "INSERT INTO interestList (intDesc) VALUES (?)";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, interest.getIntDesc());
+            stmt.executeUpdate();
+            return getInterests();
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
 
     public List<Abstract> getAbstracts()
     {
