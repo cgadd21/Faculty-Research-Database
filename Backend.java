@@ -252,14 +252,19 @@ public class Backend
                     insertInterestsStmt.setInt(2, interest.getInterestID());
                     insertInterestsStmt.executeUpdate();
                 }
+                
+                String deleteAbstractsQuery = "DELETE FROM facultyAbstract WHERE facultyID = ?";
+                PreparedStatement deleteAbstractsStmt = conn.prepareStatement(deleteAbstractsQuery);
+                deleteAbstractsStmt.setInt(1, facultyUser.getFacultyID());
+                deleteAbstractsStmt.executeUpdate();
 
-                String updateAbstractQuery = "Update abstractList SET professorAbstract = ? WHERE abstractID = ?";
-                PreparedStatement updateAbstractStmt = conn.prepareStatement(updateAbstractQuery);
-                for (Abstract abstract1 : facultyUser.getAbstracts()) 
+                String insertAbstractsQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
+                PreparedStatement insertAbstractsStmt = conn.prepareStatement(insertAbstractsQuery);
+                for (Abstract facultyAbstract : facultyUser.getAbstracts()) 
                 {
-                    updateAbstractStmt.setString(1, abstract1.getProfessorAbstract());
-                    updateAbstractStmt.setInt(2, abstract1.getAbstractID());
-                    updateAbstractStmt.executeUpdate();
+                    insertAbstractsStmt.setInt(1, facultyUser.getUserID());
+                    insertAbstractsStmt.setInt(1, facultyAbstract.getAbstractID());
+                    insertAbstractsStmt.executeUpdate();
                 }
             } 
             else if (user.getTypeID().equals("S")) 
@@ -348,24 +353,13 @@ public class Backend
                     insertInterestsStmt.executeUpdate();
                 }
 
-                String insertAbstractsQuery = "INSERT INTO abstractList (abstractID, professorAbstract) VALUES (?, ?)";
-                PreparedStatement insertAbstractsStmt = conn.prepareStatement(insertAbstractsQuery, Statement.RETURN_GENERATED_KEYS);
+                String insertAbstractsQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
+                PreparedStatement insertAbstractsStmt = conn.prepareStatement(insertAbstractsQuery);
                 for (Abstract facultyAbstract : facultyUser.getAbstracts()) 
                 {
+                    insertAbstractsStmt.setInt(1, facultyUser.getUserID());
                     insertAbstractsStmt.setInt(1, facultyAbstract.getAbstractID());
-                    insertAbstractsStmt.setString(2, facultyAbstract.getProfessorAbstract());
                     insertAbstractsStmt.executeUpdate();
-
-                    ResultSet abstractGeneratedKeys = insertAbstractsStmt.getGeneratedKeys();
-                    if (generatedKeys.next()) 
-                    {
-                        int abstractID = abstractGeneratedKeys.getInt(1);
-                        String associateAbstractQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
-                        PreparedStatement associateAbstractStmt = conn.prepareStatement(associateAbstractQuery);
-                        associateAbstractStmt.setInt(1, facultyUser.getUserID());
-                        associateAbstractStmt.setInt(2, abstractID);
-                        associateAbstractStmt.executeUpdate();
-                    }
                 }
             } 
             else if (user.getTypeID().equals("S")) 
@@ -602,6 +596,12 @@ public class Backend
             return null;
         }
     }
+
+    //createInterest
+
+    //getAbstracts
+
+    //createAbstract
 
     public static void main(String[] args) 
     {
