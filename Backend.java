@@ -640,6 +640,8 @@ public class Backend
         }
     }
 
+    //search abstracts
+
     public List<Abstract> createAbstract(Abstract abstract1)
     {
         try
