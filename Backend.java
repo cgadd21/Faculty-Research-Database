@@ -658,7 +658,7 @@ public class Backend
         }
     }
 
-    public String txtToString()
+    public String getFile()
     {
         try
         {
