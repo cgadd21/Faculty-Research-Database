@@ -100,14 +100,14 @@ public class Backend
                             facultyResultSet.getInt("interestID"),
                             facultyResultSet.getString("intDesc")
                         );
-                        if(!interests.contains(interest)) interests.add(interest);
+                        if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
 
                         Abstract facultyAbstract = new Abstract
                         (
                             facultyResultSet.getInt("abstractID"),
                             facultyResultSet.getString("professorAbstract")
                         );
-                        if(!abstracts.contains(facultyAbstract)) abstracts.add(facultyAbstract);
+                        if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
                     }
     
                     facultyUser.setInterests(interests);
@@ -157,7 +157,7 @@ public class Backend
                             studentResultSet.getInt("interestID"),
                             studentResultSet.getString("intDesc")
                         );
-                        if(!interests.contains(interest)) interests.add(interest);
+                        if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
                     }
 
                     studentUser.setInterests(interests);
@@ -476,7 +476,7 @@ public class Backend
                     interestsResultSet.getInt("interestID"),
                     interestsResultSet.getString("intDesc")
                 );
-                if(!interests.contains(interest)) interests.add(interest);
+                if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
             }
             return interests;
         }
@@ -522,7 +522,7 @@ public class Backend
                         null, 
                         null
                     );
-                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
+                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("S"))
@@ -555,7 +555,7 @@ public class Backend
                         resultSet.getString("Phone Number"),
                         resultSet.getString("Email")
                     );
-                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
+                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("G"))
@@ -588,7 +588,7 @@ public class Backend
                         null, 
                         null
                     );
-                    if(!interestResults.contains(interestResult)) interestResults.add(interestResult);
+                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
                 }
             }
             return interestResults;
@@ -625,12 +625,12 @@ public class Backend
             ResultSet abstractResultSet = stmt.executeQuery(query);
             while(abstractResultSet.next())
             {
-                Abstract abstract1 = new Abstract
+                Abstract facultyAbstract = new Abstract
                 (
                     abstractResultSet.getInt("abstractID"),
                     abstractResultSet.getString("professorAbstract")
                 );
-                if(!abstracts.contains(abstract1)) abstracts.add(abstract1);
+                if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
             }
             return abstracts;
         }
@@ -714,11 +714,6 @@ public class Backend
             {
                 Guest cGuestUser = (Guest) cUser;
                 System.out.println(cGuestUser.toString());
-            }
-
-            for (Interest interest : backend.getInterests()) 
-            {
-                System.out.println(interest.getInterestID() + "|" + interest.getIntDesc());
             }
             
         }
