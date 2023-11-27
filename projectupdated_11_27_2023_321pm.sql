@@ -26,7 +26,6 @@ CREATE TABLE guest(
     ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
-
 -- GUEST INFORMATION END
 
 CREATE TABLE student (
@@ -83,13 +82,11 @@ CREATE TABLE facultyInterests (
 	ON UPDATE CASCADE
 );
 
-
-
 CREATE TABLE abstractList (
-	abstractID int,
+	abstractID int auto_increment,
 	professorAbstract TEXT,
 	CONSTRAINT absractList_pk PRIMARY KEY (abstractID)
-);
+) AUTO_INCREMENT = 1;
 CREATE TABLE facultyAbstract (
 	facultyID INT,
 	abstractID INT,
@@ -105,14 +102,11 @@ CREATE TABLE facultyAbstract (
 INSERT INTO Users (userID, typeID, username, password) VALUES 
 (1,'F','Jimhab','FacultyPass'), 
 (2,'S','jmd4173','StudentPass'), 
-(3,'G','Wegmans','GuestPass'),
-(4,'S','ak7221','StudentPass');
-
+(3,'G','Wegmans','GuestPass');
 INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES
 (3, 'Wegmans','Mr','Wegman','wegmanscontact@gmail.com');
 INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES
-(2, 'John', 'DAngelo','jmd4173@rit.edu', '203-427-5637'),
-(4,'Aathif','Khan','ak7221@rit.edu','585-287-1098');
+(2, 'John', 'DAngelo','jmd4173@rit.edu', '203-427-5637');
 
 INSERT INTO interestList  VALUES (1, 'Pascal');
 INSERT INTO interestList  VALUES (2, 'Java');
@@ -132,10 +126,7 @@ INSERT INTO interestList  VALUES (14, "Ruby/Ruby on Rails");
 INSERT INTO studentInterests (studentID, interestID) VALUES
 (2,2),
 (2,3),
-(2,4),
-(4,10),
-(4,11),
-(4,12);
+(2,4);
 
 INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
 (1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano');
@@ -158,4 +149,3 @@ INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,6),
 (1,7),
 (1,8);
-
