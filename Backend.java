@@ -31,7 +31,7 @@ public class Backend
     {
         try 
         {
-            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            String query = "SELECT * FROM users WHERE BINARY username = ? AND BINARY password = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, username);
             //encrpyt password

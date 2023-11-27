@@ -129,7 +129,8 @@ INSERT INTO studentInterests (studentID, interestID) VALUES
 (2,4);
 
 INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
-(1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano');
+(1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano'),
+(2, 'Dean', 'Ganskop','email','123-456-7890', 'Golisano');;
 
 
 INSERT INTO abstractList (abstractID, professorAbstract) VALUES
@@ -138,7 +139,8 @@ INSERT INTO abstractList (abstractID, professorAbstract) VALUES
 
 
 INSERT INTO facultyAbstract (facultyID, abstractID) VALUES
-(1,1);
+(1,1),
+(2,1);
 
 INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,1),
