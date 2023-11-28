@@ -9,8 +9,6 @@ public class Student extends User
     private String phoneNumber;
     private List<Interest> interests;
 
-    public Student() {}
-
     public Student(int userID, String typeID, String username, String password, int studentID, String fname, String lname, String email, String phoneNumber) 
     {
         super(userID, typeID, username, password);

@@ -5,8 +5,6 @@ public class User
     private String username;
     private String password;
 
-    public User() {}
-
     public User(int userID, String typeID, String username, String password) 
     {
         this.userID = userID;

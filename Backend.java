@@ -666,13 +666,13 @@ public class Backend
         }
     }
 
-    public List<Abstract> createAbstract(Abstract abstract1)
+    public List<Abstract> createAbstract(Abstract facultyAbstract)
     {
         try
         {
             String query = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
             PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, abstract1.getProfessorAbstract());
+            stmt.setString(1, facultyAbstract.getProfessorAbstract());
             stmt.executeUpdate();
             return getAbstracts();
         }

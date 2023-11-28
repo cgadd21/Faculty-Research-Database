@@ -11,8 +11,6 @@ public class Faculty extends User
     private List<Interest> interests;
     private List<Abstract> abstracts;
 
-    public Faculty() {}
-
     public Faculty(int userID, String typeID, String username, String password, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
     {
         super(userID, typeID, username, password);

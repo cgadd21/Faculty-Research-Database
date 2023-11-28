@@ -6,8 +6,6 @@ public class Guest extends User
     private String lname;
     private String contactInfo;
 
-    public Guest() {}
-
     public Guest(int userID, String typeID, String username, String password, int guestID, String business, String fname, String lname, String contactInfo) 
     {
         super(userID, typeID, username, password);
