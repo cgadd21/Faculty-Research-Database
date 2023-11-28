@@ -522,7 +522,7 @@ public class Backend
                         null, 
                         null
                     );
-                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
+                    interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("S"))
@@ -555,7 +555,7 @@ public class Backend
                         resultSet.getString("Phone Number"),
                         resultSet.getString("Email")
                     );
-                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
+                    interestResults.add(interestResult);
                 }
             }
             else if (user.getTypeID().equals("G"))
@@ -588,7 +588,7 @@ public class Backend
                         null, 
                         null
                     );
-                    if(!interestResults.stream().anyMatch(i -> i.getName().equals(interestResult.getName()))) interestResults.add(interestResult);
+                    interestResults.add(interestResult);
                 }
             }
             return interestResults;
@@ -640,7 +640,31 @@ public class Backend
         }
     }
 
-    //search abstracts
+    public List<AbstractResult> getAbstracts(String search)
+    {
+        try
+        {
+            List<AbstractResult> abstractResults = new ArrayList<>();
+            String query = "SELECT a.professorAbstract as Abstract, GROUP_CONCAT(CONCAT(f.lname, ', ', f.fname) SEPARATOR '; ') AS Professors FROM abstractList a JOIN facultyabstract fa ON a.abstractID = fa.abstractID JOIN faculty f ON fa.facultyID = f.facultyID WHERE a.professorAbstract LIKE '%?%' GROUP BY a.abstractID;";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, search);
+            ResultSet abstractResultSet = stmt.executeQuery();
+            while (abstractResultSet.next()) 
+            {
+                AbstractResult abstractResult = new AbstractResult
+                (
+                    abstractResultSet.getString("Abstract"),
+                    abstractResultSet.getString("Professors") 
+                );
+                abstractResults.add(abstractResult);
+            }
+            return abstractResults;
+        }
+        catch (SQLException e) 
+        {
+            return null;
+        }
+    }
 
     public List<Abstract> createAbstract(Abstract abstract1)
     {
