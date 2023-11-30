@@ -130,11 +130,11 @@ INSERT INTO studentInterests (studentID, interestID) VALUES
 
 INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
 (1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano'),
-(2, 'Dean', 'Ganskop','email','123-456-7890', 'Golisano');;
+(2, 'Dean', 'Ganskop','email','123-456-7890', 'Golisano');
 
 
-INSERT INTO abstractList (abstractID, professorAbstract) VALUES
-(1,'Im an abstract!');
+INSERT INTO abstractList (professorAbstract) VALUES
+('Im an abstract!');
 
 
 
