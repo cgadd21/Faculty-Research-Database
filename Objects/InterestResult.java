@@ -1,3 +1,4 @@
+package Objects;
 public class InterestResult 
 {
     private String name;

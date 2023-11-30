@@ -1,3 +1,4 @@
+package Objects;
 public class AbstractResult 
 {
     private String Abstract;
