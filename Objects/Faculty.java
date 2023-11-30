@@ -1,5 +1,6 @@
 package Objects;
-import java.util.List;
+
+import java.util.*;
 
 public class Faculty extends User 
 {

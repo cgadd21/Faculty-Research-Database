@@ -1,4 +1,5 @@
 package Objects;
+
 public class Abstract 
 {
     private int abstractID;
