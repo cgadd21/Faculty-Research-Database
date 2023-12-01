@@ -9,5 +9,5 @@ public class program
         _userService.getCurrentUser().setPassword("StudentPass");
         _userService.login();
         System.out.println(_userService.getCurrentUser().toString());
-    }    
+    }
 }

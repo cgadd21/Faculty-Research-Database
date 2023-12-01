@@ -11,9 +11,9 @@ public class UserService implements IUserService
     private IDataService _dataService = new DataService();
 
     private User user = new User();
-    private List<Interest> interests;
+    private List<Interest> interests = new ArrayList<>();
     private Interest newInterest = new Interest();
-    private List<Abstract> abstracts;
+    private List<Abstract> abstracts = new ArrayList<>();
     private Abstract newAbstract = new Abstract();
 
     @Override
@@ -449,7 +449,7 @@ public class UserService implements IUserService
     {
         try
         {
-            interests.clear();
+            if(!interests.isEmpty()) interests.clear();
             String query = "SELECT interestID, intDesc FROM interestList";
             Statement stmt = _dataService.connect().createStatement();
             ResultSet interestsResultSet = stmt.executeQuery(query);
@@ -486,7 +486,7 @@ public class UserService implements IUserService
     {
         try
         {
-            abstracts.clear();
+            if(!abstracts.isEmpty()) abstracts.clear();
             String query = "SELECT abstractID, professorAbstract FROM abstractList";
             Statement stmt = _dataService.connect().createStatement();
             ResultSet abstractResultSet = stmt.executeQuery(query);
