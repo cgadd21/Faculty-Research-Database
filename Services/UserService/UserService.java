@@ -40,6 +40,7 @@ public class UserService implements IUserService
                     userResultSet.getString("password")
                 );
                 user = loginUser;
+                getUser();
             }
         } 
         catch (SQLException e) {}
