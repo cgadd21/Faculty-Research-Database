@@ -10,7 +10,7 @@ public class UserService implements IUserService
 {
     private IDataService _dataService = new DataService();
 
-    private User user;
+    private User user = new User();
 
     @Override
     public User getCurrentUser() 
@@ -24,24 +24,22 @@ public class UserService implements IUserService
         try 
         {
             String query = "SELECT * FROM users WHERE BINARY username = ? AND BINARY password = ?";
-            PreparedStatement preparedStatement = _dataService.getConnection().prepareStatement(query);
+            PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
             preparedStatement.setString(1, user.getUsername());
             //encrpyt password
             preparedStatement.setString(2, user.getPassword());
+            ResultSet userResultSet = preparedStatement.executeQuery();
 
-            try (ResultSet userResultSet = preparedStatement.executeQuery()) 
+            if (userResultSet.next()) 
             {
-                if (userResultSet.next()) 
-                {
-                    User loginUser = new User
-                    (
-                        userResultSet.getInt("userID"),
-                        userResultSet.getString("typeID"),
-                        userResultSet.getString("username"),
-                        userResultSet.getString("password")
-                    );
-                    user = loginUser;
-                }
+                User loginUser = new User
+                (
+                    userResultSet.getInt("userID"),
+                    userResultSet.getString("typeID"),
+                    userResultSet.getString("username"),
+                    userResultSet.getString("password")
+                );
+                user = loginUser;
             }
         } 
         catch (SQLException e) {}
@@ -55,7 +53,7 @@ public class UserService implements IUserService
             try 
             {
                 String query = "SELECT * FROM users JOIN faculty ON users.userID = faculty.facultyID LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet facultyResultSet = preparedStatement.executeQuery();
         
@@ -108,7 +106,7 @@ public class UserService implements IUserService
             try 
             {
                 String query = "SELECT * FROM users JOIN student ON users.userID = student.studentID LEFT JOIN studentInterests ON student.studentID = studentInterests.studentID LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet studentResultSet = preparedStatement.executeQuery();
 
@@ -150,7 +148,7 @@ public class UserService implements IUserService
             try 
             {
                 String query = "SELECT * FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet guestResultSet = preparedStatement.executeQuery();
 
@@ -182,7 +180,7 @@ public class UserService implements IUserService
         try 
         {
             String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
-            PreparedStatement stmtUser = _dataService.getConnection().prepareStatement(queryUser);
+            PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser);
             stmtUser.setString(1, user.getUsername());
             //encrpyt password
             stmtUser.setString(2, user.getPassword());
@@ -193,7 +191,7 @@ public class UserService implements IUserService
             {
                 Faculty facultyUser = (Faculty) user;
                 String updateFacultyQuery = "UPDATE faculty SET fname = ?, lname = ?, email = ?, phonenumber = ?, location = ? WHERE facultyID = ?";
-                PreparedStatement updateFacultyStmt = _dataService.getConnection().prepareStatement(updateFacultyQuery);
+                PreparedStatement updateFacultyStmt = _dataService.connect().prepareStatement(updateFacultyQuery);
                 updateFacultyStmt.setString(1, facultyUser.getFname());
                 updateFacultyStmt.setString(2, facultyUser.getLname());
                 updateFacultyStmt.setString(3, facultyUser.getEmail());
@@ -203,12 +201,12 @@ public class UserService implements IUserService
                 updateFacultyStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
-                PreparedStatement deleteInterestsStmt = _dataService.getConnection().prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = _dataService.connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteInterestsStmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = _dataService.getConnection().prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = _dataService.connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : facultyUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
@@ -217,12 +215,12 @@ public class UserService implements IUserService
                 }
                 
                 String deleteAbstractsQuery = "DELETE FROM facultyAbstract WHERE facultyID = ?";
-                PreparedStatement deleteAbstractsStmt = _dataService.getConnection().prepareStatement(deleteAbstractsQuery);
+                PreparedStatement deleteAbstractsStmt = _dataService.connect().prepareStatement(deleteAbstractsQuery);
                 deleteAbstractsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteAbstractsStmt.executeUpdate();
 
                 String insertAbstractsQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
-                PreparedStatement insertAbstractsStmt = _dataService.getConnection().prepareStatement(insertAbstractsQuery);
+                PreparedStatement insertAbstractsStmt = _dataService.connect().prepareStatement(insertAbstractsQuery);
                 for (Abstract facultyAbstract : facultyUser.getAbstracts()) 
                 {
                     insertAbstractsStmt.setInt(1, facultyUser.getUserID());
@@ -234,7 +232,7 @@ public class UserService implements IUserService
             {
                 Student studentUser = (Student) user;
                 String updateStudentQuery = "UPDATE student SET fname = ?, lname = ?, email = ?, phonenumber = ? WHERE studentID = ?";
-                PreparedStatement updateStudentStmt = _dataService.getConnection().prepareStatement(updateStudentQuery);
+                PreparedStatement updateStudentStmt = _dataService.connect().prepareStatement(updateStudentQuery);
                 updateStudentStmt.setString(1, studentUser.getFname());
                 updateStudentStmt.setString(2, studentUser.getLname());
                 updateStudentStmt.setString(3, studentUser.getEmail());
@@ -243,12 +241,12 @@ public class UserService implements IUserService
                 updateStudentStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
-                PreparedStatement deleteInterestsStmt = _dataService.getConnection().prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = _dataService.connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, studentUser.getStudentID());
                 deleteInterestsStmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = _dataService.getConnection().prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = _dataService.connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : studentUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, studentUser.getStudentID());
@@ -260,7 +258,7 @@ public class UserService implements IUserService
             {
                 Guest guestUser = (Guest) user;
                 String query = "UPDATE guest SET business = ?, fname = ?, lname = ?, contactinfo = ? WHERE guestID = ?";
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
                 stmt.setString(1, guestUser.getBusiness());
                 stmt.setString(2, guestUser.getFname());
                 stmt.setString(3, guestUser.getLname());
@@ -279,7 +277,7 @@ public class UserService implements IUserService
         try
         {
             String queryUser = "INSERT INTO users (typeID, username, password) VALUES (?, ?, ?)";
-            PreparedStatement stmtUser = _dataService.getConnection().prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser, Statement.RETURN_GENERATED_KEYS);
             stmtUser.setString(1, user.getTypeID());
             stmtUser.setString(2, user.getUsername());
             //encrpyt password
@@ -292,7 +290,7 @@ public class UserService implements IUserService
             {
                 Faculty facultyUser = (Faculty) user;
                 String query = "INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
                 stmt.setInt(1, facultyUser.getUserID());
                 stmt.setString(2, facultyUser.getFname());
                 stmt.setString(3, facultyUser.getLname());
@@ -302,7 +300,7 @@ public class UserService implements IUserService
                 stmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO facultyInterests (facultyID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = _dataService.getConnection().prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = _dataService.connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : facultyUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, facultyUser.getFacultyID());
@@ -311,7 +309,7 @@ public class UserService implements IUserService
                 }
 
                 String insertAbstractsQuery = "INSERT INTO facultyAbstract (facultyID, abstractID) VALUES (?, ?)";
-                PreparedStatement insertAbstractsStmt = _dataService.getConnection().prepareStatement(insertAbstractsQuery);
+                PreparedStatement insertAbstractsStmt = _dataService.connect().prepareStatement(insertAbstractsQuery);
                 for (Abstract facultyAbstract : facultyUser.getAbstracts()) 
                 {
                     insertAbstractsStmt.setInt(1, facultyUser.getUserID());
@@ -323,7 +321,7 @@ public class UserService implements IUserService
             {
                 Student studentUser = (Student) user;
                 String query = "INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
                 stmt.setInt(1, studentUser.getUserID());
                 stmt.setString(2, studentUser.getFname());
                 stmt.setString(3, studentUser.getLname());
@@ -332,7 +330,7 @@ public class UserService implements IUserService
                 stmt.executeUpdate();
 
                 String insertInterestsQuery = "INSERT INTO studentinterests (studentID, interestID) VALUES (?, ?)";
-                PreparedStatement insertInterestsStmt = _dataService.getConnection().prepareStatement(insertInterestsQuery);
+                PreparedStatement insertInterestsStmt = _dataService.connect().prepareStatement(insertInterestsQuery);
                 for (Interest interest : studentUser.getInterests()) 
                 {
                     insertInterestsStmt.setInt(1, studentUser.getStudentID());
@@ -344,7 +342,7 @@ public class UserService implements IUserService
             {
                 Guest guestUser = (Guest) user;
                 String query = "INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
                 stmt.setInt(1, guestUser.getUserID());
                 stmt.setString(2, guestUser.getBusiness());
                 stmt.setString(3, guestUser.getFname());
@@ -363,7 +361,7 @@ public class UserService implements IUserService
         try
         {
             String queryUser = "DELETE FROM users WHERE userID = ?";
-            PreparedStatement stmtUser = _dataService.getConnection().prepareStatement(queryUser);
+            PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser);
             stmtUser.setInt(1, user.getUserID());
             stmtUser.executeUpdate();
 
@@ -371,17 +369,17 @@ public class UserService implements IUserService
             {
                 Faculty facultyUser = (Faculty) user;
                 String deleteFacultyQuery = "DELETE FROM faculty WHERE facultyID = ?";
-                PreparedStatement deleteFacultyStmt = _dataService.getConnection().prepareStatement(deleteFacultyQuery);
+                PreparedStatement deleteFacultyStmt = _dataService.connect().prepareStatement(deleteFacultyQuery);
                 deleteFacultyStmt.setInt(1, facultyUser.getFacultyID());
                 deleteFacultyStmt.executeUpdate();
                 
                 String deleteInterestsQuery = "DELETE FROM facultyInterests WHERE facultyID = ?";
-                PreparedStatement deleteInterestsStmt = _dataService.getConnection().prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = _dataService.connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, facultyUser.getFacultyID());
                 deleteInterestsStmt.executeUpdate();
 
                 String deleteAbstractQuery = "DELETE FROM facultyAbstract WHERE facultyID = ?";
-                PreparedStatement deleteAbstractStmt = _dataService.getConnection().prepareStatement(deleteAbstractQuery);
+                PreparedStatement deleteAbstractStmt = _dataService.connect().prepareStatement(deleteAbstractQuery);
                 deleteAbstractStmt.setInt(1, facultyUser.getFacultyID());
                 deleteAbstractStmt.executeUpdate();
             } 
@@ -389,12 +387,12 @@ public class UserService implements IUserService
             {
                 Student studentUser = (Student) user;
                 String deleteStudentQuery = "DELETE FROM student WHERE studentID = ?";
-                PreparedStatement deleteStudentStmt = _dataService.getConnection().prepareStatement(deleteStudentQuery);
+                PreparedStatement deleteStudentStmt = _dataService.connect().prepareStatement(deleteStudentQuery);
                 deleteStudentStmt.setInt(1, studentUser.getStudentID());
                 deleteStudentStmt.executeUpdate();
 
                 String deleteInterestsQuery = "DELETE FROM studentinterests WHERE studentID = ?";
-                PreparedStatement deleteInterestsStmt = _dataService.getConnection().prepareStatement(deleteInterestsQuery);
+                PreparedStatement deleteInterestsStmt = _dataService.connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, studentUser.getStudentID());
                 deleteInterestsStmt.executeUpdate();
             }
@@ -402,7 +400,7 @@ public class UserService implements IUserService
             {
                 Guest guestUser = (Guest) user;
                 String query = "DELETE FROM guest WHERE guestID = ?";
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
                 stmt.setInt(1, guestUser.getGuestID());
                 stmt.executeUpdate();
             }

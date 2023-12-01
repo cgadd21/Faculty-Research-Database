@@ -4,24 +4,18 @@ import java.sql.*;
 
 public class DataService implements IDataService
 {
-    private Connection conn;
-
     @Override
-    public Connection getConnection() 
-    {
-        return conn;
-    }
-    
-    @Override
-    public void connect() 
+    public Connection connect() 
     {
         try 
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
+            return DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
         } 
-        catch (ClassNotFoundException cnfe) {} 
-        catch (SQLException sqle) {}
+        catch (ClassNotFoundException | SQLException e)
+        {
+            return null;
+        }
     }
 
     @Override
@@ -29,7 +23,7 @@ public class DataService implements IDataService
     {
         try 
         {
-            if (conn != null) conn.close();
+            if (connect() != null) connect().close();
         } 
         catch (SQLException sqle) {}
     }

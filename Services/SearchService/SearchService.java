@@ -46,7 +46,7 @@ public class SearchService implements ISearchService
         {
             interests.clear();
             String query = "SELECT interestID, intDesc FROM interestList";
-            Statement stmt = _dataService.getConnection().createStatement();
+            Statement stmt = _dataService.connect().createStatement();
             ResultSet interestsResultSet = stmt.executeQuery(query);
             while(interestsResultSet.next())
             {
@@ -78,7 +78,7 @@ public class SearchService implements ISearchService
 
                 query += ") GROUP BY studentinterests.studentID, CONCAT(student.fname, ' ', student.lname)";
 
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -111,7 +111,7 @@ public class SearchService implements ISearchService
                 
                 query += ") GROUP BY facultyinterests.facultyID, CONCAT(faculty.fname, ' ', faculty.lname)";
 
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -144,7 +144,7 @@ public class SearchService implements ISearchService
 
                 query += ") GROUP BY Name";
 
-                PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+                PreparedStatement stmt = _dataService.connect().prepareStatement(query);
 
                 for (int i = 0; i < interests.size(); i++) 
                 {
@@ -176,7 +176,7 @@ public class SearchService implements ISearchService
         try
         {
             String query = "INSERT INTO interestList (intDesc) VALUES (?)";
-            PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
             stmt.setString(1, interest.getIntDesc());
             stmt.executeUpdate();
             getInterests();
@@ -191,7 +191,7 @@ public class SearchService implements ISearchService
         {
             abstracts.clear();
             String query = "SELECT abstractID, professorAbstract FROM abstractList";
-            Statement stmt = _dataService.getConnection().createStatement();
+            Statement stmt = _dataService.connect().createStatement();
             ResultSet abstractResultSet = stmt.executeQuery(query);
             while(abstractResultSet.next())
             {
@@ -213,7 +213,7 @@ public class SearchService implements ISearchService
         {
             abstractResults.clear();
             String query = "SELECT a.professorAbstract as Abstract, GROUP_CONCAT(CONCAT(f.lname, ', ', f.fname) SEPARATOR '; ') AS Professors FROM abstractList a JOIN facultyabstract fa ON a.abstractID = fa.abstractID JOIN faculty f ON fa.facultyID = f.facultyID WHERE a.professorAbstract LIKE '%?%' GROUP BY a.abstractID;";
-            PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
             stmt.setString(1, search);
             ResultSet abstractResultSet = stmt.executeQuery();
             while (abstractResultSet.next()) 
@@ -235,7 +235,7 @@ public class SearchService implements ISearchService
         try
         {
             String query = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
-            PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
+            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
             stmt.setString(1, facultyAbstract.getProfessorAbstract());
             stmt.executeUpdate();
             getAbstracts();

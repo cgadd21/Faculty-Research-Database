@@ -4,7 +4,6 @@ import java.sql.*;
 
 public interface IDataService 
 {
-    void connect();
+    Connection connect();
     void close();
-    Connection getConnection();
 }
