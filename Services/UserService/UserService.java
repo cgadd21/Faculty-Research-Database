@@ -47,6 +47,12 @@ public class UserService implements IUserService
     }
 
     @Override
+    public void logout()
+    {
+        user = null;
+    }
+
+    @Override
     public void getUser()
     {
         if (user.getTypeID().equals("F")) 
@@ -405,6 +411,7 @@ public class UserService implements IUserService
                 stmt.setInt(1, guestUser.getGuestID());
                 stmt.executeUpdate();
             }
+            logout();
         }
         catch (SQLException e) {}
     }
