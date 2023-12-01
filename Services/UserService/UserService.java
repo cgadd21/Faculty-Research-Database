@@ -10,16 +10,30 @@ public class UserService implements IUserService
 {
     private IDataService _dataService = new DataService();
 
+    private User user;
+
     @Override
-    public User login(String username, String password)
+    public User getUser() 
+    {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) 
+    {
+        this.user = user;
+    }
+
+    @Override
+    public void login()
     {
         try 
         {
             String query = "SELECT * FROM users WHERE BINARY username = ? AND BINARY password = ?";
             PreparedStatement preparedStatement = _dataService.getConnection().prepareStatement(query);
-            preparedStatement.setString(1, username);
+            preparedStatement.setString(1, user.getUsername());
             //encrpyt password
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(2, user.getPassword());
 
             try (ResultSet userResultSet = preparedStatement.executeQuery()) 
             {
@@ -33,22 +47,15 @@ public class UserService implements IUserService
                         userResultSet.getString("password")
                     );
                     
-                    return getUser(user);
-                } 
-                else 
-                {
-                    return null;
+                    getUser(user);
                 }
             }
         } 
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public User getUser(User user)
+    public void getUser(User user)
     {
         if (user.getTypeID().equals("F")) 
         {
@@ -98,17 +105,10 @@ public class UserService implements IUserService
                     facultyUser.setInterests(interests);
                     facultyUser.setAbstracts(abstracts);
     
-                    return facultyUser;
-                } 
-                else 
-                {
-                    return null;
+                    user = facultyUser;
                 }
             } 
-            catch (SQLException e) 
-            {
-                return null;
-            }
+            catch (SQLException e) {}
         }        
         else if (user.getTypeID().equals("S")) 
         {
@@ -147,17 +147,10 @@ public class UserService implements IUserService
 
                     studentUser.setInterests(interests);
 
-                    return studentUser;
-                } 
-                else 
-                {
-                    return null;
+                    user = studentUser;
                 }
             } 
-            catch (SQLException e) 
-            {
-                return null;
-            }
+            catch (SQLException e) {}
         }
         else if(user.getTypeID().equals("G"))
         {
@@ -183,26 +176,15 @@ public class UserService implements IUserService
                         guestResultSet.getString("contactinfo")
                     );
 
-                    return guestUser;
-                } 
-                else 
-                {
-                    return null;
+                    user = guestUser;
                 }
             } 
-            catch (SQLException e) 
-            {
-                return null;
-            }
-        }
-        else
-        {
-            return null;
+            catch (SQLException e) {}
         }
     }
 
     @Override
-    public User updateUser(User user) 
+    public void updateUser(User user) 
     {
         try 
         {
@@ -293,20 +275,13 @@ public class UserService implements IUserService
                 stmt.setInt(5, guestUser.getGuestID());
                 stmt.executeUpdate();
             }
-            else 
-            {
-                return null;
-            }
-            return getUser(user);
+            getUser(user);
         } 
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
     
     @Override
-    public User createUser(User user)
+    public void createUser(User user)
     {
         try
         {
@@ -384,16 +359,9 @@ public class UserService implements IUserService
                 stmt.setString(5, guestUser.getContactInfo());
                 stmt.executeUpdate();
             }
-            else
-            {
-                return null;
-            }
-            return getUser(user);
+            getUser(user);
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
