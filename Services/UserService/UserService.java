@@ -11,11 +11,27 @@ public class UserService implements IUserService
     private IDataService _dataService = new DataService();
 
     private User user = new User();
+    private List<Interest> interests;
+    private Interest newInterest = new Interest();
+    private List<Abstract> abstracts;
+    private Abstract newAbstract = new Abstract();
 
     @Override
     public User getCurrentUser() 
     {
         return user;
+    }
+
+    @Override
+    public List<Interest> getInterestList()
+    {
+        return interests;
+    }
+
+    @Override
+    public List<Abstract> getAbstractsList()
+    {
+        return abstracts;
     }
 
     @Override
@@ -412,6 +428,80 @@ public class UserService implements IUserService
                 stmt.executeUpdate();
             }
             logout();
+        }
+        catch (SQLException e) {}
+    }
+
+    @Override
+    public void getInterests()
+    {
+        try
+        {
+            interests.clear();
+            String query = "SELECT interestID, intDesc FROM interestList";
+            Statement stmt = _dataService.connect().createStatement();
+            ResultSet interestsResultSet = stmt.executeQuery(query);
+            while(interestsResultSet.next())
+            {
+                Interest interest = new Interest
+                (
+                    interestsResultSet.getInt("interestID"),
+                    interestsResultSet.getString("intDesc")
+                );
+                if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
+            }
+        }
+        catch (SQLException e) {}
+    }
+
+    @Override
+    public void createInterest()
+    {
+        try
+        {
+            String query = "INSERT INTO interestList (intDesc) VALUES (?)";
+            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
+            stmt.setString(1, newInterest.getIntDesc());
+            stmt.executeUpdate();
+            newInterest = null;
+            getInterests();
+        }
+        catch (SQLException e) {}
+    }
+
+    @Override
+    public void getAbstracts()
+    {
+        try
+        {
+            abstracts.clear();
+            String query = "SELECT abstractID, professorAbstract FROM abstractList";
+            Statement stmt = _dataService.connect().createStatement();
+            ResultSet abstractResultSet = stmt.executeQuery(query);
+            while(abstractResultSet.next())
+            {
+                Abstract facultyAbstract = new Abstract
+                (
+                    abstractResultSet.getInt("abstractID"),
+                    abstractResultSet.getString("professorAbstract")
+                );
+                if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
+            }
+        }
+        catch (SQLException e) {}
+    }
+
+    @Override
+    public void createAbstract()
+    {
+        try
+        {
+            String query = "INSERT INTO abstractList (professorAbstract) VALUES (?)";
+            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
+            stmt.setString(1, newAbstract.getProfessorAbstract());
+            stmt.executeUpdate();
+            newAbstract = null;
+            getAbstracts();
         }
         catch (SQLException e) {}
     }

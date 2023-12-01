@@ -5,6 +5,8 @@ public class Abstract
     private int abstractID;
     private String professorAbstract;
 
+    public Abstract() {}
+
     public Abstract(int abstractID, String professorAbstract)
     {
         this.abstractID = abstractID;
