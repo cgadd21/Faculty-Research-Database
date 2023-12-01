@@ -8,7 +8,7 @@ import Services.DataService.*;
 
 public class SearchService implements ISearchService 
 {
-    IDataService _dataService = new DataService();
+    private IDataService _dataService = new DataService();
 
     @Override
     public List<Interest> getInterests()

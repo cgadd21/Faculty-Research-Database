@@ -8,7 +8,7 @@ import Services.DataService.*;
 
 public class UserService implements IUserService 
 {
-    IDataService _dataService = new DataService();
+    private IDataService _dataService = new DataService();
 
     @Override
     public User login(String username, String password)
