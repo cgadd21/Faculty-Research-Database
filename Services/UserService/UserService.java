@@ -13,15 +13,9 @@ public class UserService implements IUserService
     private User user;
 
     @Override
-    public User getUser() 
+    public User getCurrentUser() 
     {
         return user;
-    }
-
-    @Override
-    public void setUser(User user) 
-    {
-        this.user = user;
     }
 
     @Override
@@ -39,15 +33,14 @@ public class UserService implements IUserService
             {
                 if (userResultSet.next()) 
                 {
-                    User user = new User
+                    User loginUser = new User
                     (
                         userResultSet.getInt("userID"),
                         userResultSet.getString("typeID"),
                         userResultSet.getString("username"),
                         userResultSet.getString("password")
                     );
-                    
-                    getUser(user);
+                    user = loginUser;
                 }
             }
         } 
@@ -55,7 +48,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void getUser(User user)
+    public void getUser()
     {
         if (user.getTypeID().equals("F")) 
         {
@@ -184,7 +177,7 @@ public class UserService implements IUserService
     }
 
     @Override
-    public void updateUser(User user) 
+    public void updateUser() 
     {
         try 
         {
@@ -275,13 +268,13 @@ public class UserService implements IUserService
                 stmt.setInt(5, guestUser.getGuestID());
                 stmt.executeUpdate();
             }
-            getUser(user);
+            getUser();
         } 
         catch (SQLException e) {}
     }
     
     @Override
-    public void createUser(User user)
+    public void createUser()
     {
         try
         {
@@ -359,13 +352,13 @@ public class UserService implements IUserService
                 stmt.setString(5, guestUser.getContactInfo());
                 stmt.executeUpdate();
             }
-            getUser(user);
+            getUser();
         }
         catch (SQLException e) {}
     }
 
     @Override
-    public void deleteUser(User user)
+    public void deleteUser()
     {
         try
         {

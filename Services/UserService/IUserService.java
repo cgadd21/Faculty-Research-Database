@@ -4,11 +4,10 @@ import Models.*;
 
 public interface IUserService 
 {
-    User getUser();
-    void setUser(User user);
+    User getCurrentUser();
     void login();
-    void getUser(User user);
-    void updateUser(User user);
-    void createUser(User user);
-    void deleteUser(User user);
+    void getUser();
+    void updateUser();
+    void createUser();
+    void deleteUser();
 }
