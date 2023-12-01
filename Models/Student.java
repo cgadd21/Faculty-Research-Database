@@ -1,29 +1,26 @@
-package Objects;
+package Models;
 
 import java.util.*;
 
-public class Faculty extends User 
+public class Student extends User 
 {
-    private int facultyID;
+    private int studentID;
     private String fname;
     private String lname;
     private String email;
     private String phoneNumber;
-    private String location;
     private List<Interest> interests;
-    private List<Abstract> abstracts;
 
-    public Faculty(int userID, String typeID, String username, String password, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
+    public Student(int userID, String typeID, String username, String password, int studentID, String fname, String lname, String email, String phoneNumber) 
     {
         super(userID, typeID, username, password);
-        this.facultyID = facultyID;
+        this.studentID = studentID;
         this.fname = fname;
         this.lname = lname;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.location = location;
     }
-
+    
     @Override
     public String toString() 
     {
@@ -39,42 +36,28 @@ public class Faculty extends User
             interestsString = interestsString.substring(0, interestsString.length() - 2);
         }
 
-        StringBuilder abstractsStringBuilder = new StringBuilder();
-        for (Abstract facultyAbstract : abstracts) 
-        {
-            abstractsStringBuilder.append(facultyAbstract.getProfessorAbstract()).append(", ");
-        }
-
-        String abstractsString = abstractsStringBuilder.toString();
-        if (!abstractsString.isEmpty()) 
-        {
-            abstractsString = abstractsString.substring(0, abstractsString.length() - 2);
-        }
-
-        return "Faculty{" +
+        return "Student{" +
                 "userID=" + getUserID() +
                 ", typeID='" + getTypeID() + '\'' +
                 ", username='" + getUsername() + '\'' +
                 ", password='" + getPassword() + '\'' +
-                ", facultyID='" + facultyID + '\'' +
+                ", studentID='" + studentID + '\'' +
                 ", fname='" + fname + '\'' +
                 ", lname='" + lname + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", location='" + location + '\'' +
                 ", interests=[" + interestsString + ']' +
-                ", abstracts=[" + abstractsString + ']' +
                 '}';
     }
     
-    public int getFacultyID() 
+    public int getStudentID() 
     {
-        return facultyID;
+        return studentID;
     }
-    
-    public void setFacultyID(int facultyID) 
+
+    public void setStudentID(int studentID) 
     {
-        this.facultyID = facultyID;
+        this.studentID = studentID;
     }
     
     public String getFname() 
@@ -86,7 +69,7 @@ public class Faculty extends User
     {
         this.fname = fname;
     }
-
+    
     public String getLname() 
     {
         return lname;
@@ -111,22 +94,12 @@ public class Faculty extends User
     {
         return phoneNumber;
     }
-    
+
     public void setPhoneNumber(String phoneNumber) 
     {
         this.phoneNumber = phoneNumber;
     }
-    
-    public String getLocation() 
-    {
-        return location;
-    }
-    
-    public void setLocation(String location) 
-    {
-        this.location = location;
-    }
-    
+
     public List<Interest> getInterests() 
     {
         return interests;
@@ -135,15 +108,5 @@ public class Faculty extends User
     public void setInterests(List<Interest> interests) 
     {
         this.interests = interests;
-    }
-    
-    public List<Abstract> getAbstracts() 
-    {
-        return abstracts;
-    }
-    
-    public void setAbstracts(List<Abstract> abstracts) 
-    {
-        this.abstracts = abstracts;
     }
 }

@@ -3,7 +3,7 @@ package Services.SearchService;
 import java.sql.*;
 import java.util.*;
 
-import Objects.*;
+import Models.*;
 import Services.DataService.*;
 
 public class SearchService implements ISearchService 

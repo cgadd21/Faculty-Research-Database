@@ -2,7 +2,7 @@ package Services.SearchService;
 
 import java.util.*;
 
-import Objects.*;
+import Models.*;
 
 public interface ISearchService 
 {

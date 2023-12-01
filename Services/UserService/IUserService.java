@@ -1,6 +1,6 @@
 package Services.UserService;
 
-import Objects.*;
+import Models.*;
 
 public interface IUserService 
 {
