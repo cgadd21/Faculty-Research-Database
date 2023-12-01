@@ -29,9 +29,21 @@ public class UserService implements IUserService
     }
 
     @Override
+    public Interest getNewInterest()
+    {
+        return newInterest;
+    }
+
+    @Override
     public List<Abstract> getAbstractsList()
     {
         return abstracts;
+    }
+
+    @Override
+    public Abstract getNewAbstract()
+    {
+        return newAbstract;
     }
 
     @Override

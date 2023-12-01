@@ -8,7 +8,9 @@ public interface IUserService
 {
     User getCurrentUser();
     List<Interest> getInterestList();
+    Interest getNewInterest();
     List<Abstract> getAbstractsList();
+    Abstract getNewAbstract();
     void login();
     void logout();
     void getUser();
