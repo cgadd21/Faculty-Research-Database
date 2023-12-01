@@ -10,12 +10,41 @@ public class SearchService implements ISearchService
 {
     private IDataService _dataService = new DataService();
 
+    private List<Interest> interests;
+    private List<InterestResult> interestResults;
+    private List<Abstract> abstracts;
+    private List<AbstractResult> abstractResults;
+
     @Override
-    public List<Interest> getInterests()
+    public List<Interest> getInterestList()
+    {
+        return interests;
+    }
+
+    @Override
+    public List<InterestResult> getInterestResultList()
+    {
+        return interestResults;
+    }
+
+    @Override
+    public List<Abstract> getAbstractsList()
+    {
+        return abstracts;
+    }
+
+    @Override
+    public List<AbstractResult> getAbstractsResultList()
+    {
+        return abstractResults;
+    }
+
+    @Override
+    public void getInterests()
     {
         try
         {
-            List<Interest> interests = new ArrayList<>();
+            interests.clear();
             String query = "SELECT interestID, intDesc FROM interestList";
             Statement stmt = _dataService.getConnection().createStatement();
             ResultSet interestsResultSet = stmt.executeQuery(query);
@@ -28,21 +57,16 @@ public class SearchService implements ISearchService
                 );
                 if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
             }
-            return interests;
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public List<InterestResult> getInterests(User user, List<Interest> interests)
+    public void getInterests(User user, List<Interest> interests)
     {
         try
         {
-            List<InterestResult> interestResults = new ArrayList<>();
-
+            interestResults.clear();
             if (user.getTypeID().equals("F"))
             {
                 String query = "SELECT CONCAT(student.fname, ' ', student.lname) AS 'Student Name', GROUP_CONCAT(Interestlist.intDesc) AS 'Interest' FROM studentinterests LEFT JOIN student ON student.studentID = studentinterests.studentID LEFT JOIN interestList ON studentinterests.interestID = Interestlist.interestID WHERE studentinterests.interestID IN (";
@@ -142,16 +166,12 @@ public class SearchService implements ISearchService
                     interestResults.add(interestResult);
                 }
             }
-            return interestResults;
         }
-        catch (SQLException e)
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public List<Interest> createInterest(Interest interest)
+    public void createInterest(Interest interest)
     {
         try
         {
@@ -159,20 +179,17 @@ public class SearchService implements ISearchService
             PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
             stmt.setString(1, interest.getIntDesc());
             stmt.executeUpdate();
-            return getInterests();
+            getInterests();
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public List<Abstract> getAbstracts()
+    public void getAbstracts()
     {
         try
         {
-            List<Abstract> abstracts = new ArrayList<>();
+            abstracts.clear();
             String query = "SELECT abstractID, professorAbstract FROM abstractList";
             Statement stmt = _dataService.getConnection().createStatement();
             ResultSet abstractResultSet = stmt.executeQuery(query);
@@ -185,20 +202,16 @@ public class SearchService implements ISearchService
                 );
                 if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
             }
-            return abstracts;
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public List<AbstractResult> getAbstracts(String search)
+    public void getAbstracts(String search)
     {
         try
         {
-            List<AbstractResult> abstractResults = new ArrayList<>();
+            abstractResults.clear();
             String query = "SELECT a.professorAbstract as Abstract, GROUP_CONCAT(CONCAT(f.lname, ', ', f.fname) SEPARATOR '; ') AS Professors FROM abstractList a JOIN facultyabstract fa ON a.abstractID = fa.abstractID JOIN faculty f ON fa.facultyID = f.facultyID WHERE a.professorAbstract LIKE '%?%' GROUP BY a.abstractID;";
             PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
             stmt.setString(1, search);
@@ -212,16 +225,12 @@ public class SearchService implements ISearchService
                 );
                 abstractResults.add(abstractResult);
             }
-            return abstractResults;
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
     @Override
-    public List<Abstract> createAbstract(Abstract facultyAbstract)
+    public void createAbstract(Abstract facultyAbstract)
     {
         try
         {
@@ -229,12 +238,9 @@ public class SearchService implements ISearchService
             PreparedStatement stmt = _dataService.getConnection().prepareStatement(query);
             stmt.setString(1, facultyAbstract.getProfessorAbstract());
             stmt.executeUpdate();
-            return getAbstracts();
+            getAbstracts();
         }
-        catch (SQLException e) 
-        {
-            return null;
-        }
+        catch (SQLException e) {}
     }
 
 }

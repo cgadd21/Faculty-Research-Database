@@ -6,10 +6,14 @@ import Models.*;
 
 public interface ISearchService 
 {
-    List<Interest> getInterests();
-    List<InterestResult> getInterests(User user, List<Interest> interests);
-    List<Interest> createInterest(Interest interest);
-    List<Abstract> getAbstracts();
-    List<AbstractResult> getAbstracts(String search);
-    List<Abstract> createAbstract(Abstract facultyAbstract);
+    List<Interest> getInterestList();
+    List<InterestResult> getInterestResultList();
+    List<Abstract> getAbstractsList();
+    List<AbstractResult> getAbstractsResultList();
+    void getInterests();
+    void getInterests(User user, List<Interest> interests);
+    void createInterest(Interest interest);
+    void getAbstracts();
+    void getAbstracts(String search);
+    void createAbstract(Abstract facultyAbstract);
 }
