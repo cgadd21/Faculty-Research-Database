@@ -376,6 +376,15 @@ public class UserService implements IUserService
                     insertInterestsStmt.setInt(2, interest.getInterestID());
                     insertInterestsStmt.executeUpdate();
                 }
+
+                String insertMajorsQuery = "INSERT INTO studentmajor (studentID, majorID) VALUES (?, ?)";
+                PreparedStatement insertMajorsStmt = _dataService.connect().prepareStatement(insertMajorsQuery);
+                for(Major major : studentUser.getMajors())
+                {
+                    insertMajorsStmt.setInt(1, studentUser.getStudentID());
+                    insertMajorsStmt.setInt(2, major.getMajorID());
+                    insertMajorsStmt.executeUpdate();
+                }
             }
             else if (user.getTypeID().equals("G")) 
             {
