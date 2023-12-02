@@ -37,6 +37,18 @@ public class Student extends User
             interestsString = interestsString.substring(0, interestsString.length() - 2);
         }
 
+        StringBuilder majorsStringBuilder = new StringBuilder();
+        for (Major major : majors) 
+        {
+            majorsStringBuilder.append(major.getMajorDescription()).append(", ");
+        }
+
+        String majorsString = majorsStringBuilder.toString();
+        if (!majorsString.isEmpty()) 
+        {
+            majorsString = majorsString.substring(0, majorsString.length() - 2);
+        }
+
         return "Student{" +
                 "userID=" + getUserID() +
                 ", typeID='" + getTypeID() + '\'' +
@@ -48,6 +60,7 @@ public class Student extends User
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", interests=[" + interestsString + ']' +
+                ", majors=[" + majorsString + ']' +
                 '}';
     }
     
