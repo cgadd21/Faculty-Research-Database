@@ -94,7 +94,7 @@ public class UserService implements IUserService
                     );
                     interests.add(interest);
                 }
-                facultyUser.setInterests(interests);
+                if(!interests.isEmpty()) facultyUser.setInterests(interests);
 
                 String abstractsQuery = "SELECT abstractID, professorAbstract FROM facultyabstract JOIN abstractlist USING (abstractID) WHERE facultyID = ?";
                 PreparedStatement abstractsStatement = _dataService.connect().prepareStatement(abstractsQuery);
@@ -110,7 +110,7 @@ public class UserService implements IUserService
                     );
                     abstracts.add(facultyAbstract);
                 }
-                facultyUser.setAbstracts(abstracts);
+                if(!abstracts.isEmpty()) facultyUser.setAbstracts(abstracts);
 
                 user = facultyUser;
             }        
@@ -148,7 +148,7 @@ public class UserService implements IUserService
                     );
                     interests.add(interest);
                 }
-                studentUser.setInterests(interests);
+                if(!interests.isEmpty()) studentUser.setInterests(interests);
 
                 String majorQuery = "SELECT majorID, majorDescription FROM studentmajor JOIN majorlist USING (majorID) WHERE studentID = ?;";
                 PreparedStatement majorStatement = _dataService.connect().prepareStatement(majorQuery);
@@ -164,7 +164,7 @@ public class UserService implements IUserService
                     );
                     majors.add(major);
                 }
-                studentUser.setMajors(majors);
+                if(!majors.isEmpty()) studentUser.setMajors(majors);
 
                 user = studentUser;
             }
