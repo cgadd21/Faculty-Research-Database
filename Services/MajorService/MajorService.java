@@ -39,7 +39,7 @@ public class MajorService implements IMajorService
                     majorResultSet.getInt("majorID"),
                     majorResultSet.getString("majorDescription")
                 );
-                if(!majors.stream().anyMatch(a -> a.getMajorDescription().equals(major.getMajorDescription()))) majors.add(major);
+                majors.add(major);
             }
         }
         catch (Exception e) {}

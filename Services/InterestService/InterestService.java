@@ -39,7 +39,7 @@ public class InterestService implements IInterestService
                     interestsResultSet.getInt("interestID"),
                     interestsResultSet.getString("intDesc")
                 );
-                if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
+                interests.add(interest);
             }
         }
         catch (Exception e) {}

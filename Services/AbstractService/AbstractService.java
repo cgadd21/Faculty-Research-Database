@@ -39,7 +39,7 @@ public class AbstractService implements IAbstractService
                     abstractResultSet.getInt("abstractID"),
                     abstractResultSet.getString("professorAbstract")
                 );
-                if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
+                abstracts.add(facultyAbstract);
             }
         }
         catch (Exception e) {}
