@@ -44,7 +44,7 @@ CREATE TABLE interestList (
 	interestID INT NOT NULL auto_increment,
     intDesc VARCHAR(30),
     constraint int_pk PRIMARY KEY (interestID)
-);
+) auto_increment = 1;
 CREATE TABLE studentInterests (
 	studentID int,
     interestID int,
@@ -56,6 +56,26 @@ CREATE TABLE studentInterests (
     ON DELETE CASCADE
 	ON UPDATE CASCADE
 );
+
+CREATE TABLE majorList (
+	majorID int,
+    majorDescription VARCHAR(50),
+    CONSTRAINT majorList_pk PRIMARY KEY (majorID)
+);
+
+CREATE TABLE studentMajor (
+	studentID int,
+    majorID int,
+	CONSTRAINT studentMajor_student_fk FOREIGN KEY (studentID) REFERENCES student(studentID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
+    CONSTRAINT studentMajor_majorList_fk FOREIGN KEY (majorID) REFERENCES majorList(majorID)
+    ON DELETE CASCADE
+	ON UPDATE CASCADE,
+    CONSTRAINT studentMajor_pk PRIMARY KEY (studentID, majorID)
+);
+
+
 
 CREATE TABLE faculty (
 	facultyID INT NOT NULL,
@@ -129,18 +149,18 @@ INSERT INTO studentInterests (studentID, interestID) VALUES
 (2,4);
 
 INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
-(1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano'),
-(2, 'Dean', 'Ganskop','email','123-456-7890', 'Golisano');
+(1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano');
 
 
-INSERT INTO abstractList (professorAbstract) VALUES
-('Im an abstract!');
+INSERT INTO abstractList (abstractID, professorAbstract) VALUES
+(1,'Im an abstract!'),
+(2,'2nd Abstract here');
 
 
 
 INSERT INTO facultyAbstract (facultyID, abstractID) VALUES
 (1,1),
-(2,1);
+(1,2);
 
 INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,1),
@@ -151,3 +171,18 @@ INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,6),
 (1,7),
 (1,8);
+
+INSERT INTO majorList (majorID, majorDescription) VALUES
+(1,'Engineering'),
+(2,'Computer Science'),
+(3,'Computing Information Technology'),
+(4,'Data Analytics'),
+(5,'Art'),
+(6,'Biology'),
+(7,'Psychology'),
+(8,'Electrical Engineering'),
+(9,'Game Design');
+
+INSERT INTO studentMajor (studentID, majorID) VALUES
+(2, 3),
+(2, 4); 
