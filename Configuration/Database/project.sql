@@ -58,10 +58,10 @@ CREATE TABLE studentInterests (
 );
 
 CREATE TABLE majorList (
-	majorID int NOT NULL auto_increment,
+	majorID int auto_increment,
     majorDescription VARCHAR(50),
     CONSTRAINT majorList_pk PRIMARY KEY (majorID)
-) auto_increment = 1;
+) AUTO_INCREMENT =1;
 
 CREATE TABLE studentMajor (
 	studentID int,
@@ -122,11 +122,14 @@ CREATE TABLE facultyAbstract (
 INSERT INTO Users (userID, typeID, username, password) VALUES 
 (1,'F','Jimhab','FacultyPass'), 
 (2,'S','jmd4173','StudentPass'), 
-(3,'G','Wegmans','GuestPass');
+(3,'G','Wegmans','GuestPass'),
+(4,'S','abc1234','ExamplePass');
 INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES
 (3, 'Wegmans','Mr','Wegman','wegmanscontact@gmail.com');
 INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES
 (2, 'John', 'DAngelo','jmd4173@rit.edu', '203-427-5637');
+INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES
+(4, 'Abigail', 'Barnaby', 'abc1234@rit.edu', '123-456-7890');
 
 INSERT INTO interestList  VALUES (1, 'Pascal');
 INSERT INTO interestList  VALUES (2, 'Java');
@@ -146,7 +149,11 @@ INSERT INTO interestList  VALUES (14, "Ruby/Ruby on Rails");
 INSERT INTO studentInterests (studentID, interestID) VALUES
 (2,2),
 (2,3),
-(2,4);
+(2,4),
+(4,5),
+(4,6),
+(4,7);
+
 
 INSERT INTO faculty (facultyID, fname, lname, email, phonenumber, location) VALUES
 (1, 'Jim', 'Habermas','email','123-456-7890', 'Golisano');
@@ -172,17 +179,19 @@ INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,7),
 (1,8);
 
-INSERT INTO majorList (majorDescription) VALUES
-('Engineering'),
-('Computer Science'),
-('Computing Information Technology'),
-('Data Analytics'),
-('Art'),
-('Biology'),
-('Psychology'),
-('Electrical Engineering'),
-('Game Design');
+INSERT INTO majorList (majorID, majorDescription) VALUES
+(1,'Engineering'),
+(2,'Computer Science'),
+(3,'Computing Information Technology'),
+(4,'Data Analytics'),
+(5,'Art'),
+(6,'Biology'),
+(7,'Psychology'),
+(8,'Electrical Engineering'),
+(9,'Game Design');
 
 INSERT INTO studentMajor (studentID, majorID) VALUES
 (2, 3),
-(2, 4); 
+(2, 4),
+(4, 5),
+(4, 6); 
