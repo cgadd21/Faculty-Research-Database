@@ -58,10 +58,10 @@ CREATE TABLE studentInterests (
 );
 
 CREATE TABLE majorList (
-	majorID int,
+	majorID int NOT NULL auto_increment,
     majorDescription VARCHAR(50),
     CONSTRAINT majorList_pk PRIMARY KEY (majorID)
-);
+) auto_increment = 1;
 
 CREATE TABLE studentMajor (
 	studentID int,
@@ -172,16 +172,16 @@ INSERT INTO facultyInterests (facultyID, interestID) VALUES
 (1,7),
 (1,8);
 
-INSERT INTO majorList (majorID, majorDescription) VALUES
-(1,'Engineering'),
-(2,'Computer Science'),
-(3,'Computing Information Technology'),
-(4,'Data Analytics'),
-(5,'Art'),
-(6,'Biology'),
-(7,'Psychology'),
-(8,'Electrical Engineering'),
-(9,'Game Design');
+INSERT INTO majorList (majorDescription) VALUES
+('Engineering'),
+('Computer Science'),
+('Computing Information Technology'),
+('Data Analytics'),
+('Art'),
+('Biology'),
+('Psychology'),
+('Electrical Engineering'),
+('Game Design');
 
 INSERT INTO studentMajor (studentID, majorID) VALUES
 (2, 3),
