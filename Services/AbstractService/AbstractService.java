@@ -42,7 +42,11 @@ public class AbstractService implements IAbstractService
                 if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
             }
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 
     @Override
@@ -57,6 +61,10 @@ public class AbstractService implements IAbstractService
             newAbstract = null;
             getAbstracts();
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 }

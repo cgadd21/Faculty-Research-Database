@@ -25,7 +25,7 @@ public class FileService implements IFileService
             }
             return abstractContent.toString();
         }
-        catch (IOException e) 
+        catch (Exception e) 
         {
             return null;
         }

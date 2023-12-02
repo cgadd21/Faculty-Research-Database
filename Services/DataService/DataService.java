@@ -12,7 +12,7 @@ public class DataService implements IDataService
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection("jdbc:mysql://localhost/project", "root", "student");
         } 
-        catch (ClassNotFoundException | SQLException e)
+        catch (Exception e)
         {
             return null;
         }
@@ -25,6 +25,6 @@ public class DataService implements IDataService
         {
             if (connect() != null) connect().close();
         } 
-        catch (SQLException sqle) {}
+        catch (Exception e) {}
     }
 }

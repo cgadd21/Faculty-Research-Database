@@ -41,7 +41,11 @@ public class UserService implements IUserService
                 getUser();
             }
         } 
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 
     @Override
@@ -53,9 +57,9 @@ public class UserService implements IUserService
     @Override
     public void getUser()
     {
-        if (user.getTypeID().equals("F")) 
+        try
         {
-            try 
+            if (user.getTypeID().equals("F")) 
             {
                 String query = "SELECT * FROM users JOIN faculty ON users.userID = faculty.facultyID LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
@@ -77,7 +81,7 @@ public class UserService implements IUserService
                         facultyResultSet.getString("phoneNumber"),
                         facultyResultSet.getString("location")
                     );
-    
+
                     List<Interest> interests = new ArrayList<>();
                     List<Abstract> abstracts = new ArrayList<>();
 
@@ -97,18 +101,14 @@ public class UserService implements IUserService
                         );
                         if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
                     }
-    
+
                     facultyUser.setInterests(interests);
                     facultyUser.setAbstracts(abstracts);
-    
+
                     user = facultyUser;
                 }
-            } 
-            catch (SQLException e) {}
-        }        
-        else if (user.getTypeID().equals("S")) 
-        {
-            try 
+            }        
+            else if (user.getTypeID().equals("S")) 
             {
                 String query = "SELECT * FROM users JOIN student ON users.userID = student.studentID LEFT JOIN studentInterests ON student.studentID = studentInterests.studentID LEFT JOIN interestList ON studentInterests.interestID = interestList.interestID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
@@ -145,12 +145,8 @@ public class UserService implements IUserService
 
                     user = studentUser;
                 }
-            } 
-            catch (SQLException e) {}
-        }
-        else if(user.getTypeID().equals("G"))
-        {
-            try 
+            }
+            else if(user.getTypeID().equals("G"))
             {
                 String query = "SELECT * FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
@@ -174,8 +170,12 @@ public class UserService implements IUserService
 
                     user = guestUser;
                 }
-            } 
-            catch (SQLException e) {}
+            }
+        }
+        catch(Exception e) {}
+        finally
+        {
+            _dataService.close();
         }
     }
 
@@ -273,7 +273,11 @@ public class UserService implements IUserService
             }
             getUser();
         } 
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
     
     @Override
@@ -357,7 +361,11 @@ public class UserService implements IUserService
             }
             getUser();
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 
     @Override
@@ -411,6 +419,10 @@ public class UserService implements IUserService
             }
             logout();
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 }

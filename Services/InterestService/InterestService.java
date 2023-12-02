@@ -23,7 +23,7 @@ public class InterestService implements IInterestService
         return newInterest;
     }
 
-        @Override
+    @Override
     public void getInterests()
     {
         try
@@ -42,7 +42,11 @@ public class InterestService implements IInterestService
                 if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
             }
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 
     @Override
@@ -57,7 +61,11 @@ public class InterestService implements IInterestService
             newInterest = null;
             getInterests();
         }
-        catch (SQLException e) {}
+        catch (Exception e) {}
+        finally
+        {
+            _dataService.close();
+        }
     }
 
 }
