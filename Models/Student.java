@@ -10,6 +10,7 @@ public class Student extends User
     private String email;
     private String phoneNumber;
     private List<Interest> interests;
+    private List<Major> majors;
 
     public Student(int userID, String typeID, String username, String password, int studentID, String fname, String lname, String email, String phoneNumber) 
     {
@@ -108,5 +109,15 @@ public class Student extends User
     public void setInterests(List<Interest> interests) 
     {
         this.interests = interests;
+    }
+
+    public List<Major> getMajors() 
+    {
+        return majors;
+    }
+
+    public void setMajors(List<Major> majors) 
+    {
+        this.majors = majors;
     }
 }
