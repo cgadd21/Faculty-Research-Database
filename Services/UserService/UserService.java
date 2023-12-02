@@ -9,25 +9,11 @@ public class UserService implements IUserService
 {
     private IDataService _dataService = new DataService();
     private User user = new User();
-    private List<Interest> interests = new ArrayList<>();
-    private Interest newInterest = new Interest();
 
     @Override
     public User getCurrentUser() 
     {
         return user;
-    }
-
-    @Override
-    public List<Interest> getInterestList()
-    {
-        return interests;
-    }
-
-    @Override
-    public Interest getNewInterest()
-    {
-        return newInterest;
     }
 
     @Override
@@ -424,43 +410,6 @@ public class UserService implements IUserService
                 stmt.executeUpdate();
             }
             logout();
-        }
-        catch (SQLException e) {}
-    }
-
-    @Override
-    public void getInterests()
-    {
-        try
-        {
-            if(!interests.isEmpty()) interests.clear();
-            String query = "SELECT interestID, intDesc FROM interestList";
-            Statement stmt = _dataService.connect().createStatement();
-            ResultSet interestsResultSet = stmt.executeQuery(query);
-            while(interestsResultSet.next())
-            {
-                Interest interest = new Interest
-                (
-                    interestsResultSet.getInt("interestID"),
-                    interestsResultSet.getString("intDesc")
-                );
-                if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
-            }
-        }
-        catch (SQLException e) {}
-    }
-
-    @Override
-    public void createInterest()
-    {
-        try
-        {
-            String query = "INSERT INTO interestList (intDesc) VALUES (?)";
-            PreparedStatement stmt = _dataService.connect().prepareStatement(query);
-            stmt.setString(1, newInterest.getIntDesc());
-            stmt.executeUpdate();
-            newInterest = null;
-            getInterests();
         }
         catch (SQLException e) {}
     }
