@@ -61,52 +61,58 @@ public class UserService implements IUserService
         {
             if (user.getTypeID().equals("F")) 
             {
-                String query = "SELECT * FROM users JOIN faculty ON users.userID = faculty.facultyID LEFT JOIN facultyInterests ON faculty.facultyID = facultyInterests.facultyID LEFT JOIN interestList ON facultyInterests.interestID = interestList.interestID LEFT JOIN facultyAbstract ON faculty.facultyID = facultyAbstract.facultyID LEFT JOIN abstractList ON facultyAbstract.abstractID = abstractList.abstractID WHERE users.userID = ?";
-                PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
-                preparedStatement.setInt(1, user.getUserID());
-                ResultSet facultyResultSet = preparedStatement.executeQuery();
-        
-                if (facultyResultSet.next()) 
+                String facultyQuery = "SELECT userID, typeID, username, password, facultyID, fname, lname, email, phonenumber, location FROM users JOIN faculty ON users.userID = faculty.facultyID WHERE userID = ?;";
+                PreparedStatement facultyStatement = _dataService.connect().prepareStatement(facultyQuery);
+                facultyStatement.setInt(1, user.getUserID());
+                ResultSet facultyResultSet = facultyStatement.executeQuery();
+                facultyResultSet.next();
+                Faculty facultyUser = new Faculty
+                (
+                    facultyResultSet.getInt("userID"),
+                    facultyResultSet.getString("typeID"),
+                    facultyResultSet.getString("username"),
+                    facultyResultSet.getString("password"),
+                    facultyResultSet.getInt("facultyID"),
+                    facultyResultSet.getString("fname"),
+                    facultyResultSet.getString("lname"),
+                    facultyResultSet.getString("email"),
+                    facultyResultSet.getString("phoneNumber"),
+                    facultyResultSet.getString("location")
+                );
+
+                String interestQuery = "SELECT interestID, intDesc FROM facultyinterests JOIN interestlist USING (interestID) WHERE facultyID = ?;";
+                PreparedStatement interestStatement = _dataService.connect().prepareStatement(interestQuery);
+                interestStatement.setInt(1,facultyUser.getFacultyID());
+                ResultSet interestResultSet = interestStatement.executeQuery();
+                List<Interest> interests = new ArrayList<>();
+                while (interestResultSet.next()) 
                 {
-                    Faculty facultyUser = new Faculty
+                    Interest interest = new Interest
                     (
-                        facultyResultSet.getInt("userID"),
-                        facultyResultSet.getString("typeID"),
-                        facultyResultSet.getString("username"),
-                        facultyResultSet.getString("password"),
-                        facultyResultSet.getInt("facultyID"),
-                        facultyResultSet.getString("fname"),
-                        facultyResultSet.getString("lname"),
-                        facultyResultSet.getString("email"),
-                        facultyResultSet.getString("phoneNumber"),
-                        facultyResultSet.getString("location")
+                        interestResultSet.getInt("interestID"),
+                        interestResultSet.getString("intDesc")
                     );
-
-                    List<Interest> interests = new ArrayList<>();
-                    List<Abstract> abstracts = new ArrayList<>();
-
-                    while (facultyResultSet.next()) 
-                    {
-                        Interest interest = new Interest
-                        (
-                            facultyResultSet.getInt("interestID"),
-                            facultyResultSet.getString("intDesc")
-                        );
-                        if(!interests.stream().anyMatch(i -> i.getIntDesc().equals(interest.getIntDesc()))) interests.add(interest);
-
-                        Abstract facultyAbstract = new Abstract
-                        (
-                            facultyResultSet.getInt("abstractID"),
-                            facultyResultSet.getString("professorAbstract")
-                        );
-                        if(!abstracts.stream().anyMatch(a -> a.getProfessorAbstract().equals(facultyAbstract.getProfessorAbstract()))) abstracts.add(facultyAbstract);
-                    }
-
-                    facultyUser.setInterests(interests);
-                    facultyUser.setAbstracts(abstracts);
-
-                    user = facultyUser;
+                    interests.add(interest);
                 }
+                facultyUser.setInterests(interests);
+
+                String abstractsQuery = "SELECT abstractID, professorAbstract FROM facultyabstract JOIN abstractlist USING (abstractID) WHERE facultyID = ?";
+                PreparedStatement abstractsStatement = _dataService.connect().prepareStatement(abstractsQuery);
+                abstractsStatement.setInt(1, facultyUser.getFacultyID());
+                ResultSet abstractsResultSet = abstractsStatement.executeQuery();
+                List<Abstract> abstracts = new ArrayList<>();
+                while(abstractsResultSet.next())
+                {
+                    Abstract facultyAbstract = new Abstract
+                    (
+                        abstractsResultSet.getInt("abstractID"),
+                        abstractsResultSet.getString("professorAbstract")
+                    );
+                    abstracts.add(facultyAbstract);
+                }
+                facultyUser.setAbstracts(abstracts);
+
+                user = facultyUser;
             }        
             else if (user.getTypeID().equals("S")) 
             {
