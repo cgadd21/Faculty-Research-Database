@@ -5,29 +5,33 @@ import javax.swing.*;
 
 public class FileService implements IFileService
 {
+    private String fileContent;
+
     @Override
-    public String getFile()
+    public String getFileContent()
+    {
+        return fileContent;
+    }
+
+    @Override
+    public void getFile()
     {
         try
         {
+            fileContent = null;
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Select a File");
             StringBuilder abstractContent = new StringBuilder();
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
             {
                 BufferedReader reader = new BufferedReader(new FileReader(fileChooser.getSelectedFile()));
-                String line;
-
-                while ((line = reader.readLine()) != null) 
+                while (reader.readLine() != null) 
                 {
-                    abstractContent.append(line).append("\n");
+                    abstractContent.append(reader.readLine()).append("\n");
                 }
             }
-            return abstractContent.toString();
+            fileContent = abstractContent.toString();
         }
-        catch (Exception e) 
-        {
-            return null;
-        }
+        catch (Exception e) {}
     }
 }
