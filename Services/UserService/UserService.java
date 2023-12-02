@@ -447,6 +447,11 @@ public class UserService implements IUserService
                 PreparedStatement deleteInterestsStmt = _dataService.connect().prepareStatement(deleteInterestsQuery);
                 deleteInterestsStmt.setInt(1, studentUser.getStudentID());
                 deleteInterestsStmt.executeUpdate();
+
+                String deleteMajorsQuery = "DELETE FROM studentmajor WHERE studentID = ?";
+                PreparedStatement deleteMajorsStmt = _dataService.connect().prepareStatement(deleteMajorsQuery);
+                deleteMajorsStmt.setInt(1, studentUser.getStudentID());
+                deleteMajorsStmt.executeQuery();
             }
             else if (user.getTypeID().equals("G")) 
             {
