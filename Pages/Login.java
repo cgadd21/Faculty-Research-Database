@@ -8,26 +8,24 @@ public class Login
 {
     public Login(IUserService _userService)
     {
-        Font myFontForOutput = new Font("Courier", Font.PLAIN, 32);
-
         JPanel Loginbox = new JPanel(new GridLayout(2,2));
 
         JLabel lblUser= new JLabel("Username  -> ");
         Loginbox.add(lblUser);
-        lblUser.setFont(myFontForOutput);
+        lblUser.setFont(new Font("Courier", Font.PLAIN, 32));
 
         JTextField tfUser = new JTextField("");
         Loginbox.add(tfUser);
-        tfUser.setFont(myFontForOutput);
+        tfUser.setFont(new Font("Courier", Font.PLAIN, 32));
         tfUser.setForeground(Color.BLUE);
 
         JLabel lblPassword = new JLabel("Password  -> ");
         Loginbox.add(lblPassword);
-        lblPassword.setFont(myFontForOutput);
+        lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
 
         JTextField tfPassword = new JPasswordField("");
         Loginbox.add(tfPassword);
-        tfPassword.setFont(myFontForOutput);
+        tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
         tfPassword.setForeground(Color.BLUE);
 
         JOptionPane.showMessageDialog(null, Loginbox,"Please Login", JOptionPane.QUESTION_MESSAGE);
