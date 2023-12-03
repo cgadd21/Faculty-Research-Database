@@ -34,7 +34,7 @@ public class SearchService implements ISearchService
             
             if(_userService.getCurrentUser().getTypeID().equals("S") || _userService.getCurrentUser().getTypeID().equals("G"))
             {
-                String facultyQuery = "SELECT  u.*, f.* FROM users u JOIN faculty f ON u.userID = f.facultyID JOIN facultyabstract fa USING (facultyID) JOIN abstractlist al USING(abstractID) JOIN facultyinterests fi USING(facultyID) JOIN interestList il ON USING (interestID) WHERE professorAbstract LIKE CONCAT('%', ?, '%') OR (SELECT fi.interestID FROM facultyinterests fi JOIN interestList il USING (interestID) WHERE intDesc LIKE ?) GROUP BY userID";
+                String facultyQuery = "SELECT  u.*, f.* FROM users u JOIN faculty f ON u.userID = f.facultyID JOIN facultyabstract fa USING (facultyID) JOIN abstractlist al USING(abstractID) JOIN facultyinterests fi USING(facultyID) JOIN interestList il USING (interestID) WHERE professorAbstract LIKE CONCAT('%', ?, '%') OR (SELECT fi.interestID FROM facultyinterests fi JOIN interestList il USING (interestID) WHERE intDesc LIKE ?) GROUP BY userID";
                 PreparedStatement facultyStatement = _dataService.connect().prepareStatement(facultyQuery);
                 for (String seach : search)
                 {
