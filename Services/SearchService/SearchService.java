@@ -9,7 +9,6 @@ import Services.UserService.*;
 public class SearchService implements ISearchService
 {
     private IDataService _dataService = new DataService();
-    private IUserService _userService = new UserService();
     private List<String> search = new ArrayList<>();
     private List<User> searchResults = new ArrayList<>();
 
@@ -26,7 +25,7 @@ public class SearchService implements ISearchService
     }
 
     @Override
-    public void search()
+    public void search(IUserService _userService)
     {
         try
         {
@@ -99,53 +98,55 @@ public class SearchService implements ISearchService
                 {
                     studentStatement.setString(1, seach);
                     ResultSet studentResultSet = studentStatement.executeQuery();
-                    studentResultSet.next();
-                    Student studentUser = new Student
-                    (
-                        studentResultSet.getInt("userID"),
-                        studentResultSet.getString("typeID"),
-                        studentResultSet.getString("username"),
-                        studentResultSet.getString("password"),
-                        studentResultSet.getInt("studentID"),
-                        studentResultSet.getString("fname"),
-                        studentResultSet.getString("lname"),
-                        studentResultSet.getString("email"),
-                        studentResultSet.getString("phonenumber")
-                    );
-
-                    String interestQuery = "SELECT interestID, intDesc FROM studentinterests JOIN interestlist USING (interestID) WHERE studentID = ?;";
-                    PreparedStatement interestStatement = _dataService.connect().prepareStatement(interestQuery);
-                    interestStatement.setInt(1,studentUser.getStudentID());
-                    ResultSet interestResultSet = interestStatement.executeQuery();
-                    List<Interest> interests = new ArrayList<>();
-                    while (interestResultSet.next()) 
+                    while(studentResultSet.next())
                     {
-                        Interest interest = new Interest
+                        Student studentUser = new Student
                         (
-                            interestResultSet.getInt("interestID"),
-                            interestResultSet.getString("intDesc")
+                            studentResultSet.getInt("userID"),
+                            studentResultSet.getString("typeID"),
+                            studentResultSet.getString("username"),
+                            studentResultSet.getString("password"),
+                            studentResultSet.getInt("studentID"),
+                            studentResultSet.getString("fname"),
+                            studentResultSet.getString("lname"),
+                            studentResultSet.getString("email"),
+                            studentResultSet.getString("phonenumber")
                         );
-                        interests.add(interest);
-                    }
-                    if(!interests.isEmpty()) studentUser.setInterests(interests);
 
-                    String majorQuery = "SELECT majorID, majorDescription FROM studentmajor JOIN majorlist USING (majorID) WHERE studentID = ?;";
-                    PreparedStatement majorStatement = _dataService.connect().prepareStatement(majorQuery);
-                    majorStatement.setInt(1, studentUser.getStudentID());
-                    ResultSet majorResultSet = majorStatement.executeQuery();
-                    List<Major> majors = new ArrayList<>();
-                    while(majorResultSet.next())
-                    {
-                        Major major = new Major
-                        (
-                            majorResultSet.getInt("majorID"),
-                            majorResultSet.getString("majorDescription")
-                        );
-                        majors.add(major);
-                    }
-                    if(!majors.isEmpty()) studentUser.setMajors(majors);
+                        String interestQuery = "SELECT interestID, intDesc FROM studentinterests JOIN interestlist USING (interestID) WHERE studentID = ?;";
+                        PreparedStatement interestStatement = _dataService.connect().prepareStatement(interestQuery);
+                        interestStatement.setInt(1,studentUser.getStudentID());
+                        ResultSet interestResultSet = interestStatement.executeQuery();
+                        List<Interest> interests = new ArrayList<>();
+                        while (interestResultSet.next()) 
+                        {
+                            Interest interest = new Interest
+                            (
+                                interestResultSet.getInt("interestID"),
+                                interestResultSet.getString("intDesc")
+                            );
+                            interests.add(interest);
+                        }
+                        if(!interests.isEmpty()) studentUser.setInterests(interests);
 
-                    if(studentUser != null) searchResults.add(studentUser);
+                        String majorQuery = "SELECT majorID, majorDescription FROM studentmajor JOIN majorlist USING (majorID) WHERE studentID = ?;";
+                        PreparedStatement majorStatement = _dataService.connect().prepareStatement(majorQuery);
+                        majorStatement.setInt(1, studentUser.getStudentID());
+                        ResultSet majorResultSet = majorStatement.executeQuery();
+                        List<Major> majors = new ArrayList<>();
+                        while(majorResultSet.next())
+                        {
+                            Major major = new Major
+                            (
+                                majorResultSet.getInt("majorID"),
+                                majorResultSet.getString("majorDescription")
+                            );
+                            majors.add(major);
+                        }
+                        if(!majors.isEmpty()) studentUser.setMajors(majors);
+
+                        if(studentUser != null) searchResults.add(studentUser);
+                    }
                 }
             }
         }
