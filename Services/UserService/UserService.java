@@ -328,7 +328,7 @@ public class UserService implements IUserService
     {
         try 
         {
-            String queryUser = "INSERT INTO users (typeID, username, salt, encryptedPassword) VALUES (?, ?, ?)";
+            String queryUser = "INSERT INTO users (typeID, username, salt, encryptedPassword) VALUES (?, ?, ?, ?)";
             PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser,Statement.RETURN_GENERATED_KEYS);
             stmtUser.setString(1, user.getTypeID());
             stmtUser.setString(2, user.getUsername());
