@@ -13,3 +13,8 @@ Add interest will add interest.
 Delete user will delete the user.
 Search interest will search interests depending on the usr type.
 Logout will logout the user and exit the program.
+
+Jimhab: FacultyPass
+jmd4173: StudentPass
+Wegmans: GuestPass
+abc1234: ExamplePass

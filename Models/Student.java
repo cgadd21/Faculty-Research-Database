@@ -2,8 +2,7 @@ package Models;
 
 import java.util.*;
 
-public class Student extends User 
-{
+public class Student extends User {
     private int studentID;
     private String fname;
     private String lname;
@@ -12,8 +11,8 @@ public class Student extends User
     private List<Interest> interests;
     private List<Major> majors;
 
-    public Student(int userID, String typeID, String username, String password, int studentID, String fname, String lname, String email, String phoneNumber) 
-    {
+    public Student(int userID, String typeID, String username, String password, int studentID, String fname,
+            String lname, String email, String phoneNumber) {
         super(userID, typeID, username, password);
         this.studentID = studentID;
         this.fname = fname;
@@ -21,31 +20,26 @@ public class Student extends User
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
-    
+
     @Override
-    public String toString() 
-    {
+    public String toString() {
         StringBuilder interestsStringBuilder = new StringBuilder();
-        for (Interest interest : interests) 
-        {
+        for (Interest interest : interests) {
             interestsStringBuilder.append(interest.getIntDesc()).append(", ");
         }
 
         String interestsString = interestsStringBuilder.toString();
-        if (!interestsString.isEmpty()) 
-        {
+        if (!interestsString.isEmpty()) {
             interestsString = interestsString.substring(0, interestsString.length() - 2);
         }
 
         StringBuilder majorsStringBuilder = new StringBuilder();
-        for (Major major : majors) 
-        {
+        for (Major major : majors) {
             majorsStringBuilder.append(major.getMajorDescription()).append(", ");
         }
 
         String majorsString = majorsStringBuilder.toString();
-        if (!majorsString.isEmpty()) 
-        {
+        if (!majorsString.isEmpty()) {
             majorsString = majorsString.substring(0, majorsString.length() - 2);
         }
 
@@ -63,74 +57,60 @@ public class Student extends User
                 ", majors=[" + majorsString + ']' +
                 '}';
     }
-    
-    public int getStudentID() 
-    {
+
+    public int getStudentID() {
         return studentID;
     }
 
-    public void setStudentID(int studentID) 
-    {
+    public void setStudentID(int studentID) {
         this.studentID = studentID;
     }
-    
-    public String getFname() 
-    {
+
+    public String getFname() {
         return fname;
     }
-    
-    public void setFname(String fname) 
-    {
+
+    public void setFname(String fname) {
         this.fname = fname;
     }
-    
-    public String getLname() 
-    {
+
+    public String getLname() {
         return lname;
     }
-    
-    public void setLname(String lname) 
-    {
+
+    public void setLname(String lname) {
         this.lname = lname;
     }
-    
-    public String getEmail() 
-    {
+
+    public String getEmail() {
         return email;
     }
-    
-    public void setEmail(String email) 
-    {
+
+    public void setEmail(String email) {
         this.email = email;
     }
-    
-    public String getPhoneNumber() 
-    {
+
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) 
-    {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Interest> getInterests() 
-    {
+    public List<Interest> getInterests() {
         return interests;
     }
-    
-    public void setInterests(List<Interest> interests) 
-    {
+
+    public void setInterests(List<Interest> interests) {
         this.interests = interests;
     }
 
-    public List<Major> getMajors() 
-    {
+    public List<Major> getMajors() {
         return majors;
     }
 
-    public void setMajors(List<Major> majors) 
-    {
+    public void setMajors(List<Major> majors) {
         this.majors = majors;
     }
 }

@@ -26,20 +26,25 @@ public class UserService implements IUserService {
             ResultSet userResultSet = preparedStatement.executeQuery();
 
             if (userResultSet.next()) {
+                System.out.println("test");
                 String storedEncryptedPass = userResultSet.getString("password");
+                String tempSalt = userResultSet.getString("salt");
                 // Verify the password
-                if (_encryptService.verifyUserPassword(storedEncryptedPass,user.getPassword(),user.getSalt())) {
+                if (_encryptService.verifyUserPassword(user.getPassword(), storedEncryptedPass, tempSalt)) {
+                    System.out.println("test2");
                     User loginUser = new User(
                             userResultSet.getInt("userID"),
                             userResultSet.getString("typeID"),
                             userResultSet.getString("username"),
-                            storedEncryptedPass); // Store the hashed password
+                            storedEncryptedPass,
+                            tempSalt); // Store the hashed password
                     user = loginUser;
                     getUser();
+                } else {
+                    System.out.println("failed pass decrypt");
                 }
-            }
-            else {
-                System.out.print("user does not exist");
+            } else {
+                System.out.println("user does not exist");
             }
         } catch (Exception e) {
             // Handle exceptions appropriately, e.g., logging
@@ -47,7 +52,7 @@ public class UserService implements IUserService {
             _dataService.close();
         }
     }
-    
+
     @Override
     public void logout() {
         user = null;

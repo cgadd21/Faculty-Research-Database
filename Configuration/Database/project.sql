@@ -12,7 +12,7 @@ CREATE TABLE users (
 	typeID ENUM ('F','G','S') NOT NULL,
     username VARCHAR(30) UNIQUE,
     salt VARCHAR(100) UNIQUE,
-    password VARCHAR(30),
+    password VARCHAR(100),
 	constraint user_pk primary key (userID)
 ) AUTO_INCREMENT = 1; 
 -- GUEST INFORMATION START
@@ -120,11 +120,11 @@ CREATE TABLE facultyAbstract (
     CONSTRAINT facultyAbstract_pk PRIMARY KEY (facultyID, abstractID)
 );
 
-INSERT INTO Users (userID, typeID, username, password) VALUES 
-(1,'F','Jimhab','FacultyPass'), 
-(2,'S','jmd4173','StudentPass'), 
-(3,'G','Wegmans','GuestPass'),
-(4,'S','abc1234','ExamplePass');
+INSERT INTO Users (typeID, username, salt, password) VALUES 
+('F','Jimhab','Pwi3jy9cb15MtSZW','t7NHo0V9jpJvh7YRahbq0eI2TVCepnAnziHre+ByrHY='), 
+('S','jmd4173','ouVbBSVOk8NaQ3kC','t7OOzUMWgWZIQ7d539k2FB27kR3jcBfhWT5lVLuR6YY='), 
+('G','Wegmans','8ipUanI75GViFSko','kjXl9IS+Yto+odjLQgU0gpScsMDd9JccOwuocht4BvE='),
+('S','abc1234','qPaNSXt6R8a1ht27','Rw18gdp/PA7frMr084okXCt7j29TvcbKuvMc+G5ryzU=');
 INSERT INTO guest (guestID, business, fname, lname, contactinfo) VALUES
 (3, 'Wegmans','Mr','Wegman','wegmanscontact@gmail.com');
 INSERT INTO student (studentID, fname, lname, email, phonenumber) VALUES
