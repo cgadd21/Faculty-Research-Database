@@ -1,8 +1,4 @@
-package Service.EncryptService;
-
-import java.security.*;
-import java.util.*;
-import javax.crypto.*;
+package Services.EncryptService;
 
 public interface IEncryptService
 {

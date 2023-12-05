@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.*;
 import Models.*;
 import Services.DataService.*;
+import Services.EncryptService.*;
 
 public class UserService implements IUserService {
     private IDataService _dataService = new DataService();
@@ -27,7 +28,7 @@ public class UserService implements IUserService {
             if (userResultSet.next()) {
                 String storedEncryptedPass = userResultSet.getString("password");
                 // Verify the password
-                if (_encryptService.verifyUserPassword(storedEncryptedPass,userResultSet.getPassword(),userResultSet.getSalt())) {
+                if (_encryptService.verifyUserPassword(storedEncryptedPass,user.getPassword(),user.getSalt())) {
                     User loginUser = new User(
                             userResultSet.getInt("userID"),
                             userResultSet.getString("typeID"),
@@ -38,14 +39,15 @@ public class UserService implements IUserService {
                 }
             }
             else {
-                system.out.print("user does not exist");
+                System.out.print("user does not exist");
             }
         } catch (Exception e) {
             // Handle exceptions appropriately, e.g., logging
         } finally {
             _dataService.close();
         }
-
+    }
+    
     @Override
     public void logout() {
         user = null;
@@ -416,5 +418,3 @@ public class UserService implements IUserService {
         }
     }
 }
-}
-
