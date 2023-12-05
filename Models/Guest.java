@@ -8,9 +8,9 @@ public class Guest extends User
     private String lname;
     private String contactInfo;
 
-    public Guest(int userID, String typeID, String username, String password, int guestID, String business, String fname, String lname, String contactInfo) 
+    public Guest(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int guestID, String business, String fname, String lname, String contactInfo) 
     {
-        super(userID, typeID, username, password);
+        super(userID, typeID, username, password, salt, encryptedPassword);
         this.guestID = guestID;
         this.business = business;
         this.fname = fname;

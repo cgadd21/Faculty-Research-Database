@@ -5,26 +5,20 @@ public class User
     private int userID;
     private String typeID;
     private String username;
-    private String salt;
     private String password;
+    private String salt;
+    private String encryptedPassword;
 
     public User() {}
 
-    public User(int userID, String typeID, String username, String password) 
-    {
-        this.userID = userID;
-        this.typeID = typeID;
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(int userID, String typeID, String username, String password, String salt) 
+    public User(int userID, String typeID, String username, String password, String salt, String encryptedPassword) 
     {
         this.userID = userID;
         this.typeID = typeID;
         this.username = username;
         this.password = password;
         this.salt = salt;
+        this.encryptedPassword = encryptedPassword;
     }
 
     @Override
@@ -81,5 +75,10 @@ public class User
     public String getSalt() 
     {
         return salt;
+    }
+
+    public String getEncryptedPassword() 
+    {
+        return encryptedPassword;
     }
 }

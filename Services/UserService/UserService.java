@@ -26,28 +26,21 @@ public class UserService implements IUserService
             String query = "SELECT * FROM users WHERE BINARY username = ?";
             PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
             preparedStatement.setString(1, user.getUsername());
-            // encrpyt password
             ResultSet userResultSet = preparedStatement.executeQuery();
 
             if (userResultSet.next()) 
             {
-                String storedEncryptedPass = userResultSet.getString("password");
-                String tempSalt = userResultSet.getString("salt");
-                // Verify the password
-                if (_encryptService.verifyUserPassword(user.getPassword(), storedEncryptedPass, tempSalt)) 
-                {
-                    User loginUser = new User
-                    (
-                        userResultSet.getInt("userID"),
-                        userResultSet.getString("typeID"),
-                        userResultSet.getString("username"),
-                        storedEncryptedPass,
-                        tempSalt
-                    ); // Store the hashed password
-
-                    user = loginUser;
-                    getUser();
-                }
+                User loginUser = new User
+                (
+                    userResultSet.getInt("userID"),
+                    userResultSet.getString("typeID"),
+                    userResultSet.getString("username"),
+                    user.getPassword(),
+                    userResultSet.getString("salt"),
+                    userResultSet.getString("encryptedPassword")
+                );
+                if(_encryptService.verifyUserPassword(loginUser.getPassword(), loginUser.getEncryptedPassword(), loginUser.getSalt())) user = loginUser;
+                getUser();
             }
         } 
         catch (Exception e) {} 
@@ -70,7 +63,7 @@ public class UserService implements IUserService
         {
             if (user.getTypeID().equals("F")) 
             {
-                String facultyQuery = "SELECT userID, typeID, username, password, facultyID, fname, lname, email, phonenumber, location FROM users JOIN faculty ON users.userID = faculty.facultyID WHERE userID = ?;";
+                String facultyQuery = "SELECT userID, typeID, username, encryptedPassword, salt, facultyID, fname, lname, email, phonenumber, location FROM users JOIN faculty ON users.userID = faculty.facultyID WHERE userID = ?;";
                 PreparedStatement facultyStatement = _dataService.connect().prepareStatement(facultyQuery);
                 facultyStatement.setInt(1, user.getUserID());
                 ResultSet facultyResultSet = facultyStatement.executeQuery();
@@ -80,7 +73,9 @@ public class UserService implements IUserService
                     facultyResultSet.getInt("userID"),
                     facultyResultSet.getString("typeID"),
                     facultyResultSet.getString("username"),
-                    facultyResultSet.getString("password"),
+                    user.getPassword(),
+                    facultyResultSet.getString("salt"),
+                    facultyResultSet.getString("encryptedPassword"),
                     facultyResultSet.getInt("facultyID"),
                     facultyResultSet.getString("fname"),
                     facultyResultSet.getString("lname"),
@@ -125,7 +120,7 @@ public class UserService implements IUserService
             } 
             else if (user.getTypeID().equals("S")) 
             {
-                String studentQuery = "SELECT userID, typeID, username, password, studentID, fname, lname, email, phonenumber FROM users JOIN student ON users.userID = student.studentID WHERE userID = ?;";
+                String studentQuery = "SELECT userID, typeID, username, encryptedPassword, salt, studentID, fname, lname, email, phonenumber FROM users JOIN student ON users.userID = student.studentID WHERE userID = ?;";
                 PreparedStatement studentStatement = _dataService.connect().prepareStatement(studentQuery);
                 studentStatement.setInt(1, user.getUserID());
                 ResultSet studentResultSet = studentStatement.executeQuery();
@@ -135,7 +130,9 @@ public class UserService implements IUserService
                     studentResultSet.getInt("userID"),
                     studentResultSet.getString("typeID"),
                     studentResultSet.getString("username"),
-                    studentResultSet.getString("password"),
+                    user.getPassword(),
+                    studentResultSet.getString("salt"),
+                    studentResultSet.getString("encryptedPassword"),
                     studentResultSet.getInt("studentID"),
                     studentResultSet.getString("fname"),
                     studentResultSet.getString("lname"),
@@ -179,7 +176,7 @@ public class UserService implements IUserService
             } 
             else if (user.getTypeID().equals("G")) 
             {
-                String query = "SELECT * FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
+                String query = "SELECT userID, typeID, username, encryptedPassword, salt, guestID, business, fname, lname, contactinfo FROM users JOIN guest ON users.userID = guest.guestID WHERE users.userID = ?";
                 PreparedStatement preparedStatement = _dataService.connect().prepareStatement(query);
                 preparedStatement.setInt(1, user.getUserID());
                 ResultSet guestResultSet = preparedStatement.executeQuery();
@@ -191,7 +188,9 @@ public class UserService implements IUserService
                         guestResultSet.getInt("userID"),
                         guestResultSet.getString("typeID"),
                         guestResultSet.getString("username"),
-                        guestResultSet.getString("password"),
+                        user.getPassword(),
+                        guestResultSet.getString("salt"),
+                        guestResultSet.getString("encryptedPassword"),
                         guestResultSet.getInt("guestID"),
                         guestResultSet.getString("business"),
                         guestResultSet.getString("fname"),

@@ -12,9 +12,9 @@ public class Student extends User
     private List<Interest> interests;
     private List<Major> majors;
 
-    public Student(int userID, String typeID, String username, String password, int studentID, String fname,String lname, String email, String phoneNumber) 
+    public Student(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int studentID, String fname,String lname, String email, String phoneNumber) 
     {
-        super(userID, typeID, username, password);
+        super(userID, typeID, username, password, salt, encryptedPassword);
         this.studentID = studentID;
         this.fname = fname;
         this.lname = lname;

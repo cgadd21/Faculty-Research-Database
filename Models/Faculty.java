@@ -13,9 +13,9 @@ public class Faculty extends User
     private List<Interest> interests;
     private List<Abstract> abstracts;
 
-    public Faculty(int userID, String typeID, String username, String password, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
+    public Faculty(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
     {
-        super(userID, typeID, username, password);
+        super(userID, typeID, username, password, salt, encryptedPassword);
         this.facultyID = facultyID;
         this.fname = fname;
         this.lname = lname;

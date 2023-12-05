@@ -12,7 +12,7 @@ CREATE TABLE users (
 	typeID ENUM ('F','G','S') NOT NULL,
     username VARCHAR(30) UNIQUE,
     salt VARCHAR(100) UNIQUE,
-    password VARCHAR(100),
+    encryptedPassword VARCHAR(100),
 	constraint user_pk primary key (userID)
 ) AUTO_INCREMENT = 1; 
 -- GUEST INFORMATION START
@@ -120,7 +120,7 @@ CREATE TABLE facultyAbstract (
     CONSTRAINT facultyAbstract_pk PRIMARY KEY (facultyID, abstractID)
 );
 
-INSERT INTO Users (typeID, username, salt, password) VALUES 
+INSERT INTO Users (typeID, username, salt, encryptedPassword) VALUES 
 ('F','Jimhab','Pwi3jy9cb15MtSZW','t7NHo0V9jpJvh7YRahbq0eI2TVCepnAnziHre+ByrHY='), 
 ('S','jmd4173','ouVbBSVOk8NaQ3kC','t7OOzUMWgWZIQ7d539k2FB27kR3jcBfhWT5lVLuR6YY='), 
 ('G','Wegmans','8ipUanI75GViFSko','kjXl9IS+Yto+odjLQgU0gpScsMDd9JccOwuocht4BvE='),
