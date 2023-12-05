@@ -77,8 +77,18 @@ public class User
         return salt;
     }
 
+    public void setSalt(String salt) 
+    {
+        this.salt = salt;
+    }
+
     public String getEncryptedPassword() 
     {
         return encryptedPassword;
+    }
+
+    public void setEncryptedPassword(String encryptedPassword) 
+    {
+        this.encryptedPassword = encryptedPassword;
     }
 }

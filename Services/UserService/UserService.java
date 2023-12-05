@@ -214,7 +214,7 @@ public class UserService implements IUserService
     {
         try 
         {
-            String queryUser = "UPDATE users SET username = ?, password = ? WHERE userID = ?";
+            String queryUser = "UPDATE users SET username = ?, encryptedPassword = ? WHERE userID = ?";
             PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser);
             stmtUser.setString(1, user.getUsername());
             stmtUser.setString(2, _encryptService.generateSecurePassword(user.getPassword(), user.getSalt()));
@@ -328,13 +328,12 @@ public class UserService implements IUserService
     {
         try 
         {
-            String queryUser = "INSERT INTO users (typeID, username, salt, password) VALUES (?, ?, ?)";
+            String queryUser = "INSERT INTO users (typeID, username, salt, encryptedPassword) VALUES (?, ?, ?)";
             PreparedStatement stmtUser = _dataService.connect().prepareStatement(queryUser,Statement.RETURN_GENERATED_KEYS);
             stmtUser.setString(1, user.getTypeID());
             stmtUser.setString(2, user.getUsername());
-            String tempSalt = _encryptService.getSalt(16);
-            stmtUser.setString(3, tempSalt);
-            stmtUser.setString(4, _encryptService.generateSecurePassword(user.getPassword(), tempSalt));
+            user.setSalt(_encryptService.getSalt(16)); stmtUser.setString(3, user.getSalt());
+            user.setEncryptedPassword(_encryptService.generateSecurePassword(user.getPassword(), user.getSalt())); stmtUser.setString(4, user.getEncryptedPassword());
             stmtUser.executeUpdate();
             ResultSet generatedKeys = stmtUser.getGeneratedKeys();
             if (generatedKeys.next()) user.setUserID(generatedKeys.getInt(1));
