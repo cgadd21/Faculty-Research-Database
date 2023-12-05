@@ -10,14 +10,14 @@ public class Login
     {
         JPanel loginBox = new JPanel(new GridLayout(2,2));
 
-        JLabel lblUser= new JLabel("Username  -> ");
-        loginBox.add(lblUser);
-        lblUser.setFont(new Font("Courier", Font.PLAIN, 32));
+        JLabel lblUsername = new JLabel("Username  -> ");
+        loginBox.add(lblUsername);
+        lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
 
-        JTextField tfUser = new JTextField("");
-        loginBox.add(tfUser);
-        tfUser.setFont(new Font("Courier", Font.PLAIN, 32));
-        tfUser.setForeground(Color.BLUE);
+        JTextField tfUsername = new JTextField("");
+        loginBox.add(tfUsername);
+        tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+        tfUsername.setForeground(Color.BLUE);
 
         JLabel lblPassword = new JLabel("Password  -> ");
         loginBox.add(lblPassword);
@@ -30,7 +30,7 @@ public class Login
 
         JOptionPane.showMessageDialog(null, loginBox,"Please Login", JOptionPane.QUESTION_MESSAGE);
 
-        _userService.getCurrentUser().setUsername(tfUser.getText());
+        _userService.getCurrentUser().setUsername(tfUsername.getText());
         _userService.getCurrentUser().setPassword(tfPassword.getText());
 
         _userService.login();
