@@ -11,6 +11,7 @@ CREATE TABLE users (
 	userID INT NOT NULL auto_increment,
 	typeID ENUM ('F','G','S') NOT NULL,
     username VARCHAR(30) UNIQUE,
+    salt VARCHAR(100) UNIQUE,
     password VARCHAR(30),
 	constraint user_pk primary key (userID)
 ) AUTO_INCREMENT = 1; 

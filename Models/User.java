@@ -5,6 +5,7 @@ public class User
     private int userID;
     private String typeID;
     private String username;
+    private String salt;
     private String password;
 
     public User() {}
@@ -66,5 +67,10 @@ public class User
     public void setPassword(String password) 
     {
         this.password = password;
+    }
+
+    public String getSalt() 
+    {
+        return salt;
     }
 }
