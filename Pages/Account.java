@@ -24,7 +24,18 @@ public class Account
         accountBox.add(lblUserType);
         lblUserType.setFont(new Font("Courier", Font.PLAIN, 32));
 
-        //user type select
+        String[] userTypes = {"F","S","G"};
+        JComboBox<String> cbUserType = new JComboBox<>(userTypes);
+        accountBox.add(cbUserType);
+        cbUserType.setFont(new Font("Courier", Font.PLAIN, 32));
+        cbUserType.setForeground(Color.BLUE);
+        cbUserType.setSelectedIndex
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") ? 0 : 
+            _userService.getCurrentUser().getTypeID().equals("S") ? 1 : 
+            _userService.getCurrentUser().getTypeID().equals("G") ? 2 : 
+            -1
+        );
 
         JLabel lblUsername = new JLabel("Username");
         accountBox.add(lblUsername);
