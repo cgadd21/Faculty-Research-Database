@@ -19,6 +19,12 @@ public class UserService implements IUserService
     }
 
     @Override
+    public void setCurrentUser(User user) 
+    {
+        this.user = user;
+    }
+
+    @Override
     public void login() 
     {
         try 

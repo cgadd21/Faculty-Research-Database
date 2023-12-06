@@ -5,6 +5,7 @@ import Models.*;
 public interface IUserService 
 {
     User getCurrentUser();
+    void setCurrentUser(User user);
     void login();
     void logout();
     void getUser();

@@ -2,198 +2,261 @@ package Pages;
 
 import javax.swing.*;
 import java.awt.*;
+import Models.*;
 import Services.UserService.*;
 
 public class Account 
 {
+    public Account() {}
+
     public Account(IUserService _userService)
-    {   
-        JPanel accountBox = new JPanel
-        (
-            new GridLayout
+    {
+        User accountUser = new User();
+
+        if(_userService.getCurrentUser().getUserID() == 0)
+        {
+            JPanel initialBox = new JPanel(new GridLayout(3,2));
+
+            JLabel lblUserType = new JLabel("User Type");
+            initialBox.add(lblUserType);
+            lblUserType.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            String[] userTypes = {"Faculty","Student","Guest"};
+            JComboBox<String> cbUserType = new JComboBox<>(userTypes);
+            initialBox.add(cbUserType);
+            cbUserType.setFont(new Font("Courier", Font.PLAIN, 32));
+            cbUserType.setForeground(Color.BLUE);
+
+            JLabel lblUsername = new JLabel("Username");
+            initialBox.add(lblUsername);
+            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfUsername = new JTextField("");
+            initialBox.add(tfUsername);
+            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfUsername.setForeground(Color.BLUE);
+
+            JLabel lblPassword = new JLabel("Password");
+            initialBox.add(lblPassword);
+            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfPassword = new JTextField("");
+            initialBox.add(tfPassword);
+            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPassword.setForeground(Color.BLUE);
+
+            JOptionPane.showMessageDialog(null, initialBox,"Sign Up", JOptionPane.QUESTION_MESSAGE);
+
+            accountUser = new User
             (
-                _userService.getCurrentUser().getTypeID().equals("F") ? 10 : 
-                _userService.getCurrentUser().getTypeID().equals("S") ? 9 : 
-                _userService.getCurrentUser().getTypeID().equals("G") ? 7 : 
-                3,
-                2
-            )
-        );
+                cbUserType.getSelectedItem().equals("Faculty") ? "F" :
+                cbUserType.getSelectedItem().equals("Student") ? "S" :
+                cbUserType.getSelectedItem().equals("Guest") ? "G" :
+                null,
+                tfUsername.getText(),
+                tfPassword.getText()
+            );
 
-        JLabel lblUserType = new JLabel("User Type");
-        accountBox.add(lblUserType);
-        lblUserType.setFont(new Font("Courier", Font.PLAIN, 32));
+            accountUser = 
+            (
+                accountUser.getTypeID().equals("F") ? 
+                new Faculty(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) : 
+                accountUser.getTypeID().equals("S") ? 
+                new Student(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) :
+                accountUser.getTypeID().equals("G") ? 
+                new Guest(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) :
+                new User(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword())
+            );
 
-        String[] userTypes = {"F","S","G"};
-        JComboBox<String> cbUserType = new JComboBox<>(userTypes);
-        accountBox.add(cbUserType);
-        cbUserType.setFont(new Font("Courier", Font.PLAIN, 32));
-        cbUserType.setForeground(Color.BLUE);
-        cbUserType.setSelectedIndex
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") ? 0 : 
-            _userService.getCurrentUser().getTypeID().equals("S") ? 1 : 
-            _userService.getCurrentUser().getTypeID().equals("G") ? 2 : 
-            -1
-        );
-
-        JLabel lblUsername = new JLabel("Username");
-        accountBox.add(lblUsername);
-        lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-
-        JTextField tfUsername = new JTextField(_userService.getCurrentUser().getUsername());
-        accountBox.add(tfUsername);
-        tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-        tfUsername.setForeground(Color.BLUE);
-
-        JLabel lblPassword = new JLabel("Password");
-        accountBox.add(lblPassword);
-        lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-
-        JTextField tfPassword = new JTextField(_userService.getCurrentUser().getPassword());
-        accountBox.add(tfPassword);
-        tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-        tfPassword.setForeground(Color.BLUE);
-
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") || 
-            _userService.getCurrentUser().getTypeID().equals("S") || 
-            _userService.getCurrentUser().getTypeID().equals("G")
-        )
+        }
+        else
         {
-            JLabel lblFName = new JLabel("First Name");
-            accountBox.add(lblFName);
-            lblFName.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            JTextField tfFName = new JTextField("");
-            accountBox.add(tfFName);
-            tfFName.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfFName.setForeground(Color.BLUE);
+            accountUser = _userService.getCurrentUser();
         }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") ||
-            _userService.getCurrentUser().getTypeID().equals("S") ||
-            _userService.getCurrentUser().getTypeID().equals("G")
-        )
+        if(accountUser instanceof Faculty)
         {
-            JLabel lblLName = new JLabel("Last Name");
-            accountBox.add(lblLName);
-            lblLName.setFont(new Font("Courier", Font.PLAIN, 32));
+            Faculty accountFaculty = (Faculty) accountUser;
 
-            JTextField tfLName = new JTextField("");
-            accountBox.add(tfLName);
-            tfLName.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfLName.setForeground(Color.BLUE);
-        }
+            JPanel facultyBox = new JPanel(new GridLayout (5,5));
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") ||
-            _userService.getCurrentUser().getTypeID().equals("S")
-        )
-        {
+            JLabel lblFname = new JLabel("First Name");
+            facultyBox.add(lblFname);
+            lblFname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfFname = new JTextField(accountFaculty.getFname());
+            facultyBox.add(tfFname);
+            tfFname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfFname.setForeground(Color.BLUE);
+
+            JLabel lblLname = new JLabel("Last Name");
+            facultyBox.add(lblLname);
+            lblLname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfLname = new JTextField(accountFaculty.getLname());
+            facultyBox.add(tfLname);
+            tfLname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfLname.setForeground(Color.BLUE);
+
             JLabel lblEmail = new JLabel("Email");
-            accountBox.add(lblEmail);
+            facultyBox.add(lblEmail);
             lblEmail.setFont(new Font("Courier", Font.PLAIN, 32));
 
-            JTextField tfEmail = new JTextField("");
-            accountBox.add(tfEmail);
+            JTextField tfEmail = new JTextField(accountFaculty.getEmail());
+            facultyBox.add(tfEmail);
             tfEmail.setFont(new Font("Courier", Font.PLAIN, 32));
             tfEmail.setForeground(Color.BLUE);
-        }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") ||
-            _userService.getCurrentUser().getTypeID().equals("S")
-        )
-        {
             JLabel lblPhoneNumber = new JLabel("Phone Number");
-            accountBox.add(lblPhoneNumber);
+            facultyBox.add(lblPhoneNumber);
             lblPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
 
-            JTextField tfPhoneNumber = new JTextField("");
-            accountBox.add(tfPhoneNumber);
+            JTextField tfPhoneNumber = new JTextField(accountFaculty.getPhoneNumber());
+            facultyBox.add(tfPhoneNumber);
             tfPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
             tfPhoneNumber.setForeground(Color.BLUE);
-        }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F")
-        )
-        {
             JLabel lblLocation = new JLabel("Location");
-            accountBox.add(lblLocation);
+            facultyBox.add(lblLocation);
             lblLocation.setFont(new Font("Courier", Font.PLAIN, 32));
 
-            JTextField tfLocation = new JTextField("");
-            accountBox.add(tfLocation);
+            JTextField tfLocation = new JTextField(accountFaculty.getLocation());
+            facultyBox.add(tfLocation);
             tfLocation.setFont(new Font("Courier", Font.PLAIN, 32));
             tfLocation.setForeground(Color.BLUE);
-        }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("G")
-        )
-        {
-            JLabel lblContactInfo = new JLabel("Contact Info");
-            accountBox.add(lblContactInfo);
-            lblContactInfo.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            JTextField tfContactInfo = new JTextField("");
-            accountBox.add(tfContactInfo);
-            tfContactInfo.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfContactInfo.setForeground(Color.BLUE);
-        }
-
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F") ||
-            _userService.getCurrentUser().getTypeID().equals("S")
-        )
-        {
             JLabel lblInterests = new JLabel("Interests");
-            accountBox.add(lblInterests);
+            //facultyBox.add(lblInterests);
             lblInterests.setFont(new Font("Courier", Font.PLAIN, 32));
 
             //drop down
             //new option
-        }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("F")
-        )
-        {
             JLabel lblAbstracts = new JLabel("Abstracts");
-            accountBox.add(lblAbstracts);
+            //facultyBox.add(lblAbstracts);
             lblAbstracts.setFont(new Font("Courier", Font.PLAIN, 32));
 
             //drop down
             //new option
-        }
 
-        if
-        (
-            _userService.getCurrentUser().getTypeID().equals("S")
-        )
+            JOptionPane.showMessageDialog(null, facultyBox,"Faculty", JOptionPane.QUESTION_MESSAGE);
+
+            accountFaculty = new Faculty(accountFaculty.getUserID(), accountFaculty.getTypeID(), accountFaculty.getUsername(), accountFaculty.getPassword(), accountFaculty.getSalt(), accountFaculty.getEncryptedPassword(), accountFaculty.getFacultyID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText(), tfLocation.getText());
+
+            //set interests & abstracts
+
+            _userService.setCurrentUser(accountFaculty);
+        }
+        else if(accountUser instanceof Student)
         {
+            Student accountStudent = (Student) accountUser;
+
+            JPanel studentBox = new JPanel(new GridLayout (4,4));
+
+            JLabel lblFname = new JLabel("First Name");
+            studentBox.add(lblFname);
+            lblFname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfFname = new JTextField(accountStudent.getFname());
+            studentBox.add(tfFname);
+            tfFname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfFname.setForeground(Color.BLUE);
+
+            JLabel lblLname = new JLabel("Last Name");
+            studentBox.add(lblLname);
+            lblLname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfLname = new JTextField(accountStudent.getLname());
+            studentBox.add(tfLname);
+            tfLname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfLname.setForeground(Color.BLUE);
+
+            JLabel lblEmail = new JLabel("Email");
+            studentBox.add(lblEmail);
+            lblEmail.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfEmail = new JTextField(accountStudent.getEmail());
+            studentBox.add(tfEmail);
+            tfEmail.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfEmail.setForeground(Color.BLUE);
+
+            JLabel lblPhoneNumber = new JLabel("Phone Number");
+            studentBox.add(lblPhoneNumber);
+            lblPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfPhoneNumber = new JTextField(accountStudent.getPhoneNumber());
+            studentBox.add(tfPhoneNumber);
+            tfPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPhoneNumber.setForeground(Color.BLUE);
+
+            JLabel lblInterests = new JLabel("Interests");
+            //studentBox.add(lblInterests);
+            lblInterests.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            //drop down
+            //new option
+
             JLabel lblMajors = new JLabel("Majors");
-            accountBox.add(lblMajors);
+            //studentBox.add(lblMajors);
             lblMajors.setFont(new Font("Courier", Font.PLAIN, 32));
 
             //drop down
             //new option
+
+            JOptionPane.showMessageDialog(null, studentBox,"Student", JOptionPane.QUESTION_MESSAGE);
+
+            accountStudent = new Student(accountStudent.getUserID(), accountStudent.getTypeID(), accountStudent.getUsername(), accountStudent.getPassword(), accountStudent.getSalt(), accountStudent.getEncryptedPassword(), accountStudent.getStudentID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText());
+
+            //set interests & abstracts
+
+            _userService.setCurrentUser(accountStudent);
         }
+        else if(accountUser instanceof Guest)
+        {
+            Guest accountGuest = (Guest) accountUser;
 
-        //delete option
+            JPanel guestBox = new JPanel(new GridLayout (4,4));
 
-        JOptionPane.showMessageDialog(null, accountBox,"Account", JOptionPane.QUESTION_MESSAGE);
+            JLabel lblBusiness = new JLabel("Business");
+            guestBox.add(lblBusiness);
+            lblBusiness.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfBusiness = new JTextField(accountGuest.getBusiness());
+            guestBox.add(tfBusiness);
+            tfBusiness.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfBusiness.setForeground(Color.BLUE);
+
+            JLabel lblFname = new JLabel("First Name");
+            guestBox.add(lblFname);
+            lblFname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfFname = new JTextField(accountGuest.getFname());
+            guestBox.add(tfFname);
+            tfFname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfFname.setForeground(Color.BLUE);
+
+            JLabel lblLname = new JLabel("Last Name");
+            guestBox.add(lblLname);
+            lblLname.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfLname = new JTextField(accountGuest.getLname());
+            guestBox.add(tfLname);
+            tfLname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfLname.setForeground(Color.BLUE);
+
+            JLabel lblContactInfo = new JLabel("Contact Info");
+            guestBox.add(lblContactInfo);
+            lblContactInfo.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfContactInfo = new JTextField(accountGuest.getContactInfo());
+            guestBox.add(tfContactInfo);
+            tfContactInfo.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfContactInfo.setForeground(Color.BLUE);
+
+            accountGuest = new Guest(accountGuest.getUserID(), accountGuest.getTypeID(), accountGuest.getUsername(), accountGuest.getPassword(), accountGuest.getSalt(), accountGuest.getEncryptedPassword(), accountGuest.getGuestID(), tfBusiness.getText(), tfFname.getText(), tfLname.getText(), tfContactInfo.getText());
+
+            _userService.setCurrentUser(accountGuest);
+        }
 
         if(_userService.getCurrentUser().getUserID() == 0)
         {
@@ -203,5 +266,6 @@ public class Account
         {
             _userService.updateUser();
         }
-    }    
+        
+    }
 }

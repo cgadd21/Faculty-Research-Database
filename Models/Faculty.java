@@ -13,6 +13,13 @@ public class Faculty extends User
     private List<Interest> interests;
     private List<Abstract> abstracts;
 
+    public Faculty() {}
+
+    public Faculty(String typeID, String username, String password)
+    {
+        super(typeID, username, password);
+    }
+
     public Faculty(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
     {
         super(userID, typeID, username, password, salt, encryptedPassword);
