@@ -55,7 +55,12 @@ public class Account
         tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
         tfPassword.setForeground(Color.BLUE);
 
-        if(_userService.getCurrentUser().getTypeID().equals("F") || _userService.getCurrentUser().getTypeID().equals("S") || _userService.getCurrentUser().getTypeID().equals("G"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") || 
+            _userService.getCurrentUser().getTypeID().equals("S") || 
+            _userService.getCurrentUser().getTypeID().equals("G")
+        )
         {
             JLabel lblFName = new JLabel("First Name");
             accountBox.add(lblFName);
@@ -67,7 +72,12 @@ public class Account
             tfFName.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F") || _userService.getCurrentUser().getTypeID().equals("S") || _userService.getCurrentUser().getTypeID().equals("G"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") ||
+            _userService.getCurrentUser().getTypeID().equals("S") ||
+            _userService.getCurrentUser().getTypeID().equals("G")
+        )
         {
             JLabel lblLName = new JLabel("Last Name");
             accountBox.add(lblLName);
@@ -79,7 +89,11 @@ public class Account
             tfLName.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F") || _userService.getCurrentUser().getTypeID().equals("S"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") ||
+            _userService.getCurrentUser().getTypeID().equals("S")
+        )
         {
             JLabel lblEmail = new JLabel("Email");
             accountBox.add(lblEmail);
@@ -91,7 +105,11 @@ public class Account
             tfEmail.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F") || _userService.getCurrentUser().getTypeID().equals("S"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") ||
+            _userService.getCurrentUser().getTypeID().equals("S")
+        )
         {
             JLabel lblPhoneNumber = new JLabel("Phone Number");
             accountBox.add(lblPhoneNumber);
@@ -103,7 +121,10 @@ public class Account
             tfPhoneNumber.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F")
+        )
         {
             JLabel lblLocation = new JLabel("Location");
             accountBox.add(lblLocation);
@@ -115,7 +136,10 @@ public class Account
             tfLocation.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("G"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("G")
+        )
         {
             JLabel lblContactInfo = new JLabel("Contact Info");
             accountBox.add(lblContactInfo);
@@ -127,7 +151,11 @@ public class Account
             tfContactInfo.setForeground(Color.BLUE);
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F") || _userService.getCurrentUser().getTypeID().equals("S"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F") ||
+            _userService.getCurrentUser().getTypeID().equals("S")
+        )
         {
             JLabel lblInterests = new JLabel("Interests");
             accountBox.add(lblInterests);
@@ -137,7 +165,10 @@ public class Account
             //new option
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("F"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("F")
+        )
         {
             JLabel lblAbstracts = new JLabel("Abstracts");
             accountBox.add(lblAbstracts);
@@ -147,7 +178,10 @@ public class Account
             //new option
         }
 
-        if(_userService.getCurrentUser().getTypeID().equals("S"))
+        if
+        (
+            _userService.getCurrentUser().getTypeID().equals("S")
+        )
         {
             JLabel lblMajors = new JLabel("Majors");
             accountBox.add(lblMajors);
