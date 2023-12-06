@@ -2,11 +2,15 @@ package Pages;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+
 import Models.*;
 import Services.UserService.*;
 
 public class Account 
 {
+    boolean delete = false;
+
     public Account(IUserService _userService)
     {
         User accountUser = new User();
@@ -56,7 +60,7 @@ public class Account
         {
             Faculty accountFaculty = (Faculty) accountUser;
 
-            JPanel facultyBox = new JPanel(new GridLayout (7,2));
+            JPanel facultyBox = new JPanel(new GridLayout (accountFaculty.getUserID() != 0 ? 8 : 7,2));
 
             JLabel lblUsername = new JLabel("Username");
             facultyBox.add(lblUsername);
@@ -135,6 +139,23 @@ public class Account
             //drop down
             //new option
 
+            JLabel lblDelete = new JLabel("Delete");
+            if(accountFaculty.getUserID() != 0) facultyBox.add(lblDelete);
+            lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JCheckBox cbDelete = new JCheckBox("");
+            if(accountFaculty.getUserID() != 0) facultyBox.add(cbDelete);
+            cbDelete.addActionListener
+            (
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae)
+                    {
+                        delete = true;
+                    }
+                }
+            );
+
             JOptionPane.showMessageDialog(null, facultyBox,"Faculty", JOptionPane.QUESTION_MESSAGE);
 
             accountFaculty = new Faculty(accountFaculty.getUserID(), accountFaculty.getTypeID(), accountFaculty.getUsername(), accountFaculty.getPassword(), accountFaculty.getSalt(), accountFaculty.getEncryptedPassword(), accountFaculty.getFacultyID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText(), tfLocation.getText());
@@ -147,7 +168,7 @@ public class Account
         {
             Student accountStudent = (Student) accountUser;
 
-            JPanel studentBox = new JPanel(new GridLayout (6,2));
+            JPanel studentBox = new JPanel(new GridLayout (accountStudent.getUserID() != 0 ? 7 : 6,2));
 
             JLabel lblUsername = new JLabel("Username");
             studentBox.add(lblUsername);
@@ -217,6 +238,23 @@ public class Account
             //drop down
             //new option
 
+            JLabel lblDelete = new JLabel("Delete");
+            if(accountStudent.getUserID() != 0) studentBox.add(lblDelete);
+            lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JCheckBox cbDelete = new JCheckBox("");
+            if(accountStudent.getUserID() != 0) studentBox.add(cbDelete);
+            cbDelete.addActionListener
+            (
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae)
+                    {
+                        delete = true;
+                    }
+                }
+            );
+
             JOptionPane.showMessageDialog(null, studentBox,"Student", JOptionPane.QUESTION_MESSAGE);
 
             accountStudent = new Student(accountStudent.getUserID(), accountStudent.getTypeID(), accountStudent.getUsername(), accountStudent.getPassword(), accountStudent.getSalt(), accountStudent.getEncryptedPassword(), accountStudent.getStudentID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText());
@@ -229,7 +267,7 @@ public class Account
         {
             Guest accountGuest = (Guest) accountUser;
 
-            JPanel guestBox = new JPanel(new GridLayout (6,2));
+            JPanel guestBox = new JPanel(new GridLayout (accountGuest.getUserID() != 0 ? 7 : 6,2));
 
             JLabel lblUsername = new JLabel("Username");
             guestBox.add(lblUsername);
@@ -285,12 +323,33 @@ public class Account
             tfContactInfo.setFont(new Font("Courier", Font.PLAIN, 32));
             tfContactInfo.setForeground(Color.BLUE);
 
+            JLabel lblDelete = new JLabel("Delete");
+            if(accountGuest.getUserID() != 0) guestBox.add(lblDelete);
+            lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JCheckBox cbDelete = new JCheckBox("");
+            if(accountGuest.getUserID() != 0) guestBox.add(cbDelete);
+            cbDelete.addActionListener
+            (
+                new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae)
+                    {
+                        delete = true;
+                    }
+                }
+            );
+
             accountGuest = new Guest(accountGuest.getUserID(), accountGuest.getTypeID(), accountGuest.getUsername(), accountGuest.getPassword(), accountGuest.getSalt(), accountGuest.getEncryptedPassword(), accountGuest.getGuestID(), tfBusiness.getText(), tfFname.getText(), tfLname.getText(), tfContactInfo.getText());
 
             _userService.setCurrentUser(accountGuest);
         }
 
-        if(_userService.getCurrentUser().getUserID() == 0)
+        if(delete)
+        {
+            _userService.deleteUser();
+        }
+        else if(_userService.getCurrentUser().getUserID() == 0)
         {
             _userService.createUser();
         }
