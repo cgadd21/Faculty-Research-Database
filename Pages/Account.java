@@ -7,8 +7,6 @@ import Services.UserService.*;
 
 public class Account 
 {
-    public Account() {}
-
     public Account(IUserService _userService)
     {
         User accountUser = new User();
