@@ -10,9 +10,9 @@ public class Guest extends User
 
     public Guest() {}
 
-    public Guest(String typeID, String username, String password)
+    public Guest(String typeID)
     {
-        super(typeID, username, password);
+        super(typeID);
     }
 
     public Guest(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int guestID, String business, String fname, String lname, String contactInfo) 

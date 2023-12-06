@@ -25,24 +25,6 @@ public class Account
             cbUserType.setFont(new Font("Courier", Font.PLAIN, 32));
             cbUserType.setForeground(Color.BLUE);
 
-            JLabel lblUsername = new JLabel("Username");
-            initialBox.add(lblUsername);
-            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            JTextField tfUsername = new JTextField("");
-            initialBox.add(tfUsername);
-            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfUsername.setForeground(Color.BLUE);
-
-            JLabel lblPassword = new JLabel("Password");
-            initialBox.add(lblPassword);
-            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            JTextField tfPassword = new JTextField("");
-            initialBox.add(tfPassword);
-            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfPassword.setForeground(Color.BLUE);
-
             JOptionPane.showMessageDialog(null, initialBox,"Sign Up", JOptionPane.QUESTION_MESSAGE);
 
             accountUser = new User
@@ -50,20 +32,18 @@ public class Account
                 cbUserType.getSelectedItem().equals("Faculty") ? "F" :
                 cbUserType.getSelectedItem().equals("Student") ? "S" :
                 cbUserType.getSelectedItem().equals("Guest") ? "G" :
-                null,
-                tfUsername.getText(),
-                tfPassword.getText()
+                null
             );
 
             accountUser = 
             (
                 accountUser.getTypeID().equals("F") ? 
-                new Faculty(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) : 
+                new Faculty(accountUser.getTypeID()) : 
                 accountUser.getTypeID().equals("S") ? 
-                new Student(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) :
+                new Student(accountUser.getTypeID()) :
                 accountUser.getTypeID().equals("G") ? 
-                new Guest(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword()) :
-                new User(accountUser.getTypeID(),accountUser.getUsername(),accountUser.getPassword())
+                new Guest(accountUser.getTypeID()) :
+                new User(accountUser.getTypeID())
             );
 
         }
@@ -76,7 +56,25 @@ public class Account
         {
             Faculty accountFaculty = (Faculty) accountUser;
 
-            JPanel facultyBox = new JPanel(new GridLayout (5,5));
+            JPanel facultyBox = new JPanel(new GridLayout (7,2));
+
+            JLabel lblUsername = new JLabel("Username");
+            facultyBox.add(lblUsername);
+            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfUsername = new JTextField(accountFaculty.getUsername());
+            facultyBox.add(tfUsername);
+            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfUsername.setForeground(Color.BLUE);
+
+            JLabel lblPassword = new JLabel("Password");
+            facultyBox.add(lblPassword);
+            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfPassword = new JTextField(accountFaculty.getPassword());
+            facultyBox.add(tfPassword);
+            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPassword.setForeground(Color.BLUE);
 
             JLabel lblFname = new JLabel("First Name");
             facultyBox.add(lblFname);
@@ -149,7 +147,25 @@ public class Account
         {
             Student accountStudent = (Student) accountUser;
 
-            JPanel studentBox = new JPanel(new GridLayout (4,4));
+            JPanel studentBox = new JPanel(new GridLayout (6,2));
+
+            JLabel lblUsername = new JLabel("Username");
+            studentBox.add(lblUsername);
+            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfUsername = new JTextField(accountStudent.getUsername());
+            studentBox.add(tfUsername);
+            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfUsername.setForeground(Color.BLUE);
+
+            JLabel lblPassword = new JLabel("Password");
+            studentBox.add(lblPassword);
+            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfPassword = new JTextField(accountStudent.getPassword());
+            studentBox.add(tfPassword);
+            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPassword.setForeground(Color.BLUE);
 
             JLabel lblFname = new JLabel("First Name");
             studentBox.add(lblFname);
@@ -213,7 +229,25 @@ public class Account
         {
             Guest accountGuest = (Guest) accountUser;
 
-            JPanel guestBox = new JPanel(new GridLayout (4,4));
+            JPanel guestBox = new JPanel(new GridLayout (6,2));
+
+            JLabel lblUsername = new JLabel("Username");
+            guestBox.add(lblUsername);
+            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfUsername = new JTextField(accountGuest.getUsername());
+            guestBox.add(tfUsername);
+            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfUsername.setForeground(Color.BLUE);
+
+            JLabel lblPassword = new JLabel("Password");
+            guestBox.add(lblPassword);
+            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            JTextField tfPassword = new JTextField(accountGuest.getPassword());
+            guestBox.add(tfPassword);
+            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPassword.setForeground(Color.BLUE);
 
             JLabel lblBusiness = new JLabel("Business");
             guestBox.add(lblBusiness);

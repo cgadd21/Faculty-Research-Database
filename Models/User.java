@@ -11,11 +11,9 @@ public class User
 
     public User() {}
 
-    public User(String typeID, String username, String password)
+    public User(String typeID)
     {
         this.typeID = typeID;
-        this.username = username;
-        this.password = password;
     }
 
     public User(int userID, String typeID, String username, String password, String salt, String encryptedPassword) 

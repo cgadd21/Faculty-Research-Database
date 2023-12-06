@@ -14,9 +14,9 @@ public class Student extends User
 
     public Student () {}
 
-    public Student(String typeID, String username, String password)
+    public Student(String typeID)
     {
-        super(typeID, username, password);
+        super(typeID);
     }
 
     public Student(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int studentID, String fname,String lname, String email, String phoneNumber) 

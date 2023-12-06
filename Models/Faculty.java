@@ -15,9 +15,9 @@ public class Faculty extends User
 
     public Faculty() {}
 
-    public Faculty(String typeID, String username, String password)
+    public Faculty(String typeID)
     {
-        super(typeID, username, password);
+        super(typeID);
     }
 
     public Faculty(int userID, String typeID, String username, String password, String salt, String encryptedPassword, int facultyID, String fname, String lname, String email, String phoneNumber, String location)
