@@ -3,12 +3,22 @@ package Pages;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 import Models.*;
 import Services.UserService.*;
+import Services.InterestService.*;
+import Services.AbstractService.*;
+import Services.FileService.*;
+import Services.MajorService.*;
 
 public class Account 
 {
+    IInterestService _interestService = new InterestService();
+    IAbstractService _abstractService = new AbstractService();
+    IFileService _fileService = new FileService();
+    IMajorService _majorService = new MajorService();
     boolean delete = false;
 
     public Account(IUserService _userService)
@@ -125,20 +135,6 @@ public class Account
             tfLocation.setFont(new Font("Courier", Font.PLAIN, 32));
             tfLocation.setForeground(Color.BLUE);
 
-            JLabel lblInterests = new JLabel("Interests");
-            //facultyBox.add(lblInterests);
-            lblInterests.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            //drop down
-            //new option
-
-            JLabel lblAbstracts = new JLabel("Abstracts");
-            //facultyBox.add(lblAbstracts);
-            lblAbstracts.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            //drop down
-            //new option
-
             JLabel lblDelete = new JLabel("Delete");
             if(accountFaculty.getUserID() != 0) facultyBox.add(lblDelete);
             lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
@@ -160,7 +156,67 @@ public class Account
 
             accountFaculty = new Faculty(accountFaculty.getUserID(), accountFaculty.getTypeID(), accountFaculty.getUsername(), accountFaculty.getPassword(), accountFaculty.getSalt(), accountFaculty.getEncryptedPassword(), accountFaculty.getFacultyID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText(), tfLocation.getText());
 
-            //set interests & abstracts
+            if(!delete)
+            {
+                _interestService.getInterests();
+
+                List<Interest> facultyInterests = new ArrayList<>();
+
+                JPanel interestBox = new JPanel(new GridLayout (_interestService.getInterestList().size() + 1,2));
+
+                JLabel lblInterest = new JLabel("Interest");
+                interestBox.add(lblInterest);
+                lblInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                JButton btnNewInterest = new JButton("New");
+                btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                interestBox.add(btnNewInterest);
+                btnNewInterest.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae) 
+                    {
+                        _interestService.getNewInterest().setIntDesc(null);
+                        _interestService.getNewInterest().setInterestID(0);
+
+                        JPanel newInterestBox = new JPanel(new GridLayout(1,2));
+
+                        JLabel lblNewInterest = new JLabel("New Interest");
+                        newInterestBox.add(lblNewInterest);
+                        lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                        JTextField tfNewInterest = new JTextField("");
+                        newInterestBox.add(tfNewInterest);
+                        tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                        tfNewInterest.setForeground(Color.BLUE);
+
+                        JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
+
+                        _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                    }
+                });
+
+                for (Interest interest : _interestService.getInterestList()) 
+                {
+                    JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
+                    interestBox.add(cbInterest);
+                    cbInterest.addActionListener
+                    (
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent ae)
+                            {
+                                facultyInterests.add(interest);
+                            }
+                        }
+                    );
+                }
+
+                JOptionPane.showMessageDialog(null, interestBox,"Interest", JOptionPane.QUESTION_MESSAGE);
+
+                accountFaculty.setInterests(facultyInterests);
+            
+                //abstracts
+            }
 
             _userService.setCurrentUser(accountFaculty);
         }
@@ -224,20 +280,6 @@ public class Account
             tfPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
             tfPhoneNumber.setForeground(Color.BLUE);
 
-            JLabel lblInterests = new JLabel("Interests");
-            //studentBox.add(lblInterests);
-            lblInterests.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            //drop down
-            //new option
-
-            JLabel lblMajors = new JLabel("Majors");
-            //studentBox.add(lblMajors);
-            lblMajors.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            //drop down
-            //new option
-
             JLabel lblDelete = new JLabel("Delete");
             if(accountStudent.getUserID() != 0) studentBox.add(lblDelete);
             lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
@@ -259,7 +301,12 @@ public class Account
 
             accountStudent = new Student(accountStudent.getUserID(), accountStudent.getTypeID(), accountStudent.getUsername(), accountStudent.getPassword(), accountStudent.getSalt(), accountStudent.getEncryptedPassword(), accountStudent.getStudentID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText());
 
-            //set interests & abstracts
+            if(!delete)
+            {
+                //interests
+
+                //majors
+            }
 
             _userService.setCurrentUser(accountStudent);
         }

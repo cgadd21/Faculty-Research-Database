@@ -9,7 +9,7 @@ public class program
         _userService.getCurrentUser().setUsername("Jimhab");
         _userService.getCurrentUser().setPassword("FacultyPass");
         _userService.login();
-        //System.out.println(_userService.getCurrentUser().toString());
+        System.out.println(_userService.getCurrentUser().toString());
         new Account(_userService);
     }
 }
