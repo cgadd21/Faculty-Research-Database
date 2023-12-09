@@ -10,7 +10,7 @@ public class Login
     {
         JPanel loginBox = new JPanel(new GridLayout(2,2));
 
-        JLabel lblUsername = new JLabel("Username  -> ");
+        JLabel lblUsername = new JLabel("Username ");
         loginBox.add(lblUsername);
         lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
 
@@ -19,7 +19,7 @@ public class Login
         tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
         tfUsername.setForeground(Color.BLUE);
 
-        JLabel lblPassword = new JLabel("Password  -> ");
+        JLabel lblPassword = new JLabel("Password ");
         loginBox.add(lblPassword);
         lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
 

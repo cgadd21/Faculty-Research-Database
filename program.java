@@ -15,9 +15,9 @@ public class program extends JFrame
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel jpProgram = new JPanel();
-		jpProgram.setLayout(new GridLayout(0,1));
-        add(jpProgram);
+        JPanel jProgram = new JPanel();
+		jProgram.setLayout(new GridLayout(0,1));
+        add(jProgram);
         setVisible(true);
 
         JButton jbAccount = new JButton("Sign Up");
@@ -30,8 +30,8 @@ public class program extends JFrame
         jbSearch.setFont(new Font("Courier", Font.PLAIN, 38));
         jbLogout.setFont(new Font("Courier", Font.PLAIN, 38));
 
-        jpProgram.add(jbAccount);
-        jpProgram.add(jbLogin);
+        jProgram.add(jbAccount);
+        jProgram.add(jbLogin);
 
         jbAccount.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){new Account(_userService);}});
 
@@ -40,9 +40,9 @@ public class program extends JFrame
             new Login(_userService);
             if(_userService.getCurrentUser().getUserID() != 0)
             {
-                jpProgram.remove(jbLogin);
-                jpProgram.add(jbSearch);
-                jpProgram.add(jbLogout);
+                jProgram.remove(jbLogin);
+                jProgram.add(jbSearch);
+                jProgram.add(jbLogout);
                 jbAccount.setText("Account");
             }
         }});
@@ -52,9 +52,9 @@ public class program extends JFrame
         jbLogout.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
         {
             _userService.logout();
-            jpProgram.add(jbLogin);
-            jpProgram.remove(jbSearch);
-            jpProgram.remove(jbLogout);
+            jProgram.add(jbLogin);
+            jProgram.remove(jbSearch);
+            jProgram.remove(jbLogout);
             jbAccount.setText("Sign Up");
         }});
     }
