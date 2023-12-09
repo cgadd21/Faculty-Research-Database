@@ -12,7 +12,7 @@ public class program extends JFrame
     {
         super("Faculty Research Database");
         setSize(630,400);
-		setLocation(200,380);
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel jpProgram = new JPanel();
