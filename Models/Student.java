@@ -71,6 +71,36 @@ public class Student extends User
                 '}';
     }
 
+    @Override
+    public String toSummary() 
+    {
+        StringBuilder interestsStringBuilder = new StringBuilder();
+        for (Interest interest : interests) 
+        {
+            interestsStringBuilder.append(interest.getIntDesc()).append(", ");
+        }
+
+        String interestsString = interestsStringBuilder.toString();
+        if (!interestsString.isEmpty()) 
+        {
+            interestsString = interestsString.substring(0, interestsString.length() - 2);
+        }
+
+        StringBuilder majorsStringBuilder = new StringBuilder();
+        for (Major major : majors) 
+        {
+            majorsStringBuilder.append(major.getMajorDescription()).append(", ");
+        }
+
+        String majorsString = majorsStringBuilder.toString();
+        if (!majorsString.isEmpty()) 
+        {
+            majorsString = majorsString.substring(0, majorsString.length() - 2);
+        }
+
+        return "Student{  Name: " + fname + " " + lname + " | Email: " + email + " | Phone Number: " + phoneNumber + " | Interests: " + interestsString + " | Majors: " + majorsString + " }";
+    }
+
     public int getStudentID() 
     {
         return studentID;

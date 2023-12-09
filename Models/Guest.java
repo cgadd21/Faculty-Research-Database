@@ -41,6 +41,12 @@ public class Guest extends User
                 '}';
     }
 
+    @Override
+    public String toSummary() 
+    {
+        return "Guest{ Business: " + business + " | Name: " + fname + " " + lname + " | Contact Info: " + contactInfo + " }";
+    }
+
     public int getGuestID() 
     {
         return guestID;

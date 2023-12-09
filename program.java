@@ -59,8 +59,5 @@ public class program extends JFrame
         }});
     }
 
-    public static void main(String[] args) 
-    {
-        new program();
-    }
+    public static void main(String[] args){new program();}
 }

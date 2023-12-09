@@ -37,6 +37,11 @@ public class User
                 '}';
     }
 
+    public String toSummary() 
+    {
+        return null;
+    }
+
     public int getUserID() 
     {
         return userID;
