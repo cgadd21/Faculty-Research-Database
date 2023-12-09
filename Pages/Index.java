@@ -36,7 +36,7 @@ public class Index extends JFrame
 
         jbSignUp.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
         {
-            new Account(_userService);
+            new SignUp(_userService);
             setVisible(false);
         }});
     }

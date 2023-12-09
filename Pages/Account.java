@@ -14,6 +14,7 @@ import Services.MajorService.*;
 
 public class Account 
 {
+    User accountUser = new User();
     IInterestService _interestService = new InterestService();
     IAbstractService _abstractService = new AbstractService();
     IFileService _fileService = new FileService();
@@ -22,47 +23,7 @@ public class Account
 
     public Account(IUserService _userService)
     {
-        User accountUser = new User();
-
-        if(_userService.getCurrentUser().getUserID() == 0)
-        {
-            JPanel initialBox = new JPanel(new GridLayout(3,2));
-
-            JLabel lblUserType = new JLabel("User Type");
-            initialBox.add(lblUserType);
-            lblUserType.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            String[] userTypes = {"Faculty","Student","Guest"};
-            JComboBox<String> cbUserType = new JComboBox<>(userTypes);
-            initialBox.add(cbUserType);
-            cbUserType.setFont(new Font("Courier", Font.PLAIN, 32));
-            cbUserType.setForeground(Color.BLUE);
-
-            JOptionPane.showMessageDialog(null, initialBox,"Sign Up", JOptionPane.QUESTION_MESSAGE);
-
-            accountUser = new User
-            (
-                cbUserType.getSelectedItem().equals("Faculty") ? "F" :
-                cbUserType.getSelectedItem().equals("Student") ? "S" :
-                cbUserType.getSelectedItem().equals("Guest") ? "G" :
-                null
-            );
-
-            accountUser = 
-            (
-                accountUser.getTypeID().equals("F") ? 
-                new Faculty(accountUser.getTypeID()) : 
-                accountUser.getTypeID().equals("S") ? 
-                new Student(accountUser.getTypeID()) :
-                accountUser.getTypeID().equals("G") ? 
-                new Guest(accountUser.getTypeID()) :
-                new User(accountUser.getTypeID())
-            );
-        }
-        else
-        {
-            accountUser = _userService.getCurrentUser();
-        }
+        accountUser = _userService.getCurrentUser();
 
         if(accountUser instanceof Faculty)
         {
