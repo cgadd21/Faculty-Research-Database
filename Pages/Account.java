@@ -360,7 +360,62 @@ public class Account
 
                 accountStudent.setInterests(studentInterests);
 
-                //majors
+                _majorService.getMajors();
+
+                List<Major> studentMajors = new ArrayList<>();
+
+                JPanel majorsBox = new JPanel(new GridLayout (_majorService.getMajorsList().size() + 1,2));
+
+                JLabel lblMajor = new JLabel("Major");
+                majorsBox.add(lblMajor);
+                lblMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                JButton btnNewMajor = new JButton("New");
+                btnNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+                majorsBox.add(btnNewMajor);
+                btnNewMajor.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae) 
+                    {
+                        _majorService.getNewMajor().setMajorDescription(null);
+                        _majorService.getNewMajor().setMajorID(0);
+
+                        JPanel newMajorBox = new JPanel(new GridLayout(1,2));
+
+                        JLabel lblNewMajor = new JLabel("New Interest");
+                        newMajorBox.add(lblNewMajor);
+                        lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                        JTextField tfNewMajor = new JTextField("");
+                        newMajorBox.add(tfNewMajor);
+                        tfNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+                        tfNewMajor.setForeground(Color.BLUE);
+
+                        JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
+
+                        _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
+                    }
+                });
+
+                for (Major major : _majorService.getMajorsList()) 
+                {
+                    JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
+                    majorsBox.add(cbMajor);
+                    cbMajor.addActionListener
+                    (
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent ae)
+                            {
+                                studentMajors.add(major);
+                            }
+                        }
+                    );
+                }
+
+                JOptionPane.showMessageDialog(null, majorsBox,"Major", JOptionPane.QUESTION_MESSAGE);
+
+                accountStudent.setMajors(studentMajors);
             }
 
             _userService.setCurrentUser(accountStudent);
