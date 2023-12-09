@@ -59,7 +59,6 @@ public class Account
                 new Guest(accountUser.getTypeID()) :
                 new User(accountUser.getTypeID())
             );
-
         }
         else
         {
@@ -141,16 +140,7 @@ public class Account
 
             JCheckBox cbDelete = new JCheckBox("");
             if(accountFaculty.getUserID() != 0) facultyBox.add(cbDelete);
-            cbDelete.addActionListener
-            (
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent ae)
-                    {
-                        delete = true;
-                    }
-                }
-            );
+            cbDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){delete = true;}});
 
             JOptionPane.showMessageDialog(null, facultyBox,"Faculty", JOptionPane.QUESTION_MESSAGE);
 
@@ -171,45 +161,33 @@ public class Account
                 JButton btnNewInterest = new JButton("New");
                 btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
                 interestBox.add(btnNewInterest);
-                btnNewInterest.addActionListener(new ActionListener()
+                btnNewInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
                 {
-                    public void actionPerformed(ActionEvent ae) 
-                    {
-                        _interestService.getNewInterest().setIntDesc(null);
-                        _interestService.getNewInterest().setInterestID(0);
+                    _interestService.getNewInterest().setIntDesc(null);
+                    _interestService.getNewInterest().setInterestID(0);
 
-                        JPanel newInterestBox = new JPanel(new GridLayout(1,2));
+                    JPanel newInterestBox = new JPanel(new GridLayout(1,2));
 
-                        JLabel lblNewInterest = new JLabel("New Interest");
-                        newInterestBox.add(lblNewInterest);
-                        lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                    JLabel lblNewInterest = new JLabel("New Interest");
+                    newInterestBox.add(lblNewInterest);
+                    lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
 
-                        JTextField tfNewInterest = new JTextField("");
-                        newInterestBox.add(tfNewInterest);
-                        tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
-                        tfNewInterest.setForeground(Color.BLUE);
+                    JTextField tfNewInterest = new JTextField("");
+                    newInterestBox.add(tfNewInterest);
+                    tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                    tfNewInterest.setForeground(Color.BLUE);
 
-                        JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
 
-                        _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
-                        _interestService.createInterest();
-                    }
-                });
+                    _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                    _interestService.createInterest();
+                }});
 
                 for (Interest interest : _interestService.getInterestList()) 
                 {
                     JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
                     interestBox.add(cbInterest);
-                    cbInterest.addActionListener
-                    (
-                        new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent ae)
-                            {
-                                facultyInterests.add(interest);
-                            }
-                        }
-                    );
+                    cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){facultyInterests.add(interest);}});
                 }
 
                 JOptionPane.showMessageDialog(null, interestBox,"Interest", JOptionPane.QUESTION_MESSAGE);
@@ -229,50 +207,29 @@ public class Account
                 JButton btnNewAbstract = new JButton("New");
                 btnNewAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
                 abstractBox.add(btnNewAbstract);
-                btnNewAbstract.addActionListener(new ActionListener()
+                btnNewAbstract.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
                 {
-                    public void actionPerformed(ActionEvent ae) 
-                    {
-                        JPanel newAbstractBox = new JPanel(new GridLayout(1,2));
+                    JPanel newAbstractBox = new JPanel(new GridLayout(1,2));
 
-                        JLabel lblNewAbstract = new JLabel("New Abstract");
-                        newAbstractBox.add(lblNewAbstract);
-                        lblNewAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
+                    JLabel lblNewAbstract = new JLabel("New Abstract");
+                    newAbstractBox.add(lblNewAbstract);
+                    lblNewAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
 
-                        JCheckBox cbAbstract = new JCheckBox("Select File");
-                        newAbstractBox.add(cbAbstract);
-                        cbAbstract.addActionListener
-                        (
-                            new ActionListener()
-                            {
-                                public void actionPerformed(ActionEvent ae)
-                                {
-                                    _fileService.getFile();
-                                }
-                            }
-                        );
+                    JCheckBox cbAbstract = new JCheckBox("Select File");
+                    newAbstractBox.add(cbAbstract);
+                    cbAbstract.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){_fileService.getFile();}});
 
-                        JOptionPane.showMessageDialog(null, newAbstractBox,"New Abstract", JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, newAbstractBox,"New Abstract", JOptionPane.QUESTION_MESSAGE);
 
-                        _abstractService.getNewAbstract().setProfessorAbstract(_fileService.getFileContent());
-                        _abstractService.createAbstract();
-                    }
-                });
+                    _abstractService.getNewAbstract().setProfessorAbstract(_fileService.getFileContent());
+                    _abstractService.createAbstract();
+                }});
 
                 for (Abstract facultyAbstract : _abstractService.getAbstractsList()) 
                 {
                     JCheckBox cbAbstract = new JCheckBox(facultyAbstract.getProfessorAbstract());
                     abstractBox.add(cbAbstract);
-                    cbAbstract.addActionListener
-                    (
-                        new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent ae)
-                            {
-                                facultyAbstracts.add(facultyAbstract);
-                            }
-                        }
-                    );
+                    cbAbstract.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){facultyAbstracts.add(facultyAbstract);}});
                 }
 
                 JOptionPane.showMessageDialog(null, abstractBox,"Abstract", JOptionPane.QUESTION_MESSAGE);
@@ -348,16 +305,7 @@ public class Account
 
             JCheckBox cbDelete = new JCheckBox("");
             if(accountStudent.getUserID() != 0) studentBox.add(cbDelete);
-            cbDelete.addActionListener
-            (
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent ae)
-                    {
-                        delete = true;
-                    }
-                }
-            );
+            cbDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){delete = true;}});
 
             JOptionPane.showMessageDialog(null, studentBox,"Student", JOptionPane.QUESTION_MESSAGE);
 
@@ -378,45 +326,33 @@ public class Account
                 JButton btnNewInterest = new JButton("New");
                 btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
                 interestBox.add(btnNewInterest);
-                btnNewInterest.addActionListener(new ActionListener()
+                btnNewInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
                 {
-                    public void actionPerformed(ActionEvent ae) 
-                    {
-                        _interestService.getNewInterest().setIntDesc(null);
-                        _interestService.getNewInterest().setInterestID(0);
+                    _interestService.getNewInterest().setIntDesc(null);
+                    _interestService.getNewInterest().setInterestID(0);
 
-                        JPanel newInterestBox = new JPanel(new GridLayout(1,2));
+                    JPanel newInterestBox = new JPanel(new GridLayout(1,2));
 
-                        JLabel lblNewInterest = new JLabel("New Interest");
-                        newInterestBox.add(lblNewInterest);
-                        lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                    JLabel lblNewInterest = new JLabel("New Interest");
+                    newInterestBox.add(lblNewInterest);
+                    lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
 
-                        JTextField tfNewInterest = new JTextField("");
-                        newInterestBox.add(tfNewInterest);
-                        tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
-                        tfNewInterest.setForeground(Color.BLUE);
+                    JTextField tfNewInterest = new JTextField("");
+                    newInterestBox.add(tfNewInterest);
+                    tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                    tfNewInterest.setForeground(Color.BLUE);
 
-                        JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
 
-                        _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
-                        _interestService.createInterest();
-                    }
-                });
+                    _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                    _interestService.createInterest();
+                }});
 
                 for (Interest interest : _interestService.getInterestList()) 
                 {
                     JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
                     interestBox.add(cbInterest);
-                    cbInterest.addActionListener
-                    (
-                        new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent ae)
-                            {
-                                studentInterests.add(interest);
-                            }
-                        }
-                    );
+                    cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
                 }
 
                 JOptionPane.showMessageDialog(null, interestBox,"Interest", JOptionPane.QUESTION_MESSAGE);
@@ -465,16 +401,7 @@ public class Account
                 {
                     JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
                     majorsBox.add(cbMajor);
-                    cbMajor.addActionListener
-                    (
-                        new ActionListener()
-                        {
-                            public void actionPerformed(ActionEvent ae)
-                            {
-                                studentMajors.add(major);
-                            }
-                        }
-                    );
+                    cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
                 }
 
                 JOptionPane.showMessageDialog(null, majorsBox,"Major", JOptionPane.QUESTION_MESSAGE);
@@ -550,16 +477,7 @@ public class Account
 
             JCheckBox cbDelete = new JCheckBox("");
             if(accountGuest.getUserID() != 0) guestBox.add(cbDelete);
-            cbDelete.addActionListener
-            (
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent ae)
-                    {
-                        delete = true;
-                    }
-                }
-            );
+            cbDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){delete = true;}});
 
             accountGuest = new Guest(accountGuest.getUserID(), accountGuest.getTypeID(), accountGuest.getUsername(), accountGuest.getPassword(), accountGuest.getSalt(), accountGuest.getEncryptedPassword(), accountGuest.getGuestID(), tfBusiness.getText(), tfFname.getText(), tfLname.getText(), tfContactInfo.getText());
 

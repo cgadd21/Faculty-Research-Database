@@ -59,7 +59,7 @@ public class UserService implements IUserService
     @Override
     public void logout() 
     {
-        user = null;
+        user = new User(0, null, null, null, null, null);
     }
 
     @Override
