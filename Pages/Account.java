@@ -303,7 +303,62 @@ public class Account
 
             if(!delete)
             {
-                //interests
+                _interestService.getInterests();
+
+                List<Interest> studentInterests = new ArrayList<>();
+
+                JPanel interestBox = new JPanel(new GridLayout (_interestService.getInterestList().size() + 1,2));
+
+                JLabel lblInterest = new JLabel("Interest");
+                interestBox.add(lblInterest);
+                lblInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                JButton btnNewInterest = new JButton("New");
+                btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                interestBox.add(btnNewInterest);
+                btnNewInterest.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae) 
+                    {
+                        _interestService.getNewInterest().setIntDesc(null);
+                        _interestService.getNewInterest().setInterestID(0);
+
+                        JPanel newInterestBox = new JPanel(new GridLayout(1,2));
+
+                        JLabel lblNewInterest = new JLabel("New Interest");
+                        newInterestBox.add(lblNewInterest);
+                        lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                        JTextField tfNewInterest = new JTextField("");
+                        newInterestBox.add(tfNewInterest);
+                        tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                        tfNewInterest.setForeground(Color.BLUE);
+
+                        JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
+
+                        _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                    }
+                });
+
+                for (Interest interest : _interestService.getInterestList()) 
+                {
+                    JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
+                    interestBox.add(cbInterest);
+                    cbInterest.addActionListener
+                    (
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent ae)
+                            {
+                                studentInterests.add(interest);
+                            }
+                        }
+                    );
+                }
+
+                JOptionPane.showMessageDialog(null, interestBox,"Interest", JOptionPane.QUESTION_MESSAGE);
+
+                accountStudent.setInterests(studentInterests);
 
                 //majors
             }
