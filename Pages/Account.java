@@ -192,6 +192,7 @@ public class Account
                         JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
 
                         _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                        _interestService.createInterest();
                     }
                 });
 
@@ -215,7 +216,68 @@ public class Account
 
                 accountFaculty.setInterests(facultyInterests);
             
-                //abstracts
+                _abstractService.getAbstracts();
+
+                List<Abstract> facultyAbstracts = new ArrayList<>();
+
+                JPanel abstractBox = new JPanel(new GridLayout (_abstractService.getAbstractsList().size() + 1,1));
+
+                JLabel lblAbstract = new JLabel("Abstract");
+                abstractBox.add(lblAbstract);
+                lblAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                JButton btnNewAbstract = new JButton("New");
+                btnNewAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
+                abstractBox.add(btnNewAbstract);
+                btnNewAbstract.addActionListener(new ActionListener()
+                {
+                    public void actionPerformed(ActionEvent ae) 
+                    {
+                        JPanel newAbstractBox = new JPanel(new GridLayout(1,2));
+
+                        JLabel lblNewAbstract = new JLabel("New Abstract");
+                        newAbstractBox.add(lblNewAbstract);
+                        lblNewAbstract.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                        JCheckBox cbAbstract = new JCheckBox("Select File");
+                        newAbstractBox.add(cbAbstract);
+                        cbAbstract.addActionListener
+                        (
+                            new ActionListener()
+                            {
+                                public void actionPerformed(ActionEvent ae)
+                                {
+                                    _fileService.getFile();
+                                }
+                            }
+                        );
+
+                        JOptionPane.showMessageDialog(null, newAbstractBox,"New Abstract", JOptionPane.QUESTION_MESSAGE);
+
+                        _abstractService.getNewAbstract().setProfessorAbstract(_fileService.getFileContent());
+                        _abstractService.createAbstract();
+                    }
+                });
+
+                for (Abstract facultyAbstract : _abstractService.getAbstractsList()) 
+                {
+                    JCheckBox cbAbstract = new JCheckBox(facultyAbstract.getProfessorAbstract());
+                    abstractBox.add(cbAbstract);
+                    cbAbstract.addActionListener
+                    (
+                        new ActionListener()
+                        {
+                            public void actionPerformed(ActionEvent ae)
+                            {
+                                facultyAbstracts.add(facultyAbstract);
+                            }
+                        }
+                    );
+                }
+
+                JOptionPane.showMessageDialog(null, abstractBox,"Abstract", JOptionPane.QUESTION_MESSAGE);
+
+                accountFaculty.setAbstracts(facultyAbstracts);
             }
 
             _userService.setCurrentUser(accountFaculty);
@@ -337,6 +399,7 @@ public class Account
                         JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
 
                         _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                        _interestService.createInterest();
                     }
                 });
 
@@ -394,6 +457,7 @@ public class Account
                         JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
 
                         _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
+                        _majorService.createMajor();
                     }
                 });
 
