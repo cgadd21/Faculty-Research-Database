@@ -57,7 +57,6 @@ public class program extends JFrame
             jpProgram.remove(jbLogout);
             jbAccount.setText("Sign Up");
         }});
-        
     }
 
     public static void main(String[] args) 

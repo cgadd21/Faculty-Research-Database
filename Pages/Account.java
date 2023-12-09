@@ -381,7 +381,7 @@ public class Account
 
                         JPanel newMajorBox = new JPanel(new GridLayout(1,2));
 
-                        JLabel lblNewMajor = new JLabel("New Interest");
+                        JLabel lblNewMajor = new JLabel("New Major");
                         newMajorBox.add(lblNewMajor);
                         lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
 
