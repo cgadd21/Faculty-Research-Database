@@ -1,9 +1,9 @@
 package Pages;
 
-import Services.UserService.*;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
+import Services.UserService.*;
 
 public class Index extends JFrame
 {
