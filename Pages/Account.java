@@ -12,9 +12,10 @@ import Services.AbstractService.*;
 import Services.FileService.*;
 import Services.MajorService.*;
 
-public class Account 
+public class Account extends JFrame
 {
     User accountUser = new User();
+    Student accountStudent = new Student();
     IInterestService _interestService = new InterestService();
     IAbstractService _abstractService = new AbstractService();
     IFileService _fileService = new FileService();
@@ -23,7 +24,17 @@ public class Account
 
     public Account(IUserService _userService)
     {
+        super("Account");
+        setSize(1000,1000);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         accountUser = _userService.getCurrentUser();
+
+        JPanel jAccount = new JPanel();
+        jAccount.setLayout(new GridLayout(1,3));
+        add(jAccount);
+        setVisible(true);
 
         if(accountUser instanceof Faculty)
         {
@@ -201,175 +212,246 @@ public class Account
         }
         else if(accountUser instanceof Student)
         {
-            Student accountStudent = (Student) accountUser;
+            accountStudent = (Student) accountUser;
+            _interestService.getInterests();
+            _majorService.getMajors();
 
-            JPanel studentBox = new JPanel(new GridLayout (accountStudent.getUserID() != 0 ? 7 : 6,2));
+            List<Interest> studentInterests = new ArrayList<>();
+            List<Major> studentMajors = new ArrayList<>();
+
+            jAccount.setLayout(new GridLayout (_interestService.getInterestList().size() + _majorService.getMajorsList().size() + 7,2));
 
             JLabel lblUsername = new JLabel("Username");
-            studentBox.add(lblUsername);
-            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfUsername = new JTextField(accountStudent.getUsername());
-            studentBox.add(tfUsername);
-            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfUsername.setForeground(Color.BLUE);
-
             JLabel lblPassword = new JLabel("Password");
-            studentBox.add(lblPassword);
-            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfPassword = new JTextField(accountStudent.getPassword());
-            studentBox.add(tfPassword);
-            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfPassword.setForeground(Color.BLUE);
-
             JLabel lblFname = new JLabel("First Name");
-            studentBox.add(lblFname);
-            lblFname.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfFname = new JTextField(accountStudent.getFname());
-            studentBox.add(tfFname);
-            tfFname.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfFname.setForeground(Color.BLUE);
-
             JLabel lblLname = new JLabel("Last Name");
-            studentBox.add(lblLname);
-            lblLname.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfLname = new JTextField(accountStudent.getLname());
-            studentBox.add(tfLname);
-            tfLname.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfLname.setForeground(Color.BLUE);
-
             JLabel lblEmail = new JLabel("Email");
-            studentBox.add(lblEmail);
-            lblEmail.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfEmail = new JTextField(accountStudent.getEmail());
-            studentBox.add(tfEmail);
-            tfEmail.setFont(new Font("Courier", Font.PLAIN, 32));
-            tfEmail.setForeground(Color.BLUE);
-
             JLabel lblPhoneNumber = new JLabel("Phone Number");
-            studentBox.add(lblPhoneNumber);
-            lblPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
-
             JTextField tfPhoneNumber = new JTextField(accountStudent.getPhoneNumber());
-            studentBox.add(tfPhoneNumber);
+            JLabel lblInterest = new JLabel("Interest");
+            JButton btnNewInterest = new JButton("New");
+            JLabel lblMajor = new JLabel("Major");
+            JButton btnNewMajor = new JButton("New"); 
+            JButton btnDelete = new JButton("Delete");
+            JButton btnDone = new JButton("Done");
+
+            lblUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfUsername.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfPassword.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblFname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfFname.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblLname.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfLname.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblEmail.setFont(new Font("Courier", Font.PLAIN, 32));
+            tfEmail.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
             tfPhoneNumber.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+            btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+            lblMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+            btnNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+            btnDelete.setFont(new Font("Courier", Font.PLAIN, 32));
+            btnDone.setFont(new Font("Courier", Font.PLAIN, 32));
+
+            tfUsername.setForeground(Color.BLUE);
+            tfPassword.setForeground(Color.BLUE);
+            tfFname.setForeground(Color.BLUE);
+            tfLname.setForeground(Color.BLUE);
+            tfEmail.setForeground(Color.BLUE);
             tfPhoneNumber.setForeground(Color.BLUE);
 
-            JLabel lblDelete = new JLabel("Delete");
-            if(accountStudent.getUserID() != 0) studentBox.add(lblDelete);
-            lblDelete.setFont(new Font("Courier", Font.PLAIN, 32));
-
-            JCheckBox cbDelete = new JCheckBox("");
-            if(accountStudent.getUserID() != 0) studentBox.add(cbDelete);
-            cbDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){delete = true;}});
-
-            JOptionPane.showMessageDialog(null, studentBox,"Student", JOptionPane.QUESTION_MESSAGE);
-
-            accountStudent = new Student(accountStudent.getUserID(), accountStudent.getTypeID(), accountStudent.getUsername(), accountStudent.getPassword(), accountStudent.getSalt(), accountStudent.getEncryptedPassword(), accountStudent.getStudentID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText());
-
-            if(!delete)
+            jAccount.add(lblUsername);
+            jAccount.add(tfUsername);
+            jAccount.add(lblPassword);
+            jAccount.add(tfPassword);
+            jAccount.add(lblFname);
+            jAccount.add(tfFname);
+            jAccount.add(lblLname);
+            jAccount.add(tfLname);
+            jAccount.add(lblEmail);
+            jAccount.add(tfEmail);
+            jAccount.add(lblPhoneNumber);
+            jAccount.add(tfPhoneNumber);
+            
+            jAccount.add(lblInterest);
+            jAccount.add(btnNewInterest);
+            for (Interest interest : _interestService.getInterestList()) 
             {
-                _interestService.getInterests();
+                JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
+                jAccount.add(cbInterest);
+                cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
+            }
+            if(_interestService.getInterestList().size() % 2 == 1) jAccount.add(new JLabel(""));
 
-                List<Interest> studentInterests = new ArrayList<>();
+            jAccount.add(lblMajor);
+            jAccount.add(btnNewMajor);
+            for (Major major : _majorService.getMajorsList()) 
+            {
+                JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
+                jAccount.add(cbMajor);
+                cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
+            }
+            if(_majorService.getMajorsList().size() % 2 == 1) jAccount.add(new JLabel(""));
 
-                JPanel interestBox = new JPanel(new GridLayout (_interestService.getInterestList().size() + 1,2));
+            jAccount.add(btnDelete);
+            jAccount.add(btnDone);
 
-                JLabel lblInterest = new JLabel("Interest");
-                interestBox.add(lblInterest);
-                lblInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+            btnNewInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
+            {
+                _interestService.getNewInterest().setIntDesc(null);
+                _interestService.getNewInterest().setInterestID(0);
 
-                JButton btnNewInterest = new JButton("New");
-                btnNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
-                interestBox.add(btnNewInterest);
-                btnNewInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
-                {
-                    _interestService.getNewInterest().setIntDesc(null);
-                    _interestService.getNewInterest().setInterestID(0);
+                JPanel newInterestBox = new JPanel(new GridLayout(1,2));
 
-                    JPanel newInterestBox = new JPanel(new GridLayout(1,2));
+                JLabel lblNewInterest = new JLabel("New Interest");
+                JTextField tfNewInterest = new JTextField("");
 
-                    JLabel lblNewInterest = new JLabel("New Interest");
-                    newInterestBox.add(lblNewInterest);
-                    lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                lblNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
+                tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
 
-                    JTextField tfNewInterest = new JTextField("");
-                    newInterestBox.add(tfNewInterest);
-                    tfNewInterest.setFont(new Font("Courier", Font.PLAIN, 32));
-                    tfNewInterest.setForeground(Color.BLUE);
+                tfNewInterest.setForeground(Color.BLUE);
 
-                    JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
+                newInterestBox.add(lblNewInterest);
+                newInterestBox.add(tfNewInterest);
+                
+                JOptionPane.showMessageDialog(null, newInterestBox,"New Interest", JOptionPane.QUESTION_MESSAGE);
 
-                    _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
-                    _interestService.createInterest();
-                }});
+                _interestService.getNewInterest().setIntDesc(tfNewInterest.getText());
+                _interestService.createInterest();
 
+                jAccount.removeAll();
+                jAccount.setLayout(new GridLayout (_interestService.getInterestList().size() + _majorService.getMajorsList().size() + 7,2));
+                jAccount.add(lblUsername);
+                jAccount.add(tfUsername);
+                jAccount.add(lblPassword);
+                jAccount.add(tfPassword);
+                jAccount.add(lblFname);
+                jAccount.add(tfFname);
+                jAccount.add(lblLname);
+                jAccount.add(tfLname);
+                jAccount.add(lblEmail);
+                jAccount.add(tfEmail);
+                jAccount.add(lblPhoneNumber);
+                jAccount.add(tfPhoneNumber);
+                
+                jAccount.add(lblInterest);
+                jAccount.add(btnNewInterest);
                 for (Interest interest : _interestService.getInterestList()) 
                 {
                     JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
-                    interestBox.add(cbInterest);
+                    jAccount.add(cbInterest);
                     cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
                 }
+                if(_interestService.getInterestList().size() % 2 == 1) jAccount.add(new JLabel(""));
 
-                JOptionPane.showMessageDialog(null, interestBox,"Interest", JOptionPane.QUESTION_MESSAGE);
-
-                accountStudent.setInterests(studentInterests);
-
-                _majorService.getMajors();
-
-                List<Major> studentMajors = new ArrayList<>();
-
-                JPanel majorsBox = new JPanel(new GridLayout (_majorService.getMajorsList().size() + 1,2));
-
-                JLabel lblMajor = new JLabel("Major");
-                majorsBox.add(lblMajor);
-                lblMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-
-                JButton btnNewMajor = new JButton("New");
-                btnNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-                majorsBox.add(btnNewMajor);
-                btnNewMajor.addActionListener(new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent ae) 
-                    {
-                        _majorService.getNewMajor().setMajorDescription(null);
-                        _majorService.getNewMajor().setMajorID(0);
-
-                        JPanel newMajorBox = new JPanel(new GridLayout(1,2));
-
-                        JLabel lblNewMajor = new JLabel("New Major");
-                        newMajorBox.add(lblNewMajor);
-                        lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-
-                        JTextField tfNewMajor = new JTextField("");
-                        newMajorBox.add(tfNewMajor);
-                        tfNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-                        tfNewMajor.setForeground(Color.BLUE);
-
-                        JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
-
-                        _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
-                        _majorService.createMajor();
-                    }
-                });
-
+                jAccount.add(lblMajor);
+                jAccount.add(btnNewMajor);
                 for (Major major : _majorService.getMajorsList()) 
                 {
                     JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
-                    majorsBox.add(cbMajor);
+                    jAccount.add(cbMajor);
                     cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
                 }
+                if(_majorService.getMajorsList().size() % 2 == 1) jAccount.add(new JLabel(""));
 
-                JOptionPane.showMessageDialog(null, majorsBox,"Major", JOptionPane.QUESTION_MESSAGE);
+                jAccount.add(btnDelete);
+                jAccount.add(btnDone);
+            }});
 
+            btnNewMajor.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent ae) 
+                {
+                    _majorService.getNewMajor().setMajorDescription(null);
+                    _majorService.getNewMajor().setMajorID(0);
+
+                    JPanel newMajorBox = new JPanel(new GridLayout(1,2));
+
+                    JLabel lblNewMajor = new JLabel("New Major");
+                    JTextField tfNewMajor = new JTextField("");
+
+                    lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+                    tfNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                    tfNewMajor.setForeground(Color.BLUE);
+
+                    newMajorBox.add(lblNewMajor);
+                    newMajorBox.add(tfNewMajor);
+
+                    JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
+
+                    _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
+                    _majorService.createMajor();
+
+                    jAccount.removeAll();
+                    jAccount.setLayout(new GridLayout (_interestService.getInterestList().size() + _majorService.getMajorsList().size() + 7,2));
+                    jAccount.add(lblUsername);
+                    jAccount.add(tfUsername);
+                    jAccount.add(lblPassword);
+                    jAccount.add(tfPassword);
+                    jAccount.add(lblFname);
+                    jAccount.add(tfFname);
+                    jAccount.add(lblLname);
+                    jAccount.add(tfLname);
+                    jAccount.add(lblEmail);
+                    jAccount.add(tfEmail);
+                    jAccount.add(lblPhoneNumber);
+                    jAccount.add(tfPhoneNumber);
+                    
+                    jAccount.add(lblInterest);
+                    jAccount.add(btnNewInterest);
+                    for (Interest interest : _interestService.getInterestList()) 
+                    {
+                        JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
+                        jAccount.add(cbInterest);
+                        cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
+                    }
+                    if(_interestService.getInterestList().size() % 2 == 1) jAccount.add(new JLabel(""));
+
+                    jAccount.add(lblMajor);
+                    jAccount.add(btnNewMajor);
+                    for (Major major : _majorService.getMajorsList()) 
+                    {
+                        JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
+                        jAccount.add(cbMajor);
+                        cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
+                    }
+                    if(_majorService.getMajorsList().size() % 2 == 1) jAccount.add(new JLabel(""));
+
+                    jAccount.add(btnDelete);
+                    jAccount.add(btnDone);
+                }
+            });
+
+            btnDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
+            {
+                _userService.deleteUser();
+                new Index(_userService);
+                setVisible(false);
+            }});
+
+            btnDone.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
+            {
+                accountStudent = new Student(accountStudent.getUserID(), accountStudent.getTypeID(), accountStudent.getUsername(), accountStudent.getPassword(), accountStudent.getSalt(), accountStudent.getEncryptedPassword(), accountStudent.getStudentID(), tfFname.getText(), tfLname.getText(), tfEmail.getText(), tfPhoneNumber.getText());
+                accountStudent.setInterests(studentInterests);
                 accountStudent.setMajors(studentMajors);
-            }
-
-            _userService.setCurrentUser(accountStudent);
+                _userService.setCurrentUser(accountStudent);
+                if(_userService.getCurrentUser().getUserID() == 0)
+                {
+                    _userService.createUser();
+                }
+                else
+                {
+                    _userService.updateUser();
+                }
+                setVisible(false);
+            }});
         }
         else if(accountUser instanceof Guest)
         {
