@@ -53,19 +53,10 @@ public class Search extends JFrame
                 JLabel lblInputSearch = new JLabel(search);
                 jSearch.add(lblInputSearch);
                 lblInputSearch.setFont(new Font("Courier", Font.PLAIN, 32));
-
-                JLabel lblSpace = new JLabel("");
-                jSearch.add(lblSpace);
-                lblSpace.setFont(new Font("Courier", Font.PLAIN, 32));
-
-                JButton btnRemoveSearch = new JButton("Remove");
-                btnRemoveSearch.setFont(new Font("Courier", Font.PLAIN, 32));
-                jSearch.add(btnRemoveSearch);
-                btnRemoveSearch.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
-                {
-                    _searchService.getSearch().remove(search);
-                }});
+                jSearch.add(new JLabel());
+                jSearch.add(new JLabel());
             }
+            jSearch.add(new JLabel());
             jSearch.add(btnSearch);
         }});
 
