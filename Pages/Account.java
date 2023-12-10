@@ -364,70 +364,67 @@ public class Account extends JFrame
                 jAccount.add(btnDone);
             }});
 
-            btnNewMajor.addActionListener(new ActionListener()
+            btnNewMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae) 
             {
-                public void actionPerformed(ActionEvent ae) 
+                _majorService.getNewMajor().setMajorDescription(null);
+                _majorService.getNewMajor().setMajorID(0);
+
+                JPanel newMajorBox = new JPanel(new GridLayout(1,2));
+
+                JLabel lblNewMajor = new JLabel("New Major");
+                JTextField tfNewMajor = new JTextField("");
+
+                lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+                tfNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
+
+                tfNewMajor.setForeground(Color.BLUE);
+
+                newMajorBox.add(lblNewMajor);
+                newMajorBox.add(tfNewMajor);
+
+                JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
+
+                _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
+                _majorService.createMajor();
+
+                jAccount.removeAll();
+                jAccount.setLayout(new GridLayout (_interestService.getInterestList().size() + _majorService.getMajorsList().size() + 7,2));
+                jAccount.add(lblUsername);
+                jAccount.add(tfUsername);
+                jAccount.add(lblPassword);
+                jAccount.add(tfPassword);
+                jAccount.add(lblFname);
+                jAccount.add(tfFname);
+                jAccount.add(lblLname);
+                jAccount.add(tfLname);
+                jAccount.add(lblEmail);
+                jAccount.add(tfEmail);
+                jAccount.add(lblPhoneNumber);
+                jAccount.add(tfPhoneNumber);
+                
+                jAccount.add(lblInterest);
+                jAccount.add(btnNewInterest);
+                for (Interest interest : _interestService.getInterestList()) 
                 {
-                    _majorService.getNewMajor().setMajorDescription(null);
-                    _majorService.getNewMajor().setMajorID(0);
-
-                    JPanel newMajorBox = new JPanel(new GridLayout(1,2));
-
-                    JLabel lblNewMajor = new JLabel("New Major");
-                    JTextField tfNewMajor = new JTextField("");
-
-                    lblNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-                    tfNewMajor.setFont(new Font("Courier", Font.PLAIN, 32));
-
-                    tfNewMajor.setForeground(Color.BLUE);
-
-                    newMajorBox.add(lblNewMajor);
-                    newMajorBox.add(tfNewMajor);
-
-                    JOptionPane.showMessageDialog(null, newMajorBox,"New Major", JOptionPane.QUESTION_MESSAGE);
-
-                    _majorService.getNewMajor().setMajorDescription(tfNewMajor.getText());
-                    _majorService.createMajor();
-
-                    jAccount.removeAll();
-                    jAccount.setLayout(new GridLayout (_interestService.getInterestList().size() + _majorService.getMajorsList().size() + 7,2));
-                    jAccount.add(lblUsername);
-                    jAccount.add(tfUsername);
-                    jAccount.add(lblPassword);
-                    jAccount.add(tfPassword);
-                    jAccount.add(lblFname);
-                    jAccount.add(tfFname);
-                    jAccount.add(lblLname);
-                    jAccount.add(tfLname);
-                    jAccount.add(lblEmail);
-                    jAccount.add(tfEmail);
-                    jAccount.add(lblPhoneNumber);
-                    jAccount.add(tfPhoneNumber);
-                    
-                    jAccount.add(lblInterest);
-                    jAccount.add(btnNewInterest);
-                    for (Interest interest : _interestService.getInterestList()) 
-                    {
-                        JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
-                        jAccount.add(cbInterest);
-                        cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
-                    }
-                    if(_interestService.getInterestList().size() % 2 == 1) jAccount.add(new JLabel(""));
-
-                    jAccount.add(lblMajor);
-                    jAccount.add(btnNewMajor);
-                    for (Major major : _majorService.getMajorsList()) 
-                    {
-                        JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
-                        jAccount.add(cbMajor);
-                        cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
-                    }
-                    if(_majorService.getMajorsList().size() % 2 == 1) jAccount.add(new JLabel(""));
-
-                    jAccount.add(btnDelete);
-                    jAccount.add(btnDone);
+                    JCheckBox cbInterest = new JCheckBox(interest.getIntDesc());
+                    jAccount.add(cbInterest);
+                    cbInterest.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentInterests.add(interest);}});
                 }
-            });
+                if(_interestService.getInterestList().size() % 2 == 1) jAccount.add(new JLabel(""));
+
+                jAccount.add(lblMajor);
+                jAccount.add(btnNewMajor);
+                for (Major major : _majorService.getMajorsList()) 
+                {
+                    JCheckBox cbMajor = new JCheckBox(major.getMajorDescription());
+                    jAccount.add(cbMajor);
+                    cbMajor.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae){studentMajors.add(major);}});
+                }
+                if(_majorService.getMajorsList().size() % 2 == 1) jAccount.add(new JLabel(""));
+
+                jAccount.add(btnDelete);
+                jAccount.add(btnDone);
+            }});
 
             btnDelete.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent ae)
             {
