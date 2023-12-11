@@ -101,6 +101,16 @@ public class Student extends User
         return "Student{  Name: " + fname + " " + lname + " | Email: " + email + " | Phone Number: " + phoneNumber + " | Interests: " + interestsString + " | Majors: " + majorsString + " }";
     }
 
+    public boolean hasNullField() 
+    {
+        if (super.hasNullField()) 
+        {
+            return true;
+        }
+
+        return studentID == 0 || fname == null || lname == null || email == null || phoneNumber == null || interests == null || majors == null;
+    }
+
     public int getStudentID() 
     {
         return studentID;

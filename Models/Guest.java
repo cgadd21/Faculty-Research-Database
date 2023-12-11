@@ -47,6 +47,16 @@ public class Guest extends User
         return "Guest{ Business: " + business + " | Name: " + fname + " " + lname + " | Contact Info: " + contactInfo + " }";
     }
 
+    public boolean hasNullField() 
+    {
+        if (super.hasNullField()) 
+        {
+            return true;
+        }
+
+        return guestID == 0 || business == null || fname == null || lname == null || contactInfo == null;
+    }
+
     public int getGuestID() 
     {
         return guestID;

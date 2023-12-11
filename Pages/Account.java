@@ -274,15 +274,23 @@ public class Account extends JFrame
                 accountFaculty.setInterests(facultyInterests);
                 accountFaculty.setAbstracts(facultyAbstracts);
                 _userService.setCurrentUser(accountFaculty);
-                if(_userService.getCurrentUser().getUserID() == 0)
+                if(_userService.getCurrentUser().hasNullField())
                 {
-                    _userService.createUser();
+                    JOptionPane.showMessageDialog(null, "Please fill out all fields","Error", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
-                    _userService.updateUser();
+                    if(_userService.getCurrentUser().getUserID() == 0)
+                    {
+                        _userService.createUser();
+                    }
+                    else
+                    {
+                        _userService.updateUser();
+                    }
+                    new Home(_userService);
+                    setVisible(false);
                 }
-                setVisible(false);
             }});
         }
         else if(accountUser instanceof Student)
@@ -514,15 +522,23 @@ public class Account extends JFrame
                 accountStudent.setInterests(studentInterests);
                 accountStudent.setMajors(studentMajors);
                 _userService.setCurrentUser(accountStudent);
-                if(_userService.getCurrentUser().getUserID() == 0)
+                if(_userService.getCurrentUser().hasNullField())
                 {
-                    _userService.createUser();
+                    JOptionPane.showMessageDialog(null, "Please fill out all fields","Error", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
-                    _userService.updateUser();
+                    if(_userService.getCurrentUser().getUserID() == 0)
+                    {
+                        _userService.createUser();
+                    }
+                    else
+                    {
+                        _userService.updateUser();
+                    }
+                    new Home(_userService);
+                    setVisible(false);
                 }
-                setVisible(false);
             }});
         }
         else if(accountUser instanceof Guest)
@@ -594,15 +610,23 @@ public class Account extends JFrame
             {
                 accountGuest = new Guest(accountGuest.getUserID(), accountGuest.getTypeID(), tfUsername.getText(), tfPassword.getText(), accountGuest.getSalt(), accountGuest.getEncryptedPassword(), accountGuest.getGuestID(), tfBusiness.getText(), tfFname.getText(), tfLname.getText(), tfContactInfo.getText());
                 _userService.setCurrentUser(accountGuest);
-                if(_userService.getCurrentUser().getUserID() == 0)
+                if(_userService.getCurrentUser().hasNullField())
                 {
-                    _userService.createUser();
+                    JOptionPane.showMessageDialog(null, "Please fill out all fields","Error", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
-                    _userService.updateUser();
+                    if(_userService.getCurrentUser().getUserID() == 0)
+                    {
+                        _userService.createUser();
+                    }
+                    else
+                    {
+                        _userService.updateUser();
+                    }
+                    new Home(_userService);
+                    setVisible(false);
                 }
-                setVisible(false);
             }});
         }
     }

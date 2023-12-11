@@ -103,6 +103,16 @@ public class Faculty extends User
 
         return "Faculty{ Name: " + fname + " " + lname + " | Email: " + email + " | Phone Number: " + phoneNumber + " | Location: " + location + " | Interests: " + interestsString + " | Abstracts: " + abstractsString + " }";
     }
+
+    public boolean hasNullField() 
+    {
+        if (super.hasNullField()) 
+        {
+            return true;
+        }
+
+        return facultyID == 0 || fname == null || lname == null || email == null || phoneNumber == null || location == null || interests == null || abstracts == null;
+    }
     
     public int getFacultyID() 
     {

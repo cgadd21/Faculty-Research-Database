@@ -42,6 +42,11 @@ public class User
         return null;
     }
 
+    public boolean hasNullField() 
+    {
+        return userID == 0 || typeID == null || username == null || password == null || salt == null || encryptedPassword == null;
+    }
+
     public int getUserID() 
     {
         return userID;
