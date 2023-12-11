@@ -14,6 +14,7 @@ public class DataService implements IDataService
         } 
         catch (Exception e)
         {
+            System.out.println("ERROR connecting");
             return null;
         }
     }
@@ -25,6 +26,9 @@ public class DataService implements IDataService
         {
             if (connect() != null) connect().close();
         } 
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR closing");
+        }
     }
 }

@@ -42,7 +42,10 @@ public class AbstractService implements IAbstractService
                 abstracts.add(facultyAbstract);
             }
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting abstracts");
+        }
         finally
         {
             _dataService.close();
@@ -61,7 +64,10 @@ public class AbstractService implements IAbstractService
             newAbstract = null;
             getAbstracts();
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting creating abstract");
+        }
         finally
         {
             _dataService.close();

@@ -42,7 +42,10 @@ public class MajorService implements IMajorService
                 majors.add(major);
             }
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting majors");
+        }
         finally
         {
             _dataService.close();
@@ -61,7 +64,10 @@ public class MajorService implements IMajorService
             newMajor = null;
             getMajors();
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR creating major");
+        }
         finally
         {
             _dataService.close();

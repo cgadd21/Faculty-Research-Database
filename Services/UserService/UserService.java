@@ -49,7 +49,10 @@ public class UserService implements IUserService
                 getUser();
             }
         } 
-        catch (Exception e) {} 
+        catch (Exception e) 
+        {
+            System.out.println("ERROR logging in");
+        } 
         finally 
         {
             _dataService.close();
@@ -208,7 +211,10 @@ public class UserService implements IUserService
                 }
             }
         } 
-        catch (Exception e) {} 
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting user");
+        } 
         finally 
         {
             _dataService.close();
@@ -322,7 +328,10 @@ public class UserService implements IUserService
             }
             getUser();
         } 
-        catch (Exception e) {} 
+        catch (Exception e) 
+        {
+            System.out.println("ERROR updating user");
+        } 
         finally 
         {
             _dataService.close();
@@ -419,7 +428,10 @@ public class UserService implements IUserService
             }
             getUser();
         } 
-        catch (Exception e) {} 
+        catch (Exception e) 
+        {
+            System.out.println("ERROR creating user");
+        } 
         finally 
         {
             _dataService.close();
@@ -482,7 +494,10 @@ public class UserService implements IUserService
             }
             logout();
         } 
-        catch (Exception e) {} 
+        catch (Exception e) 
+        {
+            System.out.println("ERROR deleting user");
+        } 
         finally
         {
             _dataService.close();

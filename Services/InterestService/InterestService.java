@@ -42,7 +42,10 @@ public class InterestService implements IInterestService
                 interests.add(interest);
             }
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting interests");
+        }
         finally
         {
             _dataService.close();
@@ -61,7 +64,10 @@ public class InterestService implements IInterestService
             newInterest = null;
             getInterests();
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR creating interest");
+        }
         finally
         {
             _dataService.close();

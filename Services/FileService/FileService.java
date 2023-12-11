@@ -32,6 +32,9 @@ public class FileService implements IFileService
             }
             fileContent = abstractContent.toString();
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR getting file");
+        }
     }
 }

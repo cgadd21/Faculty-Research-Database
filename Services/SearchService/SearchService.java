@@ -154,7 +154,10 @@ public class SearchService implements ISearchService
                 }
             }
         }
-        catch (Exception e) {}
+        catch (Exception e) 
+        {
+            System.out.println("ERROR searching");
+        }
         finally
         {
             _dataService.close();
